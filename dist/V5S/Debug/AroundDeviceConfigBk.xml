@@ -1,0 +1,14 @@
+<AROUND_DEVICE updateAp="1"> 
+	<DEVICE name="ECR" version="VER0" enable="0" interface="RS232">
+		<VER0 name="NORMAL">
+			<AUTO_SIGNON>0</AUTO_SIGNON>
+			<RS232 comport="1" baud_rate="115200" bits="8" parity="N" stopbit="1"></RS232>
+			<USB>no parameters needed</USB>
+		</VER0>
+		<VER1 name="HOSPITAL">
+			<AUTO_SIGNON>1</AUTO_SIGNON>
+			<RS232 comport="1" baud_rate="9600" bits="8" parity="N" stopbit="1"></RS232>
+			<USB>no parameters needed</USB>
+		</VER1>
+	</DEVICE>
+</AROUND_DEVICE>

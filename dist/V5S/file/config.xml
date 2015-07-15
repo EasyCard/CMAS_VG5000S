@@ -1,0 +1,189 @@
+<EDC>
+	<DEBUG>
+		<PRINT><ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE></PRINT>
+		<FTP>
+			<ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE>
+			<IP readwrite="rw" type="num" maxlen="15">192.168.6.20</IP>
+			<ID readwrite="rw" type="num" maxlen="30">DEBUG</ID>
+			<PASSWORD readwrite="rw" type="num" maxlen="30">DEBUG</PASSWORD>
+			
+		</FTP>
+		<SD><ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE></SD>
+	</DEBUG>
+	<CURRVERSION > 
+		<PARAMETER name="參數版本">0</PARAMETER>
+		<AP name="程式版本">
+	   	<NAME name="AP NAME"></NAME>
+			<VERSION name="版號"></VERSION>
+			<GeneratedDateTime name="發行日期"></GeneratedDateTime>
+			<Company name="所屬公司"></Company>
+		</AP>
+	  <BLC name="鎖卡名單">
+		<VERSION name="版本號" >0</VERSION>	
+		<TYPE>BIG</TYPE>
+		<UPDATETIME name="更新時間"></UPDATETIME>
+	  </BLC>
+	  <SSL name="SSL"> 
+	  <VERSION name="版本號" >1</VERSION>	
+		<CAFILENAME1 name="憑證一檔名">ck1.cer</CAFILENAME1>
+		<CAEXPIRYDAY1 name="憑證一到期日期">1</CAEXPIRYDAY1>
+		<CAFILENAME2 name="憑證二檔名">ck2.cer</CAFILENAME2>
+		<CAEXPIRYDAY2 name="憑證一到期日期">1</CAEXPIRYDAY2>
+		</SSL>	
+	</CURRVERSION> 
+	<TMS> 
+		<PARAMETER name="參數版本"></PARAMETER>
+		<AP name="程式版本">
+	   	<NAME name="AP NAME"></NAME>
+			<VERSION name="EDC AP"></VERSION>
+			<FTPPATH></FTPPATH>
+		</AP>
+	  <BLC name="鎖卡名單">
+		<VERSION name="版本號" ></VERSION>	
+		<TYPE>BIG</TYPE>
+		<UPDATETIME name="更新時間"></UPDATETIME>
+		<FTPPATH></FTPPATH>
+	  </BLC>
+	  <SSL name="SSL"> 
+	  <VERSION name="版本號" ></VERSION>	
+	  <FTPPATH></FTPPATH>
+		<CAFILENAME1 name="憑證一檔名"></CAFILENAME1>
+		<CAEXPIRYDAY1 name="憑證一到期日期"></CAEXPIRYDAY1>
+		<CAFILENAME2 name="憑證二檔名"></CAFILENAME2>
+		<CAEXPIRYDAY2 name="憑證一到期日期">1</CAEXPIRYDAY2>
+		</SSL>	
+	</TMS> 
+	<MERCHANT name="特店資訊">
+	  <PASSWORD>0000</PASSWORD>
+		<MERCHANTID name="特店代號"></MERCHANTID>
+		<NewLocationID name="分公司代號"></NewLocationID>
+		<STCODE name="分店代號"></STCODE>		
+	</MERCHANT>
+	<TX>
+		<SERIALNO>0</SERIALNO>	
+		<SIGNONMAXTIME name="SIGNON時間間隔">24</SIGNONMAXTIME>
+		<OFFLINETXLIMIT name="離線交易筆數容許">1</OFFLINETXLIMIT>
+		<FORCEONLINELIMIT name="離線交易必須上傳筆數上限">100</FORCEONLINELIMIT>		
+	</TX>
+	<DEVICE name="設備資訊">
+		<SSLEnable name="SSL功能開啟">1</SSLEnable>
+		<SAMSLOT name="SAM插槽位置">11</SAMSLOT>
+		<EDC>
+			<MechineID  name="機器序號"></MechineID>
+		</EDC>
+		<READER>
+			<PORT name="讀卡機埠號">COM2</PORT>
+			<BAUDRATE>115200</BAUDRATE>
+			<PARITY>N</PARITY>
+			<DATABITS>8</DATABITS>
+			<STOPBITS>1</STOPBITS>
+			<HostSpecVersionNo name="HOST 識別版號"></HostSpecVersionNo>
+			<READERID name="讀卡機編號"></READERID>
+			<READERFWVER name="讀卡機韌體版本"></READERFWVER>
+		<MIFARE name="MIFARE SAM">
+				<SAMID name="SAM編號"></SAMID>
+				<SAMSN name="SAM使用次數"></SAMSN>
+				<DEVICEID name="設備編號"></DEVICEID>
+				<SAMKEYVER name="SAM金鑰版本"></SAMKEYVER>
+		</MIFARE>
+		<CPU name="CPU SAM">
+				<SAMVER name="SAM版本"></SAMVER>
+				<SAMID name="SAM 編號"></SAMID>
+				<CPUDEVICEID name="設備編號"></CPUDEVICEID>
+		</CPU>
+		<RemainderAddQuota name="剩餘加值額度"></RemainderAddQuota>
+		<CancelCreditQuota name="取消加值累計額度"></CancelCreditQuota>
+		</READER>
+		<MEMORY>
+			<USEDDISKSIZE name="已使用磁碟空間"></USEDDISKSIZE>	
+			<TOTALDISKSIZE name="可使用磁碟空間"></TOTALDISKSIZE>
+			<USEDRAMSIZE name="已使用RAM空間"></USEDRAMSIZE>	
+			<TOTALRAMSIZE name="可使用RAM空間"></TOTALRAMSIZE>
+		</MEMORY>
+	</DEVICE>
+	<STATUS>
+		<LastSignonDateTime name="最後SIGN ON時間"></LastSignonDateTime>
+	</STATUS>
+	<TM name="商店資訊">
+		<ID name="收銀機機號" >00</ID>
+		<AgentNumber name="員工編號">0000</AgentNumber> 
+		<TITLE name="特店名稱"></TITLE>
+		<SUBTITLE name="分店名"></SUBTITLE>
+		<RECEIPTNUM name="收據列印張數">2</RECEIPTNUM>
+		<RECEIPTTYPE1 name="收據第一聯">顧客收執聯</RECEIPTTYPE1>
+		<RECEIPTTYPE2 name="收據第二聯">商店存根聯</RECEIPTTYPE2>		
+		<RECEIPTREMARK name="收據備註">
+			<STRING1 name="收據備註1"></STRING1>
+			<STRING2 name="收據備註2"></STRING2>
+			<STRING3 name="收據備註3"></STRING3>
+			<STRING4 name="收據備註4"></STRING4>
+			<STRING5 name="收據備註5"></STRING5>
+		</RECEIPTREMARK>
+	</TM>	
+	<COMPORT name="連接埠">
+		<READER name="讀卡機">1</READER>
+		<ECR name="收銀機">3</ECR>		
+	</COMPORT>
+	<BATCH name="交易批次">
+			<NO name="批次號碼">0</NO>	
+	</BATCH>
+	<ETHERNET name="網路設定">
+	<LOCAL name="本機網路設定">
+		<IP name="IP" >192.168.1.1</IP>
+		<MASK name="MASK"></MASK>
+		<GATEWAY name="GATEWAY"></GATEWAY>
+		<DNS name="DNS"></DNS>
+		<MAC name="MAC"></MAC>
+	</LOCAL>	
+	<COMM name="通訊設定">
+	<HOST name="連線主機">
+		<URL name="HOST URL" readwrite="rw" type="str" maxlen="64">cmas-gateway.easycard.com.tw</URL>
+		<URLPORT name="HOST PORT" readwrite="rw" type="str" maxlen="5">7000</URLPORT>
+		<IP name="HOST IP" readwrite="rw" type="str" maxlen="15">203.70.119.18</IP>
+		<PORT name="HOST PORT" readwrite="rw" type="str" maxlen="5">7000</PORT>
+	</HOST>
+  <FTP name="FTP">
+		<URL name="FTP IP" readwrite="rw" type="str" maxlen="32">cmas-ftp.easycard.com.tw</URL>
+		<IP name="FTP IP" readwrite="rw" type="str" maxlen="15">203.70.119.20</IP>
+		<LOGINID name="FTP ID" readwrite="rw" type="str" maxlen="32">ftp_edc</LOGINID>
+		<LOGINPASSWORD name="FTP 密碼" readwrite="rw" type="str" maxlen="32">Cmas@2013</LOGINPASSWORD>
+		<SSLFILEPASSWORD name="SSL FILE 安裝密碼" readwrite="rw" type="str" maxlen="32"></SSLFILEPASSWORD>
+		<SSLFLAG>0</SSLFLAG>
+	</FTP>	
+	</COMM>
+ </ETHERNET>  	
+ <CONFIG2>
+	<OPERATIONMODE>
+			<OPMODE name="操作模式">1</OPMODE>
+			<DEDUCTAMT>
+			  <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>					
+			</DEDUCTAMT> 
+      </OPERATIONMODE>
+      <CONNECTMODE>0</CONNECTMODE>	
+      <COMM_TEST name="測試主機通訊設定">
+			<HOST name="連線主機">
+				<URL name="HOST URL" readwrite="rw" type="str" maxlen="64">cmas-gateway.easycard.com.tw</URL>
+				<URLPORT name="HOST PORT" readwrite="rw" type="str" maxlen="5">7000</URLPORT>
+				<IP name="HOST IP" readwrite="rw" type="str" maxlen="15">211.78.134.165</IP>
+				<PORT name="HOST PORT" readwrite="rw" type="str" maxlen="5">7000</PORT>
+			</HOST>
+		  <FTP name="FTP">
+				<URL name="FTP IP" readwrite="rw" type="str" maxlen="32">cmas-ftp.easycard.com.tw</URL>
+				<IP name="FTP IP" readwrite="rw" type="str" maxlen="15">211.78.134.167</IP>
+				<LOGINID name="FTP ID" readwrite="rw" type="str" maxlen="32">ftp_edc</LOGINID>
+				<LOGINPASSWORD name="FTP 密碼" readwrite="rw" type="str" maxlen="32">Cmas@2013</LOGINPASSWORD>
+				<SSLFILEPASSWORD name="SSL FILE 安裝密碼" readwrite="rw" type="str" maxlen="32"></SSLFILEPASSWORD>
+				<SSLFLAG>0</SSLFLAG>
+			</FTP>	
+			</COMM_TEST>
+		</CONFIG2>		
+</EDC>

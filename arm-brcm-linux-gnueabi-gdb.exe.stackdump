@@ -1,0 +1,9 @@
+Exception: STATUS_ACCESS_VIOLATION at eip=610CD1F0
+eax=00000002 ebx=20077000 ecx=770F1662 edx=00000000 esi=FFFFFFFF edi=00000002
+ebp=047ACCF8 esp=047ACCB0 program=C:\cygwin\gnueabi\bin\arm-brcm-linux-gnueabi-gdb.exe, pid 6712, thread socksel
+cs=0023 ds=002B es=002B fs=0053 gs=002B ss=002B
+Stack trace:
+Frame     Function  Args
+047ACCF8  610CD1F0  (20077000, 849F8571, FFFFFFFE, 770F14DE)
+047ACD38  610039F5  (000001C8, FFFFFFFF, 00000000, 00000000)
+End of stack trace

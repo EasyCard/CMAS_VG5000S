@@ -1,0 +1,403 @@
+<EDC>
+	<DEBUG>
+		<PRINT><ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE></PRINT>
+		<FTP>
+			<ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE>
+			<IP readwrite="rw" type="num" maxlen="15">192.168.6.12</IP>
+			<ID readwrite="rw" type="num" maxlen="30">DEBUG</ID>
+			<PASSWORD readwrite="rw" type="num" maxlen="30">DEBUG</PASSWORD>
+			
+		</FTP>
+		<SD><ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE></SD>
+	</DEBUG>
+	<VERSION>
+	<CURRVERSION > 
+		<PARAMETER name="參數版本">0</PARAMETER>
+		<AP name="程式版本">
+	   	<NAME name="AP NAME"></NAME>
+			<VERSION name="版號"></VERSION>
+			<GeneratedDateTime name="發行日期"></GeneratedDateTime>
+			<Company name="所屬公司"></Company>
+		</AP>
+	  <BLC name="鎖卡名單">
+		<VERSION name="版本號" >0</VERSION>	
+		<TYPE>BIG</TYPE>
+		<UPDATETIME name="更新時間"></UPDATETIME>
+	  </BLC>
+	  <SSL name="SSL"> 
+	  <VERSION name="版本號" >1</VERSION>	
+		<CAFILENAME1 name="憑證一檔名">ck1.cer</CAFILENAME1>
+		<CAEXPIRYDAY1 name="憑證一到期日期">1</CAEXPIRYDAY1>
+		<CAFILENAME2 name="憑證二檔名">ck2.cer</CAFILENAME2>
+		<CAEXPIRYDAY2 name="憑證一到期日期">1</CAEXPIRYDAY2>
+		</SSL>	
+		<READERFW name="程式版本">
+	   		<NAME name="READERFW NAME"></NAME>
+				<VERSION name="READER FW"></VERSION>
+				<FTPPATH></FTPPATH>
+		</READERFW>
+	</CURRVERSION> 
+	<TMS> 
+		<PARAMETER name="參數版本"></PARAMETER>
+		<AP name="程式版本">
+	   	<NAME name="AP NAME"></NAME>
+			<VERSION name="EDC AP"></VERSION>
+			<FTPPATH></FTPPATH>
+		</AP>
+	  <BLC name="鎖卡名單">
+		<VERSION name="版本號" ></VERSION>	
+		<TYPE>BIG</TYPE>
+		<UPDATETIME name="更新時間"></UPDATETIME>
+		<FTPPATH></FTPPATH>
+	  </BLC>
+	  <SSL name="SSL"> 
+	  <VERSION name="版本號" ></VERSION>	
+	  <FTPPATH></FTPPATH>
+		<CAFILENAME1 name="憑證一檔名"></CAFILENAME1>
+		<CAEXPIRYDAY1 name="憑證一到期日期"></CAEXPIRYDAY1>
+		<CAFILENAME2 name="憑證二檔名"></CAFILENAME2>
+		<CAEXPIRYDAY2 name="憑證一到期日期">1</CAEXPIRYDAY2>
+		</SSL>	
+		<READERFW name="程式版本">
+	   		<NAME name="READERFW NAME"></NAME>
+				<VERSION name="READER FW"></VERSION>
+				<FTPPATH></FTPPATH>
+		</READERFW>
+	</TMS> 
+	</VERSION>
+	<MERCHANT name="特店資訊">
+	  <PASSWORD>0000</PASSWORD>
+		<MERCHANTID name="特店代號"></MERCHANTID>
+		<NewLocationID name="分公司代號"></NewLocationID>
+		<STCODE name="分店代號"></STCODE>		
+	</MERCHANT>
+	<TX>
+		<SERIALNO>0</SERIALNO>	
+		<SIGNONMAXTIME name="SIGNON時間間隔">24</SIGNONMAXTIME>
+		<OFFLINETXLIMIT name="離線交易筆數容許">1</OFFLINETXLIMIT>
+		<FORCEONLINELIMIT name="離線交易必須上傳筆數上限">100</FORCEONLINELIMIT>	
+		<MiniunitsADDVALUE name="加值最小單位">100</MiniunitsADDVALUE>
+		<AUTOLOADLIMITAMT>500</AUTOLOADLIMITAMT>
+		<OPERATIONMODE name="操作模式">MANUAL</OPERATIONMODE>
+		<AMTTABLE0>
+				<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE0> 
+    <AMTTABLE1>
+   			<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE1> 
+		<AMTTABLE2>
+			<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE2> 
+		<AMTTABLE3>
+				<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE3> 
+		<AMTTABLE4>
+				<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE4> 
+			<AMTTABLE5>
+					<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>				
+		</AMTTABLE5>   	
+			<AMTTABLE6>
+					<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>						
+		</AMTTABLE6>   	
+			<AMTTABLE7>
+					<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE7>   	
+			<AMTTABLE8>
+				<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+			</AMTTABLE8>	
+			<AMTTABLE9>
+					<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE9>
+				<AMTTABLE10>
+				<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE10> 
+    <AMTTABLE11>
+   			<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE11> 
+		<AMTTABLE12>
+					<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE12> 
+		<AMTTABLE13>
+					<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE13> 
+		<AMTTABLE14>
+					<NAME></NAME>
+				<AREACODE></AREACODE>
+			   <AMT0></AMT0>			
+				<AMT1></AMT1>
+				<AMT2></AMT2>
+				<AMT3></AMT3>
+				<AMT4></AMT4>
+				<AMT5></AMT5>
+				<AMT6></AMT6>
+				<AMT7></AMT7>
+				<AMT8></AMT8>
+				<AMT9></AMT9>			
+		</AMTTABLE14>    	  	
+	</TX>
+		<DEVICE name="設備資訊">
+		<SSLEnable name="SSL功能開啟">1</SSLEnable>
+		<SAMSLOT name="SAM插槽位置">11</SAMSLOT>
+		<READER>
+			<PORT name="讀卡機埠號">Builtin</PORT>
+			<BAUDRATE>115200</BAUDRATE>
+			<PARITY>N</PARITY>
+			<DATABITS>8</DATABITS>
+			<STOPBITS>1</STOPBITS>
+		</READER>
+		<ECR>
+			<PORT name="收銀機連接埠">COM1</PORT>
+			<BAUDRATE>115200</BAUDRATE>
+			<PARITY>N</PARITY>
+			<DATABITS>8</DATABITS>
+			<STOPBITS>1</STOPBITS>
+		</ECR>	
+		<PMPASSWORD>17931793</PMPASSWORD>	
+		<SMPASSWORD>11223344</SMPASSWORD>	
+		<MMPASSWORD>70765909</MMPASSWORD>	
+		<DMPASSWORD>00000000</DMPASSWORD>	
+	</DEVICE>	
+	<STATUS>
+		<LastSignonDateTime name="最後SIGN ON時間"></LastSignonDateTime>
+	</STATUS>
+	<TM name="商店資訊">
+		<ID name="收銀機機號" >00</ID>
+		<AgentNumber name="員工編號">0000</AgentNumber> 
+		<TITLE name="特店名稱"></TITLE>
+		<SUBTITLE name="分店名"></SUBTITLE>
+		<RECEIPTNUM name="收據列印張數">2</RECEIPTNUM>
+		<RECEIPTTYPE1 name="收據第一聯">顧客收執聯</RECEIPTTYPE1>
+		<RECEIPTTYPE2 name="收據第二聯">商店存根聯</RECEIPTTYPE2>		
+		<RECEIPTREMARK name="收據備註">
+			<STRING1 name="收據備註1"></STRING1>
+			<STRING2 name="收據備註2"></STRING2>
+			<STRING3 name="收據備註3"></STRING3>
+			<STRING4 name="收據備註4"></STRING4>
+			<STRING5 name="收據備註5"></STRING5>
+		</RECEIPTREMARK>
+	</TM>	
+	<COMPORT name="連接埠">
+		<READER name="讀卡機">1</READER>
+		<ECR name="收銀機">3</ECR>		
+	</COMPORT>
+	<BATCH name="交易批次">
+			<NO name="批次號碼">0</NO>	
+	</BATCH>
+	<ETHERNET name="網路設定">
+	<EthernetCHANNEL>ETHERNET</EthernetCHANNEL>	
+	 <CONNECTHOST>PRODUCTION</CONNECTHOST>
+	 <NETWORKMODE>INTERNET</NETWORKMODE>
+			<LOCAL name="本機網路設定">
+				<IP name="IP" >192.168.1.1</IP>
+				<MASK name="MASK"></MASK>
+				<GATEWAY name="GATEWAY"></GATEWAY>
+				<DNS name="DNS"></DNS>
+				<MAC name="MAC"></MAC>
+			</LOCAL>	
+			<GPRS>
+			<SIMSLOT>SIM1</SIMSLOT>
+			<PINCODE>0000</PINCODE>
+			</GPRS>
+		 	<HOST_PRODUCTION name="通訊設定">
+			<HOST name="連線主機">
+				<URL name="HOST URL" readwrite="rw" type="str" maxlen="64">cmas-gateway.easycard.com.tw</URL>
+			  <IP name="HOST IP" readwrite="rw" type="str" maxlen="15">203.70.119.18</IP>
+		  	<VIPIP name="HOST IP" readwrite="rw" type="str" maxlen="15">192.168.112.21</VIPIP>
+				<PORT name="HOST PORT" readwrite="rw" type="str" maxlen="5">7000</PORT>
+			</HOST>
+		  <FTP name="FTP">
+				<URL name="FTP IP" readwrite="rw" type="str" maxlen="32">cmas-ftp.easycard.com.tw</URL>
+				<IP name="FTP IP" readwrite="rw" type="str" maxlen="15">203.70.119.20</IP>
+				<VIPIP name="HOST IP" readwrite="rw" type="str" maxlen="15">192.168.112.20</VIPIP>
+				<LOGINID name="FTP ID" readwrite="rw" type="str" maxlen="32">ftp_edc</LOGINID>
+				<LOGINPASSWORD name="FTP 密碼" readwrite="rw" type="str" maxlen="32">Cmas@2013</LOGINPASSWORD>
+			</FTP>	
+			</HOST_PRODUCTION>	
+			<HOST_TESTING name="測試套主機通訊設定">
+				<HOST name="連線主機">
+				<URL name="HOST URL" readwrite="rw" type="str" maxlen="64">Cmas-gatewayt.easycard.com.tw</URL>
+				<IP name="HOST IP" readwrite="rw" type="str" maxlen="15">211.78.134.165</IP>
+				<VIPIP name="HOST IP" readwrite="rw" type="str" maxlen="15">211.78.134.165</VIPIP>
+				<PORT name="HOST PORT" readwrite="rw" type="str" maxlen="5">7000</PORT>
+			</HOST>
+		  <FTP name="FTP">
+				<URL name="FTP IP" readwrite="rw" type="str" maxlen="32">cmas-ftpt.easycard.com.tw</URL>
+				<IP name="FTP IP" readwrite="rw" type="str" maxlen="15">211.78.134.167</IP>
+				<VIPIP name="HOST IP" readwrite="rw" type="str" maxlen="15">211.78.134.167</VIPIP>
+				<LOGINID name="FTP ID" readwrite="rw" type="str" maxlen="32">ftp_edc</LOGINID>
+				<LOGINPASSWORD name="FTP 密碼" readwrite="rw" type="str" maxlen="32">123@abc</LOGINPASSWORD>
+			</FTP>	
+			</HOST_TESTING>
+			<HOST_DEVELOP name="開發套主機通訊設定">
+			<HOST name="連線主機">
+				<URL name="HOST URL" readwrite="rw" type="str" maxlen="64">172.16.99.54</URL>
+				<IP name="HOST IP" readwrite="rw" type="str" maxlen="15">172.16.99.53</IP>
+			  <VIPIP name="HOST IP" readwrite="rw" type="str" maxlen="15">172.16.99.54</VIPIP>
+				<PORT name="HOST PORT" readwrite="rw" type="str" maxlen="5">7000</PORT>
+			</HOST>
+		  <FTP name="FTP">
+				<URL name="FTP IP" readwrite="rw" type="str" maxlen="32">172.16.99.55</URL>
+				<IP name="FTP IP" readwrite="rw" type="str" maxlen="15">172.16.99.55</IP>
+				<VIPIP name="HOST IP" readwrite="rw" type="str" maxlen="15">172.16.99.55</VIPIP>
+				<LOGINID name="FTP ID" readwrite="rw" type="str" maxlen="32">ftp_edc</LOGINID>
+				<LOGINPASSWORD name="FTP 密碼" readwrite="rw" type="str" maxlen="32">Cmas@2013</LOGINPASSWORD>
+			</FTP>	
+			</HOST_DEVELOP>
+	
+ </ETHERNET>  
+</EDC>

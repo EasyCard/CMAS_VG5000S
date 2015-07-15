@@ -1,0 +1,1189 @@
+{
+  "CMAS": {
+    "TransFormat": {
+      "TAGDEF": {
+        "T0100": {
+          "-name": "MESSAGE_TYPE_ID",
+          "-type": "n",
+          "-length": "4",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T0200": {
+          "-name": "CARD_ID",
+          "-type": "n",
+          "-length": "20",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-DEBUG": "M"
+        },
+        "T0211": {
+          "-name": "PURSE_ID",
+          "-type": "n",
+          "-length": "16",
+          "-AU_Q": "C",
+          "-AU_P": "C",
+          "-VERIFY_Q": "C",
+          "-VERIFY_P": "C",
+          "-ADV_Q": "C",
+          "-ADV_P": "C",
+          "-LC_Q": "C",
+          "-LC_P": "C",
+          "-DEBUG": "M"
+        },
+        "T0212": {
+          "-name": "AUTOLOAD_Flag",
+          "-type": "an",
+          "-length": "1",
+          "-ADV_Q": "MC",
+          "-DEBUG": "M"
+        },
+        "T0213": {
+          "-name": "CARDTYPE",
+          "-type": "an",
+          "-length": "2",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T0214": {
+          "-name": "PERSONALPROFILE",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T0300": {
+          "-name": "PROCESSINGCODE",
+          "-type": "n",
+          "-length": "6",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T0400": {
+          "-name": "TransAMT",
+          "-type": "n",
+          "-length": "12",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T0403": {
+          "-name": "DEDUCTAMT",
+          "-type": "n",
+          "-length": "12",
+          "-DEBUG": "M"
+        },
+        "T0407": {
+          "-name": "RETURNAMT",
+          "-type": "n",
+          "-length": "12",
+          "-DEBUG": "M"
+        },
+        "T0408": {
+          "-name": "EVAFTER TRANS",
+          "-type": "n",
+          "-length": "12",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T0409": {
+          "-name": "AUTOLOADAMT",
+          "-type": "n",
+          "-length": "12",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T0410": {
+          "-name": "EV_BEFORE_TRANS",
+          "-type": "n",
+          "-length": "12",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T1100": {
+          "-name": "EDC_TRANS_SN",
+          "-type": "n",
+          "-length": "6",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T1101": {
+          "-name": "TM_TRANS_SN",
+          "-type": "n",
+          "-length": "6",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "C",
+          "-LC_Q": "C",
+          "-SG_Q": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T1200": {
+          "-name": "LOCAL_TRANS_TIME",
+          "-type": "n",
+          "-length": "6",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T1201": {
+          "-name": "TM_TRANS_TIME",
+          "-type": "n",
+          "-length": "6",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "C",
+          "-LC_Q": "C",
+          "-SG_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T1300": {
+          "-name": "LOCAL_TRANS_DATE",
+          "-type": "n",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T1301": {
+          "-name": "TM_TRANS_TIME",
+          "-type": "n",
+          "-length": "6",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "C",
+          "-LC_Q": "C",
+          "-SG_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T1400": {
+          "-name": "CARD_EXPIRY_DATE",
+          "-type": "n",
+          "-length": "4",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-DEBUG": "M"
+        },
+        "T1402": {
+          "-name": "CARD_VALID_DATE",
+          "-type": "n",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T1403": {
+          "-name": "CARD_VALID_DATE_EXTENDED ",
+          "-type": "n",
+          "-length": "8",
+          "-AU_P": "M",
+          "-VERIFY_P": "M",
+          "-ADV_P": "M",
+          "-DEBUG": "M"
+        },
+        "T3700": {
+          "-name": "RRN",
+          "-type": "n",
+          "-length": "12",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T3701": {
+          "-name": "TM_SN",
+          "-type": "n",
+          "-length": "20",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T3800": {
+          "-name": "AUTH_IDENTIFICATION_RESPONSE",
+          "-type": "an",
+          "-length": "6",
+          "-AU_P": "M",
+          "-VERIFY_P": "M",
+          "-ADV_P": "M",
+          "-LC_P": "M",
+          "-SG_P": "M",
+          "-RE_P": "M",
+          "-TMS_P": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T3900": {
+          "-name": "RESPONSECODE",
+          "-type": "an",
+          "-length": "2",
+          "-AU_P": "M",
+          "-VERIFY_P": "M",
+          "-ADV_P": "M",
+          "-LC_P": "M",
+          "-SG_P": "M",
+          "-RE_P": "M",
+          "-TMS_P": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T4100": {
+          "-name": "TERMINAL_ID",
+          "-type": "b",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T4101": {
+          "-name": "DEVICE_ID-1GEN",
+          "-type": "b",
+          "-length": "8",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-SG_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T4102": {
+          "-name": "EDC_IP",
+          "-type": "an",
+          "-length": "15",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4103": {
+          "-name": "EDC_MACHINE_ID",
+          "-type": "an",
+          "-length": "30",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-SG_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4104": {
+          "-name": "READER_SN",
+          "-type": "an",
+          "-length": "30",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-SG_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4200": {
+          "-name": "MERCHANTID",
+          "-type": "an",
+          "-length": "15",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T4210": {
+          "-name": "BRANCH_ID",
+          "-type": "an",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T4800": {
+          "-name": "CPU_PURSE_VER",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "C",
+          "-AU_P": "C",
+          "-VERIFY_Q": "C",
+          "-VERIFY_P": "C",
+          "-ADV_Q": "M",
+          "-ADV_P": "C",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4801": {
+          "-name": "CARD_AVR",
+          "-type": "b",
+          "-length": "33",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4802": {
+          "-name": "ISSUE_CODE",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4803": {
+          "-name": "BANK_CODE",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4804": {
+          "-name": "AREA_CODE",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4805": {
+          "-name": "CPU_SUB_AREA_CODE",
+          "-type": "b",
+          "-length": "4",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4806": {
+          "-name": "PERSONAL_PROFILE_EXPIRY_DATE",
+          "-type": "b",
+          "-length": "8",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4807": {
+          "-name": "NEW_PERSONAL_PROFILE_EXPIRY_DATE",
+          "-type": "b",
+          "-length": "8",
+          "-AU_P": "C",
+          "-VERIFY_P": "C",
+          "-ADV_P": "C",
+          "-DEBUG": "M"
+        },
+        "T4808": {
+          "-name": "CARD_TX_SN",
+          "-type": "n",
+          "-length": "6",
+          "-AU_Q": "M",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4809": {
+          "-name": "CPU_TRANS_MODE",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4810": {
+          "-name": "CPU_TQ",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4811": {
+          "-name": "CPU_TX_SN_BEFORE_TX",
+          "-type": "an",
+          "-length": "6",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4812": {
+          "-name": "CPU_CTC",
+          "-type": "b",
+          "-length": "6",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4813": {
+          "-name": "LOYALTY_COUNTER",
+          "-type": "n",
+          "-length": "12",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4814": {
+          "-name": "Deposit_VALUE",
+          "-type": "n",
+          "-length": "12",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4815": {
+          "-name": "REFUNDCARD_FEE",
+          "-type": "n",
+          "-length": "12",
+          "-DEBUG": "M"
+        },
+        "T4817": {
+          "-name": " ",
+          "-type": "an",
+          "-length": "2",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4818": {
+          "-name": "ANOTHER EV",
+          "-type": "an",
+          "-length": "2",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4819": {
+          "-name": "LOCK REASON",
+          "-type": "an",
+          "-length": "2",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4820": {
+          "-name": "CPU_SPEC_VER",
+          "-type": "b",
+          "-length": "1",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4821": {
+          "-name": "CARD_PARAMETERS",
+          "-type": "b",
+          "-length": "8",
+          "-VERIFY_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T4822": {
+          "-name": "CARD_AUTOLOAD_PARAMETERS",
+          "-type": "b",
+          "-length": "6",
+          "-DEBUG": "M"
+        },
+        "T4823": {
+          "-name": "CPU_ONEDAY_QUOTA_WRITE_flag",
+          "-type": "n",
+          "-length": "2",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4824": {
+          "-name": "CPU_CPD_READ_FLAG",
+          "-type": "n",
+          "-length": "2",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4825": {
+          "-name": "CPU_CREDIT_BALANCE_CHANGE_FLAG",
+          "-type": "n",
+          "-length": "2",
+          "-SGADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4826": {
+          "-name": "CPU_CHIPID_LEN",
+          "-type": "n",
+          "-length": "1",
+          "-AU_Q": "M",
+          "-AU_P": "M",
+          "-VERIFY_Q": "M",
+          "-VERIFY_P": "M",
+          "-ADV_Q": "M",
+          "-ADV_P": "M",
+          "-LC_Q": "M",
+          "-LC_P": "M",
+          "-DEBUG": "M"
+        },
+        "T4827": {
+          "-name": "CPU_CARD_PARAMETERS",
+          "-type": "b",
+          "-length": "10",
+          "-DEBUG": "M"
+        },
+        "T4828": {
+          "-name": "MIFARE_SETTING_DATA",
+          "-type": "b",
+          "-length": "20",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T4829": {
+          "-name": "CPU_CARD_SETTING_PARAMETER",
+          "-type": "b",
+          "-length": "32",
+          "-LC_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5301": {
+          "-name": "KEYVERSION",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5302": {
+          "-name": "CPU_CARD_KEY_INFO",
+          "-type": "b",
+          "-length": "6",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T5303": {
+          "-name": "CPU_HASH_TYPE",
+          "-type": "b",
+          "-length": "2",
+          "-ADV_Q": "C",
+          "-SG_P": "M",
+          "-DEBUG": "M"
+        },
+        "T5304": {
+          "-name": "CPU_HOST_ADMIN_KVN",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "C",
+          "-ADV_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T5305": {
+          "-name": "CPU_SIGNATURE_KEY_KVN",
+          "-type": "b",
+          "-length": "2",
+          "-AU_Q": "C",
+          "-ADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5306": {
+          "-name": "CPU_EDC",
+          "-type": "b",
+          "-length": "3",
+          "-SG_P": "M",
+          "-DEBUG": "M"
+        },
+        "T5307": {
+          "-name": "RSAM",
+          "-type": "b",
+          "-length": "16",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5308": {
+          "-name": "RHOST",
+          "-type": "b",
+          "-length": "16",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5361": {
+          "-name": "SAM_ID",
+          "-type": "b",
+          "-length": "16",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5362": {
+          "-name": "SAM_SN",
+          "-type": "b",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5363": {
+          "-name": "SAM_CRN",
+          "-type": "b",
+          "-length": "16",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5364": {
+          "-name": "CPU_SAM INFO",
+          "-type": "b",
+          "-length": "156",
+          "-LC_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5365": {
+          "-name": "SAM_TRANS_INFO",
+          "-type": "b",
+          "-length": "24",
+          "-AU_Q": "M",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5366": {
+          "-name": "SAM_SINGLE_CREDIT TRANS AMT LIMIT",
+          "-type": "b",
+          "-length": "6",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5367": {
+          "-name": "CPU_SAM_PARAMETER_SETTING_DATA",
+          "-type": "b",
+          "-length": "114",
+          "-SG_P": "M",
+          "-DEBUG": "M"
+        },
+        "T5368": {
+          "-name": "SAM_TRANS_COUNT",
+          "-type": "b",
+          "-length": "8",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5369": {
+          "-name": "SAM_SIGN_ON_CONTROL FLAG",
+          "-type": "n",
+          "-length": "2",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-DEBUG": "M"
+        },
+        "T5370": {
+          "-name": "CPU_LAST_SIGN_ON_INFO",
+          "-type": "b",
+          "-length": "66",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5371": {
+          "-name": "CPU SMA ID",
+          "-type": "b",
+          "-length": "16",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-DEBUG": "M"
+        },
+        "T5501": {
+          "-name": "BATCH_NO",
+          "-type": "n",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-SG_Q": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5503": {
+          "-name": "MERCHANT_COMPANY_ID",
+          "-type": "an",
+          "-length": "15",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-SG_Q": "M",
+          "-RE_Q": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5504": {
+          "-name": "TM_ID",
+          "-type": "an",
+          "-length": "6",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-SG_Q": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5509": {
+          "-name": "EDC_SYSTEM_TYPE",
+          "-type": "b",
+          "-length": "1",
+          "-DEBUG": "M"
+        },
+        "T5510": {
+          "-name": "TM_AGENT_ID",
+          "-type": "b",
+          "-length": "v",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-ADV_Q": "M",
+          "-LC_Q": "M",
+          "-SG_Q": "M",
+          "-SGADV_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5581": {
+          "-name": "original_TxnTerminalID",
+          "-type": "an",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5582": {
+          "-name": "originalTxnRRN",
+          "-type": "an",
+          "-length": "12",
+          "-AU_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5583": {
+          "-name": "originaTxn_DATE",
+          "-type": "n",
+          "-length": "8",
+          "-AU_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T5588": {
+          "-name": "VERSIONINFO",
+          "-type": "an",
+          "-length": "v",
+          "-SG_Q": "M",
+          "-SG_P": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-SGADV_Q": "M",
+          "T558801": {
+            "-name": "VERSIONINFO_TYPE",
+            "-type": "n",
+            "-length": "2",
+            "-DEBUG": "M"
+          },
+          "T558802": {
+            "-name": "VERSIONINFO_SUBTYPE",
+            "-type": "n",
+            "-length": "30",
+            "-DEBUG": "M"
+          },
+          "T558803": {
+            "-name": "VERSIONINFO_DATA",
+            "-type": "n",
+            "-length": "30",
+            "-DEBUG": "M"
+          }
+        },
+        "T5589": {
+          "-name": "ucTransStatus",
+          "-type": "an",
+          "-length": "v",
+          "T558901": {
+            "-name": "ucDEDUCTStatus",
+            "-type": "n",
+            "-length": "1",
+            "-DEBUG": "M"
+          }
+        },
+        "T5591": {
+          "-name": "Settle_Totle_Cnt",
+          "-type": "n",
+          "-length": "6",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M",
+          "-DEBUG": "M"
+        },
+        "T5592": {
+          "-name": "SETTLE_TOTLE_AMT",
+          "-type": "n",
+          "-length": "v",
+          "-SETTLE_Q": "M",
+          "-SETTLE_P": "M"
+        },
+        "T5595": {
+          "-name": "TMS",
+          "-type": "n",
+          "-length": "v",
+          "-TMS_P": "M",
+          "T559501": {
+            "-name": "PARAMETER_VER",
+            "-type": "an",
+            "-length": "11",
+            "-DEBUG": "M"
+          },
+          "T559502": {
+            "-name": "PARAMETER_ID",
+            "-type": "an",
+            "-length": "20",
+            "-DEBUG": "M"
+          },
+          "T559503": {
+            "-name": "PARAMETER_VER",
+            "-type": "an",
+            "-length": "50",
+            "-DEBUG": "M"
+          },
+          "T559504": {
+            "-name": "PARAMETER_VAILD DATE",
+            "-type": "an",
+            "-length": "8",
+            "-DEBUG": "M"
+          },
+          "T559505": {
+            "-name": "PARAMETER_EXPIRY DATE",
+            "-type": "an",
+            "-length": "8",
+            "-DEBUG": "M"
+          }
+        },
+        "T5596": {
+          "-name": "DATA_TRANSPORT_CONTROL",
+          "-type": "n",
+          "-length": "v",
+          "-SG_Q": "C",
+          "-SG_P": "C",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "T559601": {
+            "-name": "TOTAL_PACK_COUNT",
+            "-type": "n",
+            "-length": "8",
+            "-DEBUG": "M"
+          },
+          "T559602": {
+            "-name": "SENDED_COUNT",
+            "-type": "n",
+            "-length": "8",
+            "-DEBUG": "M"
+          },
+          "T559603": {
+            "-name": "RECEIVE_COUNT",
+            "-type": "n",
+            "-length": "8",
+            "-DEBUG": "M"
+          },
+          "T559604": {
+            "-name": "TRANSPORT_ID",
+            "-type": "n",
+            "-length": "8",
+            "-DEBUG": "M"
+          }
+        },
+        "T6000": {
+          "-name": "READER_FIRMWARE_VER",
+          "-type": "b",
+          "-length": "12",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-SG_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T6001": {
+          "-name": "READER_AVR_DATA",
+          "-type": "b",
+          "-length": "166",
+          "-AU_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T6002": {
+          "-name": "TERM_HOST_PARAMETERS",
+          "-type": "b",
+          "-length": "48",
+          "-SG_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T6003": {
+          "-name": "TERM_READER_PARAMETERS",
+          "-type": "b",
+          "-length": "64",
+          "-SG_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T6004": {
+          "-name": "BLACKLIST_VERSION",
+          "-type": "b",
+          "-length": "5",
+          "-AU_Q": "M",
+          "-VERIFY_Q": "M",
+          "-SG_Q": "M",
+          "-SETTLE_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T6400": {
+          "-name": "STAC",
+          "-type": "b",
+          "-length": "16",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-SG_Q": "M",
+          "-RE_Q": "M",
+          "-RE_P": "M",
+          "-TMS_Q": "M",
+          "-TMS_P": "M",
+          "-DEBUG": "M"
+        },
+        "T6401": {
+          "-name": "CARD_ADD_HTAC",
+          "-type": "b",
+          "-length": "16",
+          "-AU_P": "C",
+          "-SG_P": "M",
+          "-DEBUG": "M"
+        },
+        "T6402": {
+          "-name": "CTAC",
+          "-type": "b",
+          "-length": "16",
+          "-ADV_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T6403": {
+          "-name": "MAC",
+          "-type": "b",
+          "-length": "8",
+          "-ADV_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T6404": {
+          "-name": "CPU_MAC",
+          "-type": "b",
+          "-length": "32",
+          "-ADV_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T6405": {
+          "-name": "CPU_SIGNATURE",
+          "-type": "b",
+          "-length": "32",
+          "-ADV_Q": "C",
+          "-DEBUG": "M"
+        },
+        "T6406": {
+          "-name": "CPU_TERM_CRYPTOGRAM",
+          "-type": "b",
+          "-length": "32",
+          "-AU_Q": "C",
+          "-VERIFY_Q": "C",
+          "-ADV_Q": "C",
+          "-SG_Q": "C",
+          "-SGADV_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T6407": {
+          "-name": "HOST_CRYPTOGRAM",
+          "-type": "b",
+          "-length": "32",
+          "-VERIFY_P": "C",
+          "-DEBUG": "M"
+        },
+        "T6408": {
+          "-name": "TERM_TOKEN",
+          "-type": "b",
+          "-length": "32",
+          "-SG_Q": "M",
+          "-DEBUG": "M"
+        },
+        "T6409": {
+          "-name": "HOST_TOKEN",
+          "-type": "b",
+          "-length": "32",
+          "-AU_P": "C",
+          "-ADV_P": "C",
+          "-SG_P": "M",
+          "-DEBUG": "M"
+        }
+      }
+    }
+  }
+}

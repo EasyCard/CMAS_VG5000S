@@ -1,0 +1,1280 @@
+{
+  "RESPONSE": {
+    "AP": {
+      "CODE0000": {
+        "-num": "0000",
+        "-action": "OK",
+        "STRING1": "成功"
+      },
+      "CODE0201": {
+        "-num": "0201",
+        "-action": "SYFAILSTEM_INVALIPARA",
+        "STRING1": "無效參數"
+      },
+      "CODE0202": {
+        "-num": "0202",
+        "-action": "FAIL",
+        "STRING1": "系統故障"
+      },
+      "CODE0203": {
+        "-num": "0203",
+        "-action": "FAIL",
+        "STRING1": "缺乏參數"
+      },
+      "CODE2C01": {
+        "-num": "2C01",
+        "-action": "FAIL",
+        "STRING1": "無效參數"
+      },
+      "CODE2C02": {
+        "-num": "2C02",
+        "-action": "FAIL",
+        "STRING1": "無效AP TABLE"
+      },
+      "CODE2C03": {
+        "-num": "2C03",
+        "-action": "FAIL",
+        "STRING1": "找不到AP"
+      },
+      "CODE2C04": {
+        "-num": "2C04",
+        "-action": "FAIL",
+        "STRING1": "無效AP"
+      },
+      "CODE2C05": {
+        "-num": "2C05",
+        "-action": "FAIL",
+        "STRING1": "儲存空間不足"
+      },
+      "CODE2C06": {
+        "-num": "2C06",
+        "-action": "FAIL",
+        "STRING1": "REACH_MAX_NO_AP"
+      },
+      "CODE2C07": {
+        "-num": "2C07",
+        "-action": "FAIL",
+        "STRING1": "NO AP EXECUTED"
+      },
+      "CODE2C08": {
+        "-num": "2C08",
+        "-action": "FAIL",
+        "STRING1": "AP_ZERO_LENGTH"
+      },
+      "CODE2C09": {
+        "-num": "2C09",
+        "-action": "FAIL",
+        "STRING1": "INVALITYPE"
+      },
+      "CODE2C0A": {
+        "-num": "2C0A",
+        "-action": "FAIL",
+        "STRING1": "PM_SHARLIBRARY_OPEN"
+      },
+      "CODE2C0B": {
+        "-num": "2C0B",
+        "-action": "FAIL",
+        "STRING1": "PM_UNEXPECTEERROR"
+      },
+      "CODE2A01": {
+        "-num": "2A01",
+        "-action": "FAIL",
+        "STRING1": "ULINVALIPARA"
+      },
+      "CODE2A02": {
+        "-num": "2A02",
+        "-action": "FAIL",
+        "STRING1": "PORT_OPEN_FAILED"
+      },
+      "CODE2A03": {
+        "-num": "2A03",
+        "-action": "FAIL",
+        "STRING1": "KEY_NOT_RECEIVED"
+      },
+      "CODE2A04": {
+        "-num": "2A04",
+        "-action": "FAIL",
+        "STRING1": "VERIFY_FAILED"
+      },
+      "CODE2A05": {
+        "-num": "2A05",
+        "-action": "FAIL",
+        "STRING1": "ULSIGN_NOT_RECEIVED"
+      },
+      "CODE2A06": {
+        "-num": "2A06",
+        "-action": "FAIL",
+        "STRING1": "ULHEADER_NOT_RECEIVED"
+      },
+      "CODE2A07": {
+        "-num": "2A07",
+        "-action": "FAIL",
+        "STRING1": "ULFILE_NOT_READY"
+      },
+      "CODE2A08": {
+        "-num": "2A08",
+        "-action": "FAIL",
+        "STRING1": "ULRECEIVE_ERROR"
+      },
+      "CODE2A09": {
+        "-num": "2A09",
+        "-action": "FAIL",
+        "STRING1": "ULRECEIVE_TIMEOUT"
+      },
+      "CODE2A0A": {
+        "-num": "2A0A",
+        "-action": "FAIL",
+        "STRING1": "ULTOTAL_TIMEOUT"
+      },
+      "CODE2A0B": {
+        "-num": "2A0B",
+        "-action": "FAIL",
+        "STRING1": "ULLOCKED"
+      },
+      "CODE2A0C": {
+        "-num": "2A0C",
+        "-action": "FAIL",
+        "STRING1": "ULINVALID"
+      },
+      "CODE2A0D": {
+        "-num": "2A0D",
+        "-action": "FAIL",
+        "STRING1": "ULPASSWORINCORRECT"
+      },
+      "CODE2A0E": {
+        "-num": "2A0E",
+        "-action": "FAIL",
+        "STRING1": "ULAP_NOT_EXIST"
+      },
+      "CODE2A40": {
+        "-num": "2A40",
+        "-action": "FAIL",
+        "STRING1": "ULTIMEOUT"
+      },
+      "CODE0E01": {
+        "-num": "0E01",
+        "-action": "FAIL",
+        "STRING1": "ULPASSWORINCORRECT"
+      },
+      "CODE0E02": {
+        "-num": "0E02",
+        "-action": "FAIL",
+        "STRING1": "LEINVALIPARA"
+      },
+      "CODE1F01": {
+        "-num": "1F01",
+        "-action": "FAIL",
+        "STRING1": "BKLIT_NOT_SUPPORT"
+      },
+      "CODE0401": {
+        "-num": "0401",
+        "-action": "FAIL",
+        "STRING1": "TIMER_INVALIPARA"
+      },
+      "CODE0402": {
+        "-num": "0402",
+        "-action": "FAIL",
+        "STRING1": "TIMER_HAL_FAULT"
+      },
+      "CODE0403": {
+        "-num": "0403",
+        "-action": "FAIL",
+        "STRING1": "RTC_INVALIPARA"
+      },
+      "CODE0404": {
+        "-num": "0404",
+        "-action": "FAIL",
+        "STRING1": "RTC_HAL_FAULT"
+      },
+      "CODE1001": {
+        "-num": "1001",
+        "-action": "FAIL",
+        "STRING1": "RTC_INVALIPARA"
+      },
+      "CODE1002": {
+        "-num": "1002",
+        "-action": "FAIL",
+        "STRING1": "RTC_HAL_FAULT"
+      },
+      "CODE0801": {
+        "-num": "0801",
+        "-action": "FAIL",
+        "STRING1": "CRYPTO_INVALIPARA"
+      },
+      "CODE0802": {
+        "-num": "0802",
+        "-action": "FAIL",
+        "STRING1": "CRYPTO_HAL_FAULT"
+      },
+      "CODE0803": {
+        "-num": "0803",
+        "-action": "FAIL",
+        "STRING1": "CRYPTO_RNG_TIMEOUT"
+      },
+      "CODE0A01": {
+        "-num": "0A01",
+        "-action": "FAIL",
+        "STRING1": "RS232_INVALIPARA"
+      },
+      "CODE0A02": {
+        "-num": "0A02",
+        "-action": "FAIL",
+        "STRING1": "RS232_HAL_FAULT"
+      },
+      "CODE0A03": {
+        "-num": "0A03",
+        "-action": "FAIL",
+        "STRING1": "RS232_BUSY"
+      },
+      "CODE0A04": {
+        "-num": "0A04",
+        "-action": "FAIL",
+        "STRING1": "RS232_NOT_OPEN"
+      },
+      "CODE0A05": {
+        "-num": "0A05",
+        "-action": "FAIL",
+        "STRING1": "RS232_NOT_SUPPORT"
+      },
+      "CODE4201": {
+        "-num": "4201",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_INVALIPARA"
+      },
+      "CODE4202": {
+        "-num": "4202",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_NOT_OPEN"
+      },
+      "CODE4203": {
+        "-num": "4203",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_NOT_ONLINE"
+      },
+      "CODE4204": {
+        "-num": "4204",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_TIMEOUT"
+      },
+      "CODE4205": {
+        "-num": "4205",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_INSUFFICIENT_CMBUF"
+      },
+      "CODE4206": {
+        "-num": "4206",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_CMINVALIRESPONSE"
+      },
+      "CODE4207": {
+        "-num": "4208",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_CMNOT_SUCCESS"
+      },
+      "CODE4208": {
+        "-num": "4208",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_TX_BUSY"
+      },
+      "CODE4209": {
+        "-num": "4209",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_NOT_SUPPORTED"
+      },
+      "CODE420A": {
+        "-num": "420A",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_NOT_DATA_MODE"
+      },
+      "CODE420B": {
+        "-num": "420B",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_SOCKET_ALREADYOPENED"
+      },
+      "CODE420C": {
+        "-num": "420C",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_ALREADY_OPENED"
+      },
+      "CODE420D": {
+        "-num": "420D",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_HARDWARE_ERROR"
+      },
+      "CODE420E": {
+        "-num": "420E",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_GDB_RUNNING"
+      },
+      "CODE4214": {
+        "-num": "4214",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_DNS_INVALIFORMAT"
+      },
+      "CODE4215": {
+        "-num": "4215",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_DNS_SERVER_FAILURE"
+      },
+      "CODE4216": {
+        "-num": "4216",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_DNS_REQUEST_NOT_EXIST"
+      },
+      "CODE4217": {
+        "-num": "4217",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_DNS_SERVER_REFUSED"
+      },
+      "CODE4218": {
+        "-num": "4218",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_DNS_SERVER_REFUSED"
+      },
+      "CODE4219": {
+        "-num": "4219",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_NOT_OPEN"
+      },
+      "CODE421A": {
+        "-num": "421A",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_GETDIR_FAILED"
+      },
+      "CODE421B": {
+        "-num": "421B",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_CHANGEDIR_FAILED"
+      },
+      "CODE421C": {
+        "-num": "421C",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_LIST_NOT_READY"
+      },
+      "CODE421D": {
+        "-num": "421D",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_BUSY"
+      },
+      "CODE421E": {
+        "-num": "421E",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_REQUEST_PASSWORD"
+      },
+      "CODE421F": {
+        "-num": "421F",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_LOGIN_FAILED"
+      },
+      "CODE4220": {
+        "-num": "4220",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_RESPONSE_TIMEOUT"
+      },
+      "CODE4222": {
+        "-num": "4222",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_DATACONN_FAILED"
+      },
+      "CODE4223": {
+        "-num": "4223",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_RECONNETION_FAILED"
+      },
+      "CODE4224": {
+        "-num": "4224",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_DOWNLOADFILE_FAILED"
+      },
+      "CODE4225": {
+        "-num": "4225",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_FTP_UPLOADFILE_FAILED"
+      },
+      "CODE4226": {
+        "-num": "4226",
+        "-action": "FAIL",
+        "STRING1": "ETHERNET_NOT_ENABLE"
+      },
+      "CODE9999": {
+        "-num": "9999",
+        "-action": "FAIL",
+        "STRING1": "失敗"
+      },
+      "CODE9998": {
+        "-num": "9998",
+        "-action": "FAIL",
+        "STRING1": "讀取tag失敗"
+      },
+      "CODE9997": {
+        "-num": "9997",
+        "-action": "FAIL",
+        "STRING1": "檔案不存在"
+      },
+      "CODE9996": {
+        "-num": "9996",
+        "-action": "FAIL",
+        "STRING1": "檔案長度錯誤"
+      },
+      "CODE9995": {
+        "-num": "9995",
+        "-action": "FAIL",
+        "STRING1": "檔案讀取失敗"
+      },
+      "CODE9994": {
+        "-num": "9994",
+        "-action": "FAIL",
+        "STRING1": "檔案寫入失敗"
+      },
+      "CODE9993": {
+        "-num": "9993",
+        "-action": "FAIL",
+        "STRING1": "檔案無法開啟"
+      },
+      "CODE9992": {
+        "-num": "9992",
+        "-action": "FAIL"
+      },
+      "CODE9991": {
+        "-num": "9991",
+        "-action": "FAIL"
+      },
+      "CODE9990": {
+        "-num": "9990",
+        "-action": "FAIL"
+      },
+      "CODE9989": {
+        "-num": "9989",
+        "-action": "FAIL",
+        "STRING1": "SSL憑證錯誤"
+      },
+      "CODE9988": {
+        "-num": "9988",
+        "-action": "FAIL",
+        "STRING1": "SSL連線無法建立"
+      },
+      "CODE9987": {
+        "-num": "9987",
+        "-action": "FAIL",
+        "STRING1": "SSL無效憑證"
+      },
+      "CODE9986": {
+        "-num": "9986",
+        "-action": "FAIL",
+        "STRING1": "使用者取消操作"
+      },
+      "CODE9985": {
+        "-num": "9985",
+        "-action": "FAIL",
+        "STRING1": "無自動加值功能"
+      },
+      "CODE9984": {
+        "-num": "9984",
+        "-action": "FAIL",
+        "STRING1": "卡片餘額不足"
+      },
+      "CODE9983": {
+        "-num": "9983",
+        "-action": "FAIL",
+        "STRING1": "不允許自動加值"
+      },
+      "CODE9982": {
+        "-num": "9982",
+        "-action": "FAIL",
+        "STRING1": "不需要自動加值"
+      },
+      "CODE9981": {
+        "-num": "9981",
+        "-action": "FAIL",
+        "STRING1": "密碼錯誤"
+      },
+      "CODE9980": {
+        "-num": "9980",
+        "-action": "FAIL",
+        "STRING1": "XML解析失敗"
+      },
+      "CODE9979": {
+        "-num": "9979",
+        "-action": "FAIL",
+        "STRING1": "主機回應:鎖卡"
+      },
+      "CODE9978": {
+        "-num": "9978",
+        "-action": "FAIL",
+        "STRING1": "主機回應:拒絕"
+      },
+      "CODE9977": {
+        "-num": "9977",
+        "-action": "FAIL",
+        "STRING1": "主機回應:中斷"
+      },
+      "CODE9976": {
+        "-num": "9976",
+        "-action": "FAIL",
+        "STRING1": "主機回應:請重開機"
+      },
+      "CODE9975": {
+        "-num": "9975",
+        "-action": "FAIL",
+        "STRING1": "主機回應:安全問題"
+      },
+      "CODE9974": {
+        "-num": "9974",
+        "-action": "FAIL",
+        "STRING1": "主機回應:SIGN ON"
+      },
+      "CODE9973": {
+        "-num": "9973",
+        "-action": "FAIL",
+        "STRING1": "讀取RTC時間失敗"
+      },
+      "CODE9972": {
+        "-num": "9972",
+        "-action": "FAIL",
+        "STRING1": "建立目錄失敗"
+      },
+      "CODE9971": {
+        "-num": "9971",
+        "-action": "FAIL",
+        "STRING1": "COM通訊接收錯誤"
+      },
+      "CODE9970": {
+        "-num": "9970",
+        "-action": "WARNING",
+        "STRING1": "讀卡機無回應",
+        "STRING2": "請檢查讀卡機"
+      },
+      "CODE9969": {
+        "-num": "9969",
+        "-action": "WARNING",
+        "STRING1": "發送APDU錯誤"
+      },
+      "CODE9968": {
+        "-num": "9968",
+        "-action": "WARNING",
+        "STRING1": "RS232無法開啟"
+      },
+      "CODE9967": {
+        "-num": "9967",
+        "-action": "FAIL",
+        "STRING1": "參數錯誤"
+      },
+      "CODE9966": {
+        "-num": "9966",
+        "-action": "FAIL"
+      },
+      "CODE9965": {
+        "-num": "9965",
+        "-action": "FAIL",
+        "STRING1": "資料讀取失敗"
+      },
+      "CODE9964": {
+        "-num": "9964",
+        "-action": "FAIL",
+        "STRING1": "批次已滿",
+        "STRING2": "請先結帳"
+      },
+      "CODE9963": {
+        "-num": "9963",
+        "-action": "FAIL"
+      },
+      "CODE9962": {
+        "-num": "9962",
+        "-action": "FAIL"
+      },
+      "CODE9961": {
+        "-num": "9961",
+        "-action": "FAIL",
+        "STRING1": "不需更新參數"
+      },
+      "CODE9960": {
+        "-num": "9960",
+        "-action": "FAIL",
+        "STRING1": "找不到TAG"
+      },
+      "CODE9959": {
+        "-num": "9959",
+        "-action": "FAIL",
+        "STRING1": "參數無效"
+      },
+      "CODE9958": {
+        "-num": "9958",
+        "-action": "FAIL",
+        "STRING1": "錯誤訊息"
+      },
+      "CODE9957": {
+        "-num": "9957",
+        "-action": "FAIL",
+        "STRING1": "網路接收逾時"
+      },
+      "CODE9956": {
+        "-num": "9956",
+        "-action": "FAIL",
+        "STRING1": "尚有交易資料",
+        "STRING2": "請先結帳"
+      },
+      "CODE9955": {
+        "-num": "9955",
+        "-action": "FAIL",
+        "STRING1": "找不到對應交易資料"
+      },
+      "CODE9954": {
+        "-num": "9954",
+        "-action": "FAIL",
+        "STRING1": "讀卡機有變動",
+        "STRING2": "請確認!!"
+      },
+      "CODE9953": {
+        "-num": "9953",
+        "-action": "FAIL",
+        "STRING1": "請重試"
+      },
+      "CODE9952": {
+        "-num": "9952",
+        "-action": "FAIL",
+        "STRING1": "找不到交易"
+      },
+      "CODE9951": {
+        "-num": "9951",
+        "-action": "FAIL",
+        "STRING1": "主機回應錯誤"
+      },
+      "CODE9950": {
+        "-num": "9950",
+        "-action": "FAIL",
+        "STRING1": "未設定密碼，無法交易",
+        "STRING2": "請報修!!"
+      },
+      "CODE9949": {
+        "-num": "9949",
+        "-action": "FAIL",
+        "STRING1": "系統錯誤",
+        "STRING2": "請報修!!"
+      }
+    },
+    "CMAS": {
+      "-name": "錯誤代碼",
+      "CODE00": {
+        "-num": "00",
+        "-action": "OK",
+        "STRING1": "00訊息處理成功"
+      },
+      "CODE03": {
+        "-num": "03",
+        "-action": "REJECT",
+        "STRING1": "不合法的端末設備"
+      },
+      "CODE04": {
+        "-num": "04",
+        "-action": "LOCK",
+        "STRING1": "卡片沒收"
+      },
+      "CODE05": {
+        "-num": "05",
+        "-action": "REJECT",
+        "STRING1": "卡片驗證碼錯誤"
+      },
+      "CODE12": {
+        "-num": "12",
+        "-action": "REJECT",
+        "STRING1": "交易不合法"
+      },
+      "CODE13": {
+        "-num": "13",
+        "-action": "REJECT",
+        "STRING1": "金額不合法"
+      },
+      "CODE14": {
+        "-num": "14",
+        "-action": "REJECT",
+        "STRING1": "卡號不合法"
+      },
+      "CODE15": {
+        "-num": "15",
+        "-action": "REJECT",
+        "STRING1": "無此發卡業者"
+      },
+      "CODE19": {
+        "-num": "19",
+        "-action": "RETRY",
+        "STRING1": "交易重複"
+      },
+      "CODE25": {
+        "-num": "25",
+        "-action": "REJECT",
+        "STRING1": "無法取得資料"
+      },
+      "CODE30": {
+        "-num": "30",
+        "-action": "REJECT",
+        "STRING1": "訊息格式檢察錯誤"
+      },
+      "CODE41": {
+        "-num": "41",
+        "-action": "REJECT",
+        "STRING1": "遺失卡"
+      },
+      "CODE51": {
+        "-num": "51",
+        "-action": "REJECT",
+        "STRING1": "額度不足"
+      },
+      "CODE54": {
+        "-num": "54",
+        "-action": "REJECT",
+        "STRING1": "卡片過期"
+      },
+      "CODE55": {
+        "-num": "55",
+        "-action": "REJECT",
+        "STRING1": "無須展期"
+      },
+      "CODE57": {
+        "-num": "57",
+        "-action": "REJECT",
+        "STRING1": "持卡人交易不被允許"
+      },
+      "CODE58": {
+        "-num": "58",
+        "-action": "REJECT",
+        "STRING1": "端末設備交易不被允許"
+      },
+      "CODE59": {
+        "-num": "59",
+        "-action": "REJECT",
+        "STRING1": "端末設備不合法"
+      },
+      "CODE61": {
+        "-num": "61",
+        "-action": "REJECT",
+        "STRING1": "超過金額上限"
+      },
+      "CODE64": {
+        "-num": "64",
+        "-action": "REJECT",
+        "STRING1": "安全檢查錯誤"
+      },
+      "CODE65": {
+        "-num": "65",
+        "-action": "REJECT",
+        "STRING1": "超過次數上限"
+      },
+      "CODE76": {
+        "-num": "76",
+        "-action": "REJECT",
+        "STRING1": "無法找到原始交易"
+      },
+      "CODE77": {
+        "-num": "77",
+        "-action": "REJECT",
+        "STRING1": "交易內容不一致"
+      },
+      "CODE91": {
+        "-num": "91",
+        "-action": "REJECT",
+        "STRING1": "後端主機",
+        "STRING2": "不在服務狀態"
+      },
+      "CODE92": {
+        "-num": "92",
+        "-action": "REJECT",
+        "STRING1": "交易逾時"
+      },
+      "CODE96": {
+        "-num": "96",
+        "-action": "REJECT",
+        "STRING1": "系統發生異常",
+        "STRING2": "或資料內容有誤"
+      },
+      "CODE97": {
+        "-num": "97",
+        "-action": "REJECT",
+        "STRING1": "Call DES error"
+      },
+      "CODE98": {
+        "-num": "98",
+        "-action": "REJECT",
+        "STRING1": "悠遊卡扣款失敗",
+        "STRING2": "但auto-load成功"
+      },
+      "CODE99": {
+        "-num": "99",
+        "-action": "REJECT",
+        "STRING1": "讀寫檔案錯誤"
+      }
+    },
+    "READER": {
+      "CODE9970": {
+        "-num": "9970",
+        "-action": "WARNING",
+        "STRING1": "讀卡機無回應",
+        "STRING2": "請檢查讀卡機"
+      },
+      "CODE9969": {
+        "-num": "9969",
+        "-action": "WARNING",
+        "STRING1": "讀卡機發送錯誤",
+        "STRING2": "請檢查讀卡機"
+      },
+      "CODE9968": {
+        "-num": "9968",
+        "-action": "WARNING",
+        "STRING1": "讀卡機連線錯誤",
+        "STRING2": "請檢查讀卡機"
+      },
+      "CODE9000": {
+        "-num": "9000",
+        "-action": "OK",
+        "STRING1": "執行成功"
+      },
+      "CODE6001": {
+        "-num": "6001",
+        "-action": "ABORT",
+        "STRING1": "CLA, INS ERROR"
+      },
+      "CODE6002": {
+        "-num": "6002",
+        "-action": "ABORT",
+        "STRING1": "P1, P2 ERROR"
+      },
+      "CODE6003": {
+        "-num": "6003",
+        "-action": "ABORT",
+        "STRING1": "LC, LE ERROR"
+      },
+      "CODE6004": {
+        "-num": "6004",
+        "-action": "ABORT",
+        "STRING1": "CHECK SUM ERROR"
+      },
+      "CODE6005": {
+        "-num": "6005",
+        "-action": "ABORT",
+        "STRING1": "DATA ERROR"
+      },
+      "CODE6088": {
+        "-num": "6088",
+        "-action": "RETRY",
+        "STRING1": "線路不良／Time Out"
+      },
+      "CODE6101": {
+        "-num": "6101",
+        "-action": "REJECT",
+        "STRING1": "票卡不適用",
+        "STRING2": "(AID Error)"
+      },
+      "CODE6102": {
+        "-num": "6102",
+        "-action": "REJECT",
+        "STRING1": "Issuer Code Error"
+      },
+      "CODE6103": {
+        "-num": "6103",
+        "-action": "LOCK",
+        "STRING1": "CPD Error"
+      },
+      "CODE6104": {
+        "-num": "6104",
+        "-action": "REJECT",
+        "STRING1": "未開卡之票卡",
+        "STRING2": "票卡狀態不符"
+      },
+      "CODE6105": {
+        "-num": "6105",
+        "-action": "REJECT",
+        "STRING1": "主要票值格式錯誤"
+      },
+      "CODE6106": {
+        "-num": "6106",
+        "-action": "REJECT",
+        "STRING1": "備份票值格式錯誤"
+      },
+      "CODE6107": {
+        "-num": "6107",
+        "-action": "REJECT",
+        "STRING1": "電子票值格式錯誤"
+      },
+      "CODE6108": {
+        "-num": "6108",
+        "-action": "REJECT",
+        "STRING1": "票卡過期"
+      },
+      "CODE6109": {
+        "-num": "6109",
+        "-action": "REJECT",
+        "STRING1": "票卡已鎖卡"
+      },
+      "CODE610A": {
+        "-num": "610A",
+        "-action": "REJECT",
+        "STRING1": "票卡內檢核碼錯誤"
+      },
+      "CODE610B": {
+        "-num": "610B",
+        "-action": "REJECT",
+        "STRING1": "Two FAT Error"
+      },
+      "CODE610C": {
+        "-num": "610C",
+        "-action": "REJECT",
+        "STRING1": "FAT Content Error"
+      },
+      "CODE610D": {
+        "-num": "610D",
+        "-action": "REJECT",
+        "STRING1": "票卡起始日期未到"
+      },
+      "CODE610E": {
+        "-num": "610E",
+        "-action": "REJECT",
+        "STRING1": "CTC或TSQN",
+        "STRING2": "超出限制"
+      },
+      "CODE610F": {
+        "-num": "610F",
+        "-action": "REJECT",
+        "STRING1": " Mifare Locked",
+        "STRING2": "(6999)"
+      },
+      "CODE6111": {
+        "-num": "6111",
+        "-action": "REJECT",
+        "STRING1": "未先正確執行CPU卡",
+        "STRING2": "上一步驟",
+        "STRING3": "或CPU卡驗證失敗"
+      },
+      "CODE6201": {
+        "-num": "6201",
+        "-action": "ABORT",
+        "STRING1": "找不到卡片"
+      },
+      "CODE6202": {
+        "-num": "6202",
+        "-action": "ABORT",
+        "STRING1": "讀卡失敗"
+      },
+      "CODE6203": {
+        "-num": "6203",
+        "-action": "ABORT",
+        "STRING1": "寫卡失敗"
+      },
+      "CODE6204": {
+        "-num": "6204",
+        "-action": "ABORT",
+        "STRING1": "多張卡"
+      },
+      "CODE6205": {
+        "-num": "6205",
+        "-action": "ABORT",
+        "STRING1": "RC531 ",
+        "STRING2": "load key失敗"
+      },
+      "CODE6206": {
+        "-num": "6206",
+        "-action": "ABORT",
+        "STRING1": "RC531 Auth失敗"
+      },
+      "CODE6207": {
+        "-num": "6207",
+        "-action": "ABORT",
+        "STRING1": "CPU卡Record not found",
+        "STRING2": "超出範圍"
+      },
+      "CODE6208": {
+        "-num": "6208",
+        "-action": "ABORT",
+        "STRING1": "CPU卡Record不支援",
+        "STRING2": "MAC或MAC錯誤"
+      },
+      "CODE6301": {
+        "-num": "6301",
+        "-action": "REBOOT",
+        "STRING1": "SAM認證失敗"
+      },
+      "CODE6302": {
+        "-num": "6302",
+        "-action": "REBOOT",
+        "STRING1": "未先正確執行",
+        "STRING2": "SAM上一步驟"
+      },
+      "CODE6303": {
+        "-num": "6303",
+        "-action": "REBOOT",
+        "STRING1": "無SAM卡"
+      },
+      "CODE6304": {
+        "-num": "6304",
+        "-action": "SIGNON",
+        "STRING1": "未先下PR_Reset",
+        "STRING2": "/PPR_Reset"
+      },
+      "CODE6305": {
+        "-num": "6305",
+        "-action": "SIGNON",
+        "STRING1": "未先下PR_SignOn",
+        "STRING2": "/PPR_SignOn"
+      },
+      "CODE6306": {
+        "-num": "6306",
+        "-action": "REBOOT",
+        "STRING1": "SAM卡加值額度",
+        "STRING2": "(CA)不足 "
+      },
+      "CODE6307": {
+        "-num": "6307",
+        "-action": "REBOOT",
+        "STRING1": "舊SAM卡異常"
+      },
+      "CODE6308": {
+        "-num": "6308",
+        "-action": "REBOOT",
+        "STRING1": "需再執行端末驗證",
+        "STRING2": "以更新SAM參數"
+      },
+      "CODE6309": {
+        "-num": "6309",
+        "-action": "REBOOT",
+        "STRING1": "新SAM卡異常"
+      },
+      "CODE630A": {
+        "-num": "630A",
+        "-action": "REBOOT",
+        "STRING1": "新舊SAM卡皆異常"
+      },
+      "CODE630B": {
+        "-num": "630B",
+        "-action": "REBOOT",
+        "STRING1": "STC超出限制"
+      },
+      "CODE630C": {
+        "-num": "630C",
+        "-action": "REBOOT",
+        "STRING1": "SAM卡不支援該功能"
+      },
+      "CODE6401": {
+        "-num": "6401",
+        "-action": "REJECT",
+        "STRING1": "取消交易",
+        "STRING2": "與上一筆交易不符"
+      },
+      "CODE6402": {
+        "-num": "6402",
+        "-action": "REJECT",
+        "STRING1": "交易金額超過額度"
+      },
+      "CODE6403": {
+        "-num": "6403",
+        "-action": "REJECT",
+        "STRING1": "餘額不足"
+      },
+      "CODE6404": {
+        "-num": "6404",
+        "-action": "REJECT",
+        "STRING1": "卡號錯誤"
+      },
+      "CODE6405": {
+        "-num": "6405",
+        "-action": "REJECT",
+        "STRING1": "H-TAC內容認證錯誤 ",
+        "STRING2": "load key失敗"
+      },
+      "CODE6406": {
+        "-num": "6406",
+        "-action": "REJECT",
+        "STRING1": "禁用名單",
+        "STRING2": "展期異動名單票卡"
+      },
+      "CODE6407": {
+        "-num": "6407",
+        "-action": "REJECT",
+        "STRING1": "非社福卡不需展期"
+      },
+      "CODE6408": {
+        "-num": "6408",
+        "-action": "REJECT",
+        "STRING1": "HOST判斷不需展期"
+      },
+      "CODE6409": {
+        "-num": "6409",
+        "-action": "REJECT",
+        "STRING1": "自動加值旗標未啟用"
+      },
+      "CODE640A": {
+        "-num": "640A",
+        "-action": "REJECT",
+        "STRING1": "票卡自動加值金額為零"
+      },
+      "CODE640B": {
+        "-num": "640B",
+        "-action": "REJECT",
+        "STRING1": "所查詢的該筆扣值",
+        "STRING2": "Log資料不存在"
+      },
+      "CODE640C": {
+        "-num": "640C",
+        "-action": "REJECT",
+        "STRING1": "累計小額消費(購貨)",
+        "STRING2": "金額超出日限額"
+      },
+      "CODE640D": {
+        "-num": "640D",
+        "-action": "REJECT",
+        "STRING1": "單次小額消費(購貨)",
+        "STRING2": "金額超出次限額"
+      },
+      "CODE640E": {
+        "-num": "640E",
+        "-action": "LOCK",
+        "STRING1": "交易前餘額超出",
+        "STRING2": "最後一次加值後餘額"
+      },
+      "CODE640F": {
+        "-num": "640F",
+        "-action": "LOCK",
+        "STRING1": "Reader累計加值金額",
+        "STRING2": "超出額度管控限制"
+      },
+      "CODE6410": {
+        "-num": "6410",
+        "-action": "REJECT",
+        "STRING1": "票卡不適用",
+        "STRING2": "（非普通卡）"
+      },
+      "CODE6411": {
+        "-num": "6411",
+        "-action": "REJECT",
+        "STRING1": "票卡押金不符",
+        "STRING2": "（押金非100）"
+      },
+      "CODE6412": {
+        "-num": "6412",
+        "-action": "REJECT",
+        "STRING1": "超過通路退卡",
+        "STRING2": "交易額度(餘額>1000)"
+      },
+      "CODE6413": {
+        "-num": "6413",
+        "-action": "REJECT",
+        "STRING1": "製卡日未滿三個月"
+      },
+      "CODE6414": {
+        "-num": "6414",
+        "-action": "REJECT",
+        "STRING1": "卡片使用次數",
+        "STRING2": "未滿五次"
+      },
+      "CODE6415": {
+        "-num": "6415",
+        "-action": "REJECT",
+        "STRING1": "需執行交易合法驗證"
+      },
+      "CODE6416": {
+        "-num": "6416",
+        "-action": "REJECT",
+        "STRING1": "自動加值旗標已啟用"
+      },
+      "CODE6417": {
+        "-num": "6417",
+        "-action": "REJECT",
+        "STRING1": "票卡已開卡"
+      },
+      "CODE6418": {
+        "-num": "6418",
+        "-action": "REJECT",
+        "STRING1": "票卡於此通路",
+        "STRING2": "限制使用"
+      },
+      "CODE6419": {
+        "-num": "6419",
+        "-action": "REJECT",
+        "STRING1": "CPU卡票卡狀態",
+        "STRING2": "不適用此交易"
+      },
+      "CODE641A": {
+        "-num": "641A",
+        "-action": "REJECT",
+        "STRING1": "PPR_SignOn",
+        "STRING2": "檢核碼(EDC)錯誤"
+      },
+      "CODE641B": {
+        "-num": "641B",
+        "-action": "REJECT",
+        "STRING1": "交易欄位資料",
+        "STRING2": "不適用此交易(CPU卡)"
+      },
+      "CODE641C": {
+        "-num": "641C",
+        "-action": "REJECT",
+        "STRING1": "交易欄位資料",
+        "STRING2": "不適用此交易(SAM卡)"
+      },
+      "CODE641D": {
+        "-num": "641D",
+        "-action": "REJECT",
+        "STRING1": "超出離線",
+        "STRING2": "自動加值日限次"
+      },
+      "CODE641E": {
+        "-num": "641E",
+        "-action": "REJECT",
+        "STRING1": "VAR-押碼檢查失敗"
+      },
+      "CODE6501": {
+        "-num": "6501",
+        "-action": "SECURTERR",
+        "STRING1": "Key Locked"
+      },
+      "CODE6502": {
+        "-num": "6502",
+        "-action": "SECURTERR",
+        "STRING1": "Key No Initial"
+      },
+      "CODE6503": {
+        "-num": "6503",
+        "-action": "SECURTERR",
+        "STRING1": "RAM Error"
+      },
+      "CODE6504": {
+        "-num": "6504",
+        "-action": "SECURTERR",
+        "STRING1": "Flash Failed",
+        "STRING2": "/PPR_Reset"
+      },
+      "CODE6505": {
+        "-num": "6505",
+        "-action": "SECURTERR",
+        "STRING1": "SAM使用次數已達上限",
+        "STRING2": "/PPR_SignOn"
+      },
+      "CODE6506": {
+        "-num": "6506",
+        "-action": "SECURTERR",
+        "STRING1": "SAM使用次數異常有誤",
+        "STRING2": "(CA)不足 "
+      },
+      "CODE6507": {
+        "-num": "6507",
+        "-action": "SECURTERR",
+        "STRING1": "CPU卡TXN",
+        "STRING2": "Key Selection Error"
+      },
+      "CODE6508": {
+        "-num": "6508",
+        "-action": "SECURTERR",
+        "STRING1": "CPU卡Signature",
+        "STRING2": "Key Selection Error"
+      },
+      "CODE6509": {
+        "-num": "6509",
+        "-action": "SECURTERR",
+        "STRING1": "SAM卡",
+        "STRING2": "Key Selection Error"
+      },
+      "CODE65FF": {
+        "-num": "65FF",
+        "-action": "SECURTERR",
+        "STRING1": "線路遭到攻擊破壞"
+      }
+    }
+  }
+}
