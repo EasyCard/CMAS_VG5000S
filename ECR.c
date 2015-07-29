@@ -246,6 +246,7 @@ int inEcrSettingInterface(void* p1) {
         //backup orig settings
         if(updateApFlag == 1 && oldConfigExist == TRUE)
         {
+            
             for (device = ezxml_child(root, "DEVICE"); device; device = device->next) {
                 deviceName = ezxml_attr(device, "name");
                 if (memcmp(deviceName, "ECR", 3) == 0) {                    

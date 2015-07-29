@@ -1255,19 +1255,22 @@ void fnGetRTCDOSData(BYTE *DOSDate)
   int n_chars;
   char buf[BUFFERSIZE];
   char *folder;
-//  folder=strrchr(destination,'/');
- // folder++;
- //   CreateDir(folder); 
+
+  printf("[%s,%d] copy %s ---> %s\n",__FUNCTION__,__LINE__,source, destination);
+  
   /* open files */
   in_fd = fopen(source, "r");
   if (in_fd == NULL)    
   {
-     SystemLog("Cannot open ", source);
-       return d_ERR_FILE_OPEN;
+      printf("[%s,%d] d_ERR_FILE_OPEN\n",__FUNCTION__,__LINE__);
+     SystemLog("Cannot open ", source);       
+     return d_ERR_FILE_OPEN;
   }
  
   out_fd=fopen(destination, "w+");
+  if (out_fd == NULL) 
   {
+      printf("[%s,%d] d_ERR_FILE_OPEN\n",__FUNCTION__,__LINE__);
        SystemLog("Cannot creat ", destination);
        return d_ERR_FILE_OPEN;
   }
@@ -1276,11 +1279,9 @@ void fnGetRTCDOSData(BYTE *DOSDate)
   /* copy files */
   while(n_chars =fread(buf,1,BUFFERSIZE,in_fd))
   {
-      
-
- 
-    if(fwrite(buf,n_chars,1,out_fd )!= n_chars)  
+    if(fwrite(buf,1,n_chars, out_fd )!= n_chars)  
     {
+        printf("[%s,%d] d_ERR_FILE_READ_FAIL\n",__FUNCTION__,__LINE__);
       SystemLog("Write error to ", destination);
       return d_ERR_FILE_READ_FAIL;
     }
@@ -1288,6 +1289,7 @@ void fnGetRTCDOSData(BYTE *DOSDate)
  
     if( n_chars == -1 )
     {
+        printf("[%s,%d] d_ERR_FILE_READ_FAIL\n",__FUNCTION__,__LINE__);
        SystemLog("Read error to ", source);
       return d_ERR_FILE_READ_FAIL;
     }
@@ -1298,6 +1300,7 @@ void fnGetRTCDOSData(BYTE *DOSDate)
     if( fclose(in_fd) == -1 || fclose(out_fd) == -1 )
     {
       SystemLog("Error closing files", "");
+      printf("[%s,%d] d_ERR_FILE_CLOSE\n",__FUNCTION__,__LINE__);
       return d_ERR_FILE_CLOSE;
     }
  
@@ -1697,6 +1700,15 @@ void CopyFiletoUSB(char *source, char *destination)
    ret= copyFiles(source, destination);
   ret= CTOS_USBSelectMode ( d_USB_DEVICE_MODE );
 }
+
+void copyFileFromUSB(char *source, char *destination)
+{
+  USHORT ret;
+  ret= CTOS_USBSelectMode ( d_USB_HOST_MODE );
+   ret= copyFiles(source, destination);
+  ret= CTOS_USBSelectMode ( d_USB_DEVICE_MODE );
+}
+
 void ezPowerOff()
 {
     int result;

@@ -170,6 +170,8 @@ typedef union
         void dumpByteArrayToHexString(BYTE *, int, BYTE *);
         void PowerSaving(void);
         void CopyFiletoUSB(char *source, char *destination);
+        void copyFileFromUSB(char *source, char *destination);         
+        int copyFiles2(char *source, char *destination);
 #ifdef	__cplusplus
 }
 #endif

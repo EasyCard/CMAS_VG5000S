@@ -33,6 +33,7 @@ USHORT SaveBackupTxData(TRANS_DATA2 *TransData);
 void Debug_SendData(char * title,char * Data,int len);
 USHORT SaveTCPDatatoSD(char* SendFILE,char * ReceiveData,int ReceiveDatalen);
 USHORT FLASHERROR(void);
+USHORT CheckFLASHSTATUS(void);
 #ifdef	__cplusplus
 }
 #endif

@@ -29,6 +29,100 @@ BYTE babuff[d_BUFF_SIZE];
  BYTE baFileBuff[d_BUFF_SIZE];*/
  
 
+void checkEccappToEccapp2(void){
+
+    ULONG size=0;     
+    USHORT ret=0;
+    BYTE filename[]="bkDeviceInfo.txt";
+    ULONG pulFileHandle=0;
+    ret = CTOS_FileGetSize(filename, &size);
+
+    if(ret!=d_OK) {        
+        printf("[%s,%d]\n CTOS_FileGetSize fail:ret=%d",__FUNCTION__,__LINE__,ret);
+        return;
+    }
+    printf("[%s,%d]got file, size=%lu\n",__FUNCTION__,__LINE__,size);
+
+    //ret = CTOS_FileGetSize ("bkDeviceInfo.txt", &size);
+    
+    //copy ECCAPP origSetting
+    ret = CTOS_FileOpenAttrib(filename, d_STORAGE_FLASH, &pulFileHandle, d_FA_PUBLIC);        
+    if(ret != d_OK) printf("[%s,%d]\n CTOS_FileOpenAttrib fail:ret=%d",__FUNCTION__,__LINE__,ret);
+    else printf("[%s,%d] CTOS_FileOpenAttrib OK\n",__FUNCTION__,__LINE__);             
+
+    ret = CTOS_FileSeek(pulFileHandle, 0, d_SEEK_FROM_BEGINNING);                 
+    if(ret != d_OK) printf("[%s,%d]\n CTOS_FileSeek fail:ret=%d",__FUNCTION__,__LINE__,ret);
+    else printf("[%s,%d] CTOS_FileSeek OK\n",__FUNCTION__,__LINE__);                          
+    
+    ULONG expLen = 8+1+10+1+4+1+1;//00010001,0000100001,5909,1
+    ULONG len=expLen;
+    BYTE data[expLen];    
+    ret = CTOS_FileRead(pulFileHandle, data, &len);    
+    if(ret != d_OK || len != expLen) {
+        printf("[%s,%d]\n CTOS_FileRead fail:ret=%d or len=%lu not the same expLen=%lu",__FUNCTION__,__LINE__,ret,len,expLen);
+        return;
+    }else printf("[%s,%d] CTOS_FileRead OK\n",__FUNCTION__,__LINE__);                          
+    if(data[8]!=',' || data[19]!=',' || data[24]!=','){
+        printf("[%s,%d] index 8,9,24 mube be ','\n",__FUNCTION__,__LINE__);
+    }
+    
+    printf("[%s,%d]read data:%s \n",__FUNCTION__,__LINE__,data);
+    
+    //SPID
+    memcpy(gConfig.MERCHANT.MERCHANTID, data, 8);
+    ECC_SetXMLTag(MERCHANTINFO_Path,"MERCHANT","MERCHANTID",gConfig.MERCHANT.MERCHANTID);
+    printf("[%s,%d] now SPID=%s\n",__FUNCTION__,__LINE__,gConfig.MERCHANT.MERCHANTID);
+    //TMLocationID
+    memcpy(gConfig.MERCHANT.STCODE, data+9, 10);
+    ECC_SetXMLTag(MERCHANTINFO_Path,"MERCHANT","STCODE",gConfig.MERCHANT.STCODE);
+    printf("[%s,%d] now TMLocationID=%s\n",__FUNCTION__,__LINE__,gConfig.MERCHANT.STCODE);
+    //Pwd
+    memcpy(gConfig.MERCHANT.PASSWORD, data+20, 4);
+    SetFunctionpPassword("SIGNON",gConfig.MERCHANT.PASSWORD);
+    printf("[%s,%d] now SIGNON PWD=%s\n",__FUNCTION__,__LINE__,gConfig.MERCHANT.PASSWORD);
+    
+    //netWorkMode
+    if(data[25]=='0') sprintf(gConfig.ETHERNET.NETWORKMODE, "INTERNET");
+    else sprintf(gConfig.ETHERNET.NETWORKMODE,"VPN");
+    printf("[%s,%d] now NETWORKMODE=%s\n",__FUNCTION__,__LINE__,gConfig.ETHERNET.NETWORKMODE);
+    
+    //upgrade ECR setting file
+    remove(AROUND_DEVICE_CONFIG);//delete AROUND_DEVICE_CONFIG first, if existed
+
+    BYTE sourcePath[64];
+    BYTE destPath[64];
+    USHORT apIndex=0;
+    ret = CTOS_APFind(APPNAME, &apIndex);
+    if(ret!=d_OK) printf("[%s,%d] CTOS_APFind fail:%d",__FUNCTION__,__LINE__,ret);
+    printf("[%s,%d] %s index=%d",__FUNCTION__,__LINE__,APPNAME,apIndex);
+    
+    sprintf(sourcePath,"/home/ap/pub/%s",AROUND_DEVICE_CONFIG);
+    sprintf(destPath,"/home/ap/%d/%s",apIndex,AROUND_DEVICE_CONFIG);
+    copyFiles2(sourcePath, destPath);
+    
+    
+    
+    
+    FILE *fp2=NULL;
+    fp2 = fopen((char *)destPath,"rb");        
+    if(fp2 ==NULL)        
+    {	        
+        printf("[%s,%d] fopen not found file\n",__FUNCTION__,__LINE__);
+    }else {
+         char buf[1024];
+         memset(buf, 0x00, sizeof(buf));
+         int n_chars =fread(buf,1,1024,fp2);
+         printf("[%s,%d] %s: size=%d, data=%s\n",__FUNCTION__,__LINE__,destPath, n_chars,buf);
+       
+        fclose(fp2);
+        fp2=NULL;
+        printf("[%s,%d] great! file %s existed \n",__FUNCTION__,__LINE__,destPath);       
+    }
+                
+    
+    return;
+}
+
 void Init(void)
 {
   //設定畫面顯示參數
@@ -40,17 +134,7 @@ void Init(void)
   //設定列表顏色深度    
    CTOS_PrinterSetHeatLevel(6);
    
-   /* 2014.04.03, kobe ECR Obj*/
-        int result;   
-        ecrInitial(&ecrObj);
-        if((result = ecrObj.settingInterface(&ecrObj)) == d_OK) 
-        {        
-            if((result = ecrObj.ecrRun(&ecrObj)) != d_OK) 
-                ecrObj.ecrOn=FALSE;                    
-        }
-        else ecrObj.ecrOn=FALSE;
-/* 2014.04.03, kobe ECR Obj end*/        
-  // 讀取 ResponseCode 資料  
+   // 讀取 ResponseCode 資料  
   
    parse_ResponseCode("AP");
    
@@ -79,6 +163,20 @@ void Init(void)
    MechineStatus |= Status_SignOnFail;
    if( CheckFLASHSTATUS()==d_OK)
        MechineStatus |= Status_FLASH_ERROR;
+   
+   //V15, added it for upgrade ECCAPP -> ECCAPP2
+   checkEccappToEccapp2();
+   
+   /* 2014.04.03, kobe ECR Obj*/   
+   int result;           
+   ecrInitial(&ecrObj);        
+   if((result = ecrObj.settingInterface(&ecrObj)) == d_OK)         
+   {                    
+       if((result = ecrObj.ecrRun(&ecrObj)) != d_OK)        
+           ecrObj.ecrOn=FALSE;                            
+   }    
+   else ecrObj.ecrOn=FALSE;     
+   /* 2014.04.03, kobe ECR Obj end*/   
 }
 
 
@@ -95,64 +193,37 @@ void PowerSaving()
        }
     }
 }
+
 /** 
 ** The main entry of the terminal application 
 **/
 int main(int argc,char *argv[])
 {
- USHORT ret;
- int Sleeptime=100*60;//60秒
- int kill_rc;
- //BYTE TEXT[1024*5];
- //myxml_GetXMLTag2(TransFormatFile,"TransFormat",&TEXT);
- //return;
- Init();  
-/*int i; 
-  ret=Eth_SSLConnect_SOCKET(bgNETWORKChannel);
- for(i=0;i<10;i++)
-        ret= Eth_SSLSendandRecv_Socket(bgNETWORKChannel); 
-  return 0;
-*/
-
-//測試用 
-//  ret= ECC_FTPGetFileShowStatusForTest("FTP DOWNLOAD ","211.78.134.167","ftp_edc","123@abc","test_001m.zip", "/out/speedtest/test_001m.zip",1);     
-  
-//   ret= ECC_FTPGetFileShowStatusForTest("FTP DOWNLOAD ","192.168.6.20","ftp_edc","Cmas@2013","test_001m.zip", "/blc/test_001m.zip",1);
-// Ethernet_Check 
-//BarcodeScannerInput();
-//  ret= ECC_FTPGetFileShowStatus_S("192.168.1.100","ftp_edc","123@abc","test_001m.zip", "/blc/test_001m.zip",1);
-//  InitConfigData();   
-//  ret= Process_DownloadTMS(); 
-//  CheckNewVersionAP();  
  
- //  pthread_create(&thread_AfterTxSuccess, NULL, (void *)Process_SendCurrentTxAdvice, NULL);    // 執行緒 SSLSocketConnect 
-   // pthread_t thread;     // 宣告執行緒
-  //  ret=pthread_create(&thread, NULL, &SSLSocketConnect_thread, NULL);    // 執行緒 SSLSocketConnect 
-   ret=Process_ReBootCheckStatus();
+    USHORT ret; 
+    int Sleeptime=100*60;//60秒 
+    int kill_rc;
+
+ 
+    Init();  
+
+
+
+   
+    ret=Process_ReBootCheckStatus();
    //pthread_t thread1;     // 宣告執行緒
    //pthread_create(&thread1, NULL, (void*)ShowDataTime, NULL);    // 執行緒 SSLSocketConnect  
    ShowUPStatusbar();
  
-    if(!ecrObj.ecrOn)// for ECR version, no needed to display warnning
-    {       
-     /*    USHORT TXCount=CheckBatchCount();       
-         if(TXCount>0){
-             ret= ShowMessage3line(gTransTitle,"目前尚有帳務未結","請確認是否需結帳!!","結帳請按<OK>",Type_ComformOK);
-             if(ret==d_OK){
-                 ret= Process_Settle();
-              //  if(usRet!=d_OK) return usRet;
-             }       
-         }*/
-    }
  
    
     init_menudata();
-      ret= SystemLog("SYSTEM","POWER ON");
-      gScrpitTesting=0;
+    ret= SystemLog("SYSTEM","POWER ON");
+    gScrpitTesting=0;
   
      pthread_create(&thread_SendAdvice, NULL, (void *) SendAdvice_Background, NULL);    // 執行緒 SSLSocketConnect   
-     //  CTOS_TimeOutSet(TIMER_ID_1, gSignOnlimit);//20141113, kobe marked it, move to Functin_SignOn
-     //  CTOS_TimeOutSet(TIMER_ID_2, 100*60*1); 
+     
+     
        if(ecrObj.ecrOn)
        {   
            if(ecrObj.autoSignOn) {ecrObj.autoExeSignOn(&ecrObj);}          

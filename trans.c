@@ -451,8 +451,11 @@ USHORT Function_Signon()
           ECC_CheckAPResponseCode(ret);
            //2014.04.07, kobe modified for ECR 
            //ret=UnpackTMSParameter();
-           UnpackTMSParameter();
-           //end
+           
+            ret=UnpackTMSParameter();//2014.07.30, V11fixed bug for Updated AP
+            ret= Process_DownloadTMS();  //2014.07.30, V11fixed bug for Updated AP
+           
+            CheckNewVersionAP();//shit! bruceLin marked it, fxxk...
            
       //     Process_DownloadTMS();
            //CheckNewVersionFile();//2014.07.30, V11 fixed bug for Updated AP
@@ -539,8 +542,10 @@ USHORT Function_Signon_forMaintenance()
            SetRTC((BYTE *)&gTxnData,(BYTE *)&gTxnTime);      
            MechineStatus &= (~(Status_SignOnFail));
             ECC_CheckAPResponseCode(ret);
-           ret= Process_DownloadTMS();  //2014.07.30, V11fixed bug for Updated AP
            ret=UnpackTMSParameter();//2014.07.30, V11fixed bug for Updated AP
+            ret= Process_DownloadTMS();  //2014.07.30, V11fixed bug for Updated AP
+           
+           
          
            CheckNewVersionAP();
  //           CheckNewVersionFile();

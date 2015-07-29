@@ -3336,6 +3336,7 @@ USHORT usUnFormatTMSTag(ezxml_t Tag)
     memset(tmpstr,0x00,sizeof(tmpstr));
 //    if(strlen(Tag->txt)<=1) return d_OK; 
     
+    printf("[%s,%d] unFormat TMS tag:%s\n",__FUNCTION__,__LINE__,Tag->name);
      if(strcmp(Tag->name,"TM05")==0){
       memset(gConfig.ETHERNET.HOST_PRODUCTION.FTP.IP,0x00,sizeof(gConfig.ETHERNET.HOST_PRODUCTION.FTP.IP));   
       memcpy(gConfig.ETHERNET.HOST_PRODUCTION.FTP.IP,Tag->txt,strlen(Tag->txt));
@@ -3551,6 +3552,7 @@ USHORT usUnFormatTMSTag(ezxml_t Tag)
        // SetTXInfo();
         return 0;
     }else if(strcmp(Tag->name,"TM30")==0){
+        printf("[%s,%d] TM30 value:%s\n",__FUNCTION__,__LINE__,Tag->txt);
        if(Tag->txt[0]==0x31)
            SetFunctionSwitch("ADDVALUE",TRUE);
        else
@@ -3915,6 +3917,9 @@ USHORT UnpackTMSParameter()
      if(ret !=d_OK) return  ret;
      ezxml_t ezxml_TMS;
      ezxml_TMS= LoadXMLFile(TMSFILE);
+     
+     printf("[%s,%d] TMS File: %s\n",__FUNCTION__,__LINE__,ezxml_toxml(ezxml_TMS));
+     
      if(ezxml_TMS == NULL){    //找不到tms file 表示無資料更新  
         SystemLog("UnpackTMSParameter","LOAD TMS FILE XML STRUCT FAIL");
          return d_ERR_NOTNEEDUPDATEPARAMETER;
@@ -3932,6 +3937,7 @@ USHORT UnpackTMSParameter()
     int iConfigVerNO=atoi(gConfig.CURRVERSION.PARAMETER);
     //版本號相同 不需更新 delete tms file
 
+    printf("[%s,%d] nowVer:%d , TMSVer:%d\n",__FUNCTION__,__LINE__,iConfigVerNO,iTMSVerNO);
     if(iTMSVerNO==iConfigVerNO||iTMSVerNO==0){ 
         remove(TMSFILE);
         return d_ERR_NOTNEEDUPDATEPARAMETER;
@@ -3960,9 +3966,12 @@ USHORT UnpackTMSParameter()
      sprintf(tmpdata,"%s000000",TMSStartData);
      fngetUnixTimeCnt((BYTE *)&TmsTime,(BYTE *)&tmpdata);
     //尚未生效 暫不更新 不刪檔案
+     
+     printf("[%s,%d] nowTime:%lu, TMSTime:%lu\n",__FUNCTION__,__LINE__,CurrTime, TmsTime);
     if(CurrTime<TmsTime){  
         // tag=tag->sibling;
         //continue;
+        printf("[%s,%d] not yet Timeout to updade TMS para.\n",__FUNCTION__,__LINE__);
         return d_ERR_NOTNEEDUPDATEPARAMETER;
     }
        ret=usUnFormatTMSTag(tag);
