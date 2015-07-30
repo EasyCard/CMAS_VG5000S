@@ -1438,16 +1438,29 @@ USHORT CTOS_WriteFile(STR * Filename,BYTE * Data,ULONG Datelen)
 
   ULONG ulHandle;
   USHORT ret = CTOS_FileOpen(Filename, d_STORAGE_FLASH, &ulHandle);
- // USHORT ret= CTOS_FileOpenAttrib (Filename, d_STORAGE_FLASH, &ulHandle,d_FA_PUBLIC );
- if (ret != d_OK)
-            return ret;
+
+  if(ret == 0x200B) myDebugPrinter(ERROR,"write %s fail d_FS_NOT_OWNER", Filename);
+  printf("[%s,%d] CTOS_WriteFile fileName=%s\n",__FUNCTION__,__LINE__,Filename);
+  if (ret != d_OK){
+     printf("[%s,%d] CTOS_FileOpen fail ret=%d\n",__FUNCTION__,__LINE__,ret);
+     return ret;
+ }
   ret = CTOS_FileSeek(ulHandle ,0 ,d_SEEK_FROM_BEGINNING);
-  if (ret != d_OK)   return ret;
-
+  if (ret != d_OK){
+      myDebugPrinter(ERROR,"CTOS_FileSeek %s fail ret=%d", Filename, ret);
+      printf("[%s,%d] CTOS_FileSeek fail ret=%d\n",__FUNCTION__,__LINE__,ret);
+      return ret;
+  }
   ret = CTOS_FileWrite(ulHandle ,Data ,Datelen);
-  if (ret != d_OK)    return ret;        
-
+  if (ret != d_OK){
+      myDebugPrinter(ERROR,"CTOS_FileWrite %s fail ret=%d", Filename, ret);
+      printf("[%s,%d] CTOS_FileWrite fail ret=%d\n",__FUNCTION__,__LINE__,ret);
+      return ret;        
+  }
   ret=CTOS_FileClose(ulHandle);
+  if(ret!=d_OK){      
+      printf("[%s,%d] CTOS_FileClose fail ret=%d\n",__FUNCTION__,__LINE__,ret);
+  }
   return d_OK;
 }
 
@@ -1742,4 +1755,21 @@ void dumpByteArrayToHexString(BYTE *data, int dataLen, BYTE *subject)
         }
       printf("[%s,%d] %s=>len(%d),%s\n",__FUNCTION__,__LINE__,subject, dataLen,log);
         //end
+}
+
+void deleteOldApp(BYTE *appName){
+
+    USHORT ret = 0;
+    USHORT index=999;
+    ret = CTOS_APFind(appName, &index);
+    if(ret != d_OK) {
+        printf("[%s,%d] got AP index fail ret=%d\n",__FUNCTION__,__LINE__,ret);
+        return;
+    }
+    printf("[%s,%d] oldAPP existed @ index=%d\n",__FUNCTION__,__LINE__,index);
+    
+    ret = CTOS_APDel(index);
+    if(ret != d_OK) myDebugPrinter(WARN, "ECCAPP deleted fail, 請通知維修工程師");
+    
+    return;
 }

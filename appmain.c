@@ -54,7 +54,7 @@ void checkEccappToEccapp2(void){
     if(ret != d_OK) printf("[%s,%d]\n CTOS_FileSeek fail:ret=%d",__FUNCTION__,__LINE__,ret);
     else printf("[%s,%d] CTOS_FileSeek OK\n",__FUNCTION__,__LINE__);                          
     
-    ULONG expLen = 8+1+10+1+4+1+1;//00010001,0000100001,5909,1
+    ULONG expLen = 8+1+10+1+4+1+1+1+1;//00010001,0000100001,5909,1,0
     ULONG len=expLen;
     BYTE data[expLen];    
     ret = CTOS_FileRead(pulFileHandle, data, &len);    
@@ -63,7 +63,7 @@ void checkEccappToEccapp2(void){
         return;
     }else printf("[%s,%d] CTOS_FileRead OK\n",__FUNCTION__,__LINE__);                          
     if(data[8]!=',' || data[19]!=',' || data[24]!=','){
-        printf("[%s,%d] index 8,9,24 mube be ','\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] index 8,9,24,26 mube be ','\n",__FUNCTION__,__LINE__);
     }
     
     printf("[%s,%d]read data:%s \n",__FUNCTION__,__LINE__,data);
@@ -85,6 +85,12 @@ void checkEccappToEccapp2(void){
     if(data[25]=='0') sprintf(gConfig.ETHERNET.NETWORKMODE, "INTERNET");
     else sprintf(gConfig.ETHERNET.NETWORKMODE,"VPN");
     printf("[%s,%d] now NETWORKMODE=%s\n",__FUNCTION__,__LINE__,gConfig.ETHERNET.NETWORKMODE);
+    
+    //remove /home/ap/pub/bkDeviceInfo.txt
+    remove("/home/ap/pub/bkDeviceInfo.txt");
+    
+    //if origAP ECCAPP ecrOn was FALSE, return
+    //if(data[27]=='0') return;
     
     //upgrade ECR setting file
     remove(AROUND_DEVICE_CONFIG);//delete AROUND_DEVICE_CONFIG first, if existed
@@ -108,6 +114,9 @@ void checkEccappToEccapp2(void){
     if(fp2 ==NULL)        
     {	        
         printf("[%s,%d] fopen not found file\n",__FUNCTION__,__LINE__);
+        myDebugPrinter(ERROR,"ECR config missing");
+        
+        
     }else {
          char buf[1024];
          memset(buf, 0x00, sizeof(buf));
@@ -126,7 +135,6 @@ void checkEccappToEccapp2(void){
 void Init(void)
 {
   //設定畫面顯示參數
-   
    init_DisplayConfig();
    CTOS_KBDSetSound(d_ON);
    CTOS_BackLightSet(d_BKLIT_LCD, d_ON);
@@ -204,7 +212,12 @@ int main(int argc,char *argv[])
     int Sleeptime=100*60;//60秒 
     int kill_rc;
 
- 
+    //CTOS_PrinterFline(5);
+    myDebugPrinter(WARN,"app main start, the warnning words just testing printer function working fine or not");
+    //delete ECCAPP
+    deleteOldApp("ECCAPP");
+    
+    //init config
     Init();  
 
 

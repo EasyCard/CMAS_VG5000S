@@ -936,6 +936,7 @@ USHORT Sysinfo2_GetEDCSystemMemoryStatus()
 USHORT Sysinfo2_InitConfigData()
 {
     
+    printf("[%s,%d] Sysinfo2_InitConfigData start",__FUNCTION__,__LINE__);
     Sysinfo2_GetData();
     
     USHORT ret=ConfigFunction_GetData();

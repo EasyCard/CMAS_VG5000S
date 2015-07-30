@@ -741,3 +741,56 @@ USHORT BuildBatchUploadAdviceTxFile(char * filename)
     
       return iCount;
 }
+
+//kobe added for debug
+void myDebugPrinter(int level, const char* fmt, ...)
+{	
+    char szPrintBuffer[1024];
+    char oneLine[64];
+    char levelWords[32];
+    int index=0;
+    int c=0;
+    int i=0;
+    va_list marker;
+    
+    memset(szPrintBuffer, 0x00, sizeof(szPrintBuffer));
+    switch(level){
+    
+        case DEBUG:
+            if(gConfig.sDEBUG.PRINT.ENABLE == FALSE)
+                return;
+            sprintf(levelWords, "!DEBUG!");
+            //index = strlen(szPrintBuffer);
+            break;
+        case WARN:
+            sprintf(levelWords, "!!WARN!!");
+            //index = strlen(szPrintBuffer);
+            break;
+            
+        case ERROR:
+            sprintf(levelWords, "!!!ERROR!!!");
+            //index = strlen(szPrintBuffer);            
+            break;
+        default:
+            return;
+            break;
+    }
+    	
+    
+    va_start( marker, fmt );
+    vsprintf( szPrintBuffer, fmt, marker );    
+    va_end( marker );						
+        
+    index = strlen(szPrintBuffer);
+    c = ((index%30)==0)?index/30:(index/30)+1;//caculate how much loop needed 
+    sprintf(oneLine,"==========%s================",levelWords);
+    CTOS_PrinterPutString(oneLine);
+    for(i=0; i<c; i++){
+        memset(oneLine, 0x00, 64);
+        memcpy(oneLine, szPrintBuffer+(i*30), 30);
+        CTOS_PrinterPutString(oneLine);
+    }
+    CTOS_PrinterPutString("=====================================");
+    CTOS_PrinterFline(64);
+    
+}

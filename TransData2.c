@@ -3584,9 +3584,9 @@ USHORT usUnFormatTMSTag(ezxml_t Tag)
              SetFunctionSwitch("RETURN",FALSE);
        
         if(Tag->txt[7]==0x31)
-           SetFunctionSwitch("SETDATA",TRUE);
+           SetFunctionSwitch("SETVALUE",TRUE);//function.xml tag was 'SETVALUE'
         else
-           SetFunctionSwitch("SETDATA",FALSE);
+           SetFunctionSwitch("SETVALUE",FALSE);
        
         if(Tag->txt[8]==0x31)
            SetFunctionSwitch("AUTOLOADENABLE",TRUE);
@@ -3971,7 +3971,7 @@ USHORT UnpackTMSParameter()
     if(CurrTime<TmsTime){  
         // tag=tag->sibling;
         //continue;
-        printf("[%s,%d] not yet Timeout to updade TMS para.\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] Tag:%s not yet Timeout to updade TMS para.\n",__FUNCTION__,__LINE__,tag->name);
         return d_ERR_NOTNEEDUPDATEPARAMETER;
     }
        ret=usUnFormatTMSTag(tag);

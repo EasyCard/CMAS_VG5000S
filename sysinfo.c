@@ -984,6 +984,7 @@ return d_OK;
 USHORT ConfigFuncion_GetInitData()
 {
     
+    printf("[%s,%d] init function table\n",__FUNCTION__,__LINE__);
    memset(&gConfigFUNCTION,0x00,sizeof(FUNCTION_STRUCT));
   ezxml_t FunctionDATA = ezxml_parse_file(FunctionXML);
   ezxml_t FUNCTION,TYPE;
@@ -994,19 +995,20 @@ USHORT ConfigFuncion_GetInitData()
   TYPE= FUNCTION->child;
   for(i=0;i<20;i++){
               
-                if(TYPE==NULL) break;
-                       memcpy( gConfigFUNCTION.TXFUNCTION[i].TagName,TYPE->name,strlen(TYPE->txt));
-
-                       gConfigFUNCTION.TXFUNCTION[i].enable=atoi(ezxml_child(TYPE, "enable")->txt);
-               
-                       gConfigFUNCTION.TXFUNCTION[i].visible=atoi(ezxml_child(TYPE, "visible")->txt);                
-                    
-                       gConfigFUNCTION.TXFUNCTION[i].needpassword=atoi(ezxml_child(TYPE, "needpassword")->txt);
-             
-                        memcpy( gConfigFUNCTION.TXFUNCTION[i].itemname,ezxml_child(TYPE, "itemname")->txt,strlen(ezxml_child(TYPE, "itemname")->txt));
-             
-                        memcpy( gConfigFUNCTION.TXFUNCTION[i].password,ezxml_child(TYPE, "PASSWORD")->txt,strlen(ezxml_child(TYPE, "PASSWORD")->txt));
-                TYPE= TYPE->sibling;
+      if(TYPE==NULL) {
+          printf("[%s,%d] no tag existed\n",__FUNCTION__,__LINE__);
+          break;
+      }
+      
+      memcpy( gConfigFUNCTION.TXFUNCTION[i].TagName,TYPE->name,strlen(TYPE->txt));
+      gConfigFUNCTION.TXFUNCTION[i].enable=atoi(ezxml_child(TYPE, "enable")->txt);               
+      gConfigFUNCTION.TXFUNCTION[i].visible=atoi(ezxml_child(TYPE, "visible")->txt);                                    
+      gConfigFUNCTION.TXFUNCTION[i].needpassword=atoi(ezxml_child(TYPE, "needpassword")->txt);      
+      memcpy( gConfigFUNCTION.TXFUNCTION[i].itemname,ezxml_child(TYPE, "itemname")->txt,strlen(ezxml_child(TYPE, "itemname")->txt));             
+      memcpy( gConfigFUNCTION.TXFUNCTION[i].password,ezxml_child(TYPE, "PASSWORD")->txt,strlen(ezxml_child(TYPE, "PASSWORD")->txt));
+      printf("[%s,%d] get function Tag:%s, enable:%d\n",__FUNCTION__,__LINE__,gConfigFUNCTION.TXFUNCTION[i].itemname, gConfigFUNCTION.TXFUNCTION[i].enable);
+      
+      TYPE= TYPE->sibling;
           
    } 
     
@@ -1060,6 +1062,7 @@ USHORT SetFunctionSwitch(BYTE * function,BOOL flag)
      }
     
    
+    printf("[%s,%d] not found the same Tag:%s could not set flag\n",__FUNCTION__,__LINE__,function);
      ConfigFunction_GetData();
      return d_OK;
 }
@@ -1129,7 +1132,7 @@ USHORT ConfigFunction_GetData()
        ret= ConfigFuncion_GetInitData();
        if(ret==d_OK){  
              ret= CTOS_WriteFile(FUNCTIONFile,(BYTE *)&gConfigFUNCTION,sizeof(gConfigFUNCTION)); 
-          
+             printf("[%s,%d] write FUNCTIONFile ret=%d\n",__FUNCTION__,__LINE__,ret);
        }
     } 
      return ret;
@@ -1153,10 +1156,14 @@ USHORT CheckConfigFunctionStatus()
   
     ULONG size=0;
     USHORT ret= CTOS_FileGetSize(FUNCTIONFile, &size);
-    if(size!=sizeof( gConfigFUNCTION) )return d_Fail;
+    if(size!=sizeof( gConfigFUNCTION) ){
+        printf("[%s,%d] ret=%d, gotSize=%lu",__FUNCTION__,__LINE__,ret,size);
+        return d_Fail;
+    }
     size=sizeof( FUNCTION_TABLE_STRUCT);
     ret=CTOS_ReadFile(FUNCTIONFile,(BYTE *)&gConfigFUNCTION,&size);
     if(size!=sizeof( FUNCTION_TABLE_STRUCT) )return d_Fail;
+    //setting F1 menu UI, notes by kobe
     GetFunctionSetting();
    return d_OK;     
 }/*

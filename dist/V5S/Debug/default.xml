@@ -3,7 +3,7 @@
 		<PRINT><ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE></PRINT>
 		<FTP>
 			<ENABLE readwrite="rw" type="num" maxlen="1">0</ENABLE>
-			<IP readwrite="rw" type="num" maxlen="15">192.168.6.12</IP>
+			<IP readwrite="rw" type="num" maxlen="15">192.168.1.100</IP>
 			<ID readwrite="rw" type="num" maxlen="30">DEBUG</ID>
 			<PASSWORD readwrite="rw" type="num" maxlen="30">DEBUG</PASSWORD>
 			

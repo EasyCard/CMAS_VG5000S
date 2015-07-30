@@ -34,6 +34,14 @@ void Debug_SendData(char * title,char * Data,int len);
 USHORT SaveTCPDatatoSD(char* SendFILE,char * ReceiveData,int ReceiveDatalen);
 USHORT FLASHERROR(void);
 USHORT CheckFLASHSTATUS(void);
+
+enum LOG_LEVEL{
+    DEBUG,
+    WARN,
+    ERROR
+};
+void myDebugPrinter(int level, const char* fmt, ...);
+
 #ifdef	__cplusplus
 }
 #endif
