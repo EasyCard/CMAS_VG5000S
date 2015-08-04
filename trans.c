@@ -1018,7 +1018,6 @@ USHORT Trans_Deduct()//購貨交易
         if (usRet != d_OK) {
             goto DISCONNECT;
         }
-
     }
 
 
@@ -1488,7 +1487,7 @@ START:
             sprintf(gTransTitle, "購貨-%s", gConfig.TX.AMTTABLE[gSelectTable].NAME);
         }
         gucLCDControlFlag = 1;
-        tstart = CTOS_TickGet();
+        //tstart = CTOS_TickGet();
         usRet = iProcessWaitCard();
         if (usRet != d_OK) {
             if (usRet == d_ERR_USERCANCEL)

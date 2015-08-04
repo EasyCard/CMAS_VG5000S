@@ -288,50 +288,6 @@ USHORT Process_DownloadTMS() {
             ShowMessage3line("下載AP", "", "版本無需更新", "", Type_ComformNONE);
         }
     }
-
-
-    ///////////////////////////////////////////////////////////////////////////////  
-
-    /*
-        TAG_CurrVer= ezxml_get(gConfigDATA,"CURRVERSION",0,"SSL",0,"VERSION",-1);
-        if(TAG_CurrVer ==NULL) {return d_Fail;}
-    
-     
-        TAG_NewVer= ezxml_get(gConfigDATA,"TMS",0,"SSL",0,"VERSION",-1);
-        if(TAG_NewVer ==NULL) {return d_Fail;}
-     
-         ezxml_t TAG_CA;
-         memset(Downloadfile,0x00,sizeof(Downloadfile));
-        if(strcmp(TAG_NewVer->txt,TAG_CurrVer->txt)!=0)     
-         {
-           TAG_CA= ezxml_get(gConfigDATA,"TMS",0,"SSL",0,"FTPPATH",-1);
-           if(TAG_CA ==NULL) {return d_Fail;}
-           sprintf(Downloadfile,"%s",TAG_CA->txt);
-            ShowMessage("下載憑證","DOWNLOADING..",Type_ComformNONE);
-           ret=  ECC_FTPGetFile2(SSLCertFile,Downloadfile );
-            if(ret==0){
-                ULONG lsize=File_GetLen(SSLCertFile);
-                if(lsize<=0){ 
-                    ShowMessage3line("下載AP","","檔案下載失敗","",Type_ComformAnykey);
-                }else{
-           
-                BYTE str1[64],str2[64];
-                sprintf(str1,"版本號:%s",TAG_CA->txt);
-                sprintf(str2,"SIZE:%ld BYTE",lsize);
-                 ShowMessage3line("下載憑證",str1,str2,"DOWNLOAD OK",Type_ComformNONE);
-               TAG_CA= ezxml_get(gConfigDATA,"CURRVERSION",0,"SSL",0,"VERSION",-1);
-               if(TAG_CA ==NULL) {return d_Fail;}
-                ezxml_set_txt(TAG_CA, TAG_NewVer->txt);
-                ret= ECC_WriteXMLFILE(ConfigFile,gConfigDATA);
-                }
-            }else{
-               ShowMessage3line("下載憑證","","版本無需更新","",Type_ComformNONE);
-            }
-         }
-     */
-    ///////////////////////////////////////////////////////////////////////////////  
-    //  ezxml_free(TAG_CA);ezxml_free(TAG_AP);ezxml_free(TAG_CurrVer);ezxml_free(TAG_NewVer);
-
     return ret;
 }
 
@@ -1483,12 +1439,16 @@ USHORT Process_SignOn2(void)//sign on 交易
     do {
         //   while(1){
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         usRet = usInitTxData(TXTYPE_SIGNON); //初始交易資料
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         usRet = ECC_CheckAPResponseCode(usRet);
         if (usRet != d_OK) goto SSL_DISCONNECT;
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         CTOS_LCDGClearCanvas();
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         ShowTitle(gTransTitle);
 
 
@@ -1503,12 +1463,14 @@ USHORT Process_SignOn2(void)//sign on 交易
         sprintf(gTransfer_ReceivedPackCnt, "%08d", ReceivedPackCnt);
         sprintf(gTransfer_SendPackSN, "%08d", SendPackSN);
 
-
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         iret = inPPR_Reset(1);
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         usRet = ECC_CheckReaderResponseCode(iret);
         if (usRet != d_OK) goto SSL_DISCONNECT;
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         //2014.05.26, kobe added it
         //if((usRet = ResetDongle()) != d_OK)
         //    return usRet;
@@ -1516,27 +1478,15 @@ USHORT Process_SignOn2(void)//sign on 交易
         ShowStatusLine("通訊中...");
         remove(SendFile);
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         gTransData.ucTXSTATUS = TransStatus_REQ;
 
-        /*   usRet= ECC_WriteXmlHeader("TransXML",SendFile);
-   
-           vdBuildMessageType2(gTransData.ucTXTYPE,gTransData.ucTXSTATUS,(BYTE *)&gTransData.ucMessageType);//Message Type ID 0100
-    
-           vdBuildProcessingCode2((TRANS_DATA2 *)&gTransData,(BYTE *)&gTransData.ucProcessCode);//Processing Code 0300
- 
-           usRet= usBuildTXREQ(&gTransData,SendFile);
- 
-           usRet= ECC_WriteXmlEND("TransXML",SendFile);          */
-        /*    while(1){
-                    kill_rc = pthread_kill(Thread_Comm,0);
-                    if(kill_rc==ESRCH) break;
-                    ShowMessage2line(gTransTitle,"資料傳輸中..","請稍候。",Type_ComformNONE);
-               }*/
         usRet = Process_TransComm2(&gTransData, 1);
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         usRet = ECC_CheckAPResponseCode(usRet);
         if (usRet != d_OK) goto SSL_DISCONNECT;
-
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
 
 
         ShowStatusLine("已完成");
@@ -1547,16 +1497,10 @@ USHORT Process_SignOn2(void)//sign on 交易
             continue;
         }
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         usRet = ECC_CheckCMASResponseCode(gTransData.ucResponseCode);
         if (usRet != d_OK) goto SSL_DISCONNECT;
 
-
-        /*    
-        if(gDebugFTPFlag){
-            gTransData.ucTXTYPE=TXTYPE_DEBUG;
-            SaveTransData(&gTransData);
-        }
-         */
         TotlePackCnt = atoi(gTransfer_TotlePackCnt);
         SendedPackCnt = atoi(gTransfer_SendedPackCnt);
         ReceivedPackCnt = atoi(gTransfer_ReceivedPackCnt);
@@ -1571,17 +1515,21 @@ USHORT Process_SignOn2(void)//sign on 交易
         ShowLine(0, 40 + 16, Big_Font_Size, "資料傳輸中..", FALSE);
         ShowStatusLine("Reader SignOn...");
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         iret = inPPR_SignOn();
 
         if (iret == 0x6308) {// 2014.08.25, reader 回6308 表示需重作sigon 直接進continue
             usRet = UpdateTransSN();
             continue;
         }
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        
         usRet = ECC_CheckReaderResponseCode(iret);
         if (usRet != d_OK) {
             goto SSL_DISCONNECT;
         }
 
+        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
         usRet = UpdateTransSN();
         //Process_DownloadTMS();  //2014.07.30, V11fixed bug for Updated AP
         //UnpackTMSParameter();   //2014.07.30, V11fixed bug for Updated AP

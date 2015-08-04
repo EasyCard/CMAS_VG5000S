@@ -222,7 +222,7 @@ USHORT usInitTxData(BYTE TXTYPE) {
 
     // usRet=Config_GetData();
     //usRet= Sysinfo2_GetData();
-    usGetCurrTransSN((int*) gTransData.usTXSN);
+    usGetCurrTransSN((int*) &gTransData.usTXSN);
 
     // gTransData.usTXSN=GetTransSn(gConfig.TX.SERIALNO);
     gTransData.ulTerminalInvoiceNum = gTransData.usTXSN;
