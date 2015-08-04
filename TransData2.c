@@ -8,13 +8,13 @@ USHORT CheckDeviceID(BYTE * DeviceID) {
     BYTE *tmpstr;
     memset(buf, 0x00, sizeof (buf));
     BYTE zero[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-    USHORT ret = GetBatchTotal_DevID((BYTE *) & buf);
+    USHORT ret = GetBatchTotal_DevID((BYTE *)buf);
     if (ret != d_OK) return ret;
     if (memcmp(buf, zero, 6) == 0) {
-        usSetCurrBatchDevID2((BYTE *) & gTransData.ucCPUDeviceID);
-        GetBatchTotal_DevID((BYTE *) & buf);
+        usSetCurrBatchDevID2((BYTE *)gTransData.ucCPUDeviceID);
+        GetBatchTotal_DevID((BYTE *)buf);
     }
-    if (memcmp(&buf, DeviceID, 6) != 0)
+    if (memcmp(buf, DeviceID, 6) != 0)
         return d_Fail;
     return d_OK;
 }
@@ -28,9 +28,9 @@ USHORT UpdateSystemInfo() {
 
 
     memset(cpudeviceid, 0x00, sizeof (cpudeviceid));
-    wub_hex_2_str((char *) &gTransData.ucCPUDeviceID, (char *) &cpudeviceid, sizeof (gTransData.ucCPUDeviceID));
+    wub_hex_2_str((char *)gTransData.ucCPUDeviceID, (char *)cpudeviceid, sizeof (gTransData.ucCPUDeviceID));
     USHORT usRet = GetBatchTotal();
-    usRet = CheckDeviceID((BYTE *) & gTransData.ucCPUDeviceID);
+    usRet = CheckDeviceID((BYTE *)gTransData.ucCPUDeviceID);
     if (usRet != d_OK) {
         usRet = ShowMessage3line("系統檢查", "請注意!!", "讀卡機已變更!!", "資料將重新設定。", TYPE_ECR_FORCE_TO_CONFIRM_0);
         if (usRet != d_OK) return;
@@ -58,11 +58,13 @@ USHORT UpdateSystemInfo() {
     //ret= ECC_SetXMLTag3(ConfigFile, "DEVICE","READER","CPU","CPUDEVICEID",cpudeviceid);
     wub_hex_2_str(gTransData.ucReaderFWVersion, ReaderFWVersion, sizeof (gTransData.ucReaderFWVersion));
 
-    sprintf((BYTE *) & gConfig.DEVICE.READER.CPU.CPUDEVICEID, "%s", cpudeviceid);
+    if(memcmp(cpudeviceid,"000000000000", 12)==0)
+        myDebugPrinter(ERROR, "cpudeviceid all zero");
+    sprintf((BYTE *)gConfig.DEVICE.READER.CPU.CPUDEVICEID, "%s", cpudeviceid);
 
     wub_hex_2_str(gTransData.ucDeviceID, deviceid, sizeof (gTransData.ucDeviceID));
 
-    sprintf((BYTE *) & gConfig.DEVICE.READER.MIFARE_DEVICEID, "%s", deviceid);
+    sprintf((BYTE *)gConfig.DEVICE.READER.MIFARE_DEVICEID, "%s", deviceid);
 
     wub_hex_2_str(gTransData.ucReaderSN, ReaderSN, sizeof (gTransData.ucReaderSN));
 
@@ -103,52 +105,64 @@ int inBuildResetOutput_2(int inTxnType, TRANS_DATA2 *Trans, Reset_APDU_In *Dongl
 
 
     Trans->ucHostSpecVersionNo = DongleOut->ucHostSpecVersionNo;
-    memcpy(&Trans->ucReaderSN, &DongleOut->ucReaderID, sizeof (DongleOut->ucReaderID));
-    memcpy(&Trans->ucReaderFWVersion, &DongleOut->ucReaderFWVersion, sizeof (DongleOut->ucReaderFWVersion));
+    memcpy(Trans->ucReaderSN, DongleOut->ucReaderID, sizeof (DongleOut->ucReaderID));
+    memcpy(Trans->ucReaderFWVersion, DongleOut->ucReaderFWVersion, sizeof (DongleOut->ucReaderFWVersion));
 
-    memcpy(&Trans->ucSAMID, &DongleOut->ucSAMID, sizeof (DongleOut->ucSAMID));
-    memcpy(&Trans->ucSAMSN, &DongleOut->ucSAMSN, sizeof (DongleOut->ucSAMSN));
-    memcpy(&Trans->ucSAMCRN, &DongleOut->ucSAMCRN, sizeof (DongleOut->ucSAMCRN));
+    memcpy(Trans->ucSAMID, DongleOut->ucSAMID, sizeof (DongleOut->ucSAMID));
+    memcpy(Trans->ucSAMSN, DongleOut->ucSAMSN, sizeof (DongleOut->ucSAMSN));
+    memcpy(Trans->ucSAMCRN, DongleOut->ucSAMCRN, sizeof (DongleOut->ucSAMCRN));
     // DebugPrint_hex(&DongleOut->ucSAMID,sizeof(DongleOut->ucSAMID),"ucSAMID",DebugMode_TX);          
     //  DebugPrint_hex(&DongleOut->ucSAMSN,sizeof(DongleOut->ucSAMSN),"ucSAMSN",DebugMode_TX);    
     // DebugPrint_hex(&DongleOut->ucSAMCRN,sizeof(DongleOut->ucSAMCRN),"ucSAMCRN",DebugMode_TX); 
 
-    memcpy(&Trans->ucDeviceID, &DongleOut->ucDeviceID, sizeof (DongleOut->ucDeviceID));
+    memcpy(Trans->ucDeviceID, DongleOut->ucDeviceID, sizeof (DongleOut->ucDeviceID));
 
     Trans->ucKeyVersion = DongleOut->ucSAMKeyVersion;
 
-    memcpy(&Trans->ucSTAC, &DongleOut->ucSTAC, sizeof (DongleOut->ucSTAC));
+    memcpy(Trans->ucSTAC, DongleOut->ucSTAC, sizeof (DongleOut->ucSTAC));
     //DebugPrint_hex(&DongleOut->ucSTAC,sizeof(DongleOut->ucSTAC),"ucSTAC",DebugMode_TX);      
-    memcpy(&Trans->ucCPUSAMID, &DongleOut->ucCPUSAMID, sizeof (DongleOut->ucCPUSAMID));
+    memcpy(Trans->ucCPUSAMID, DongleOut->ucCPUSAMID, sizeof (DongleOut->ucCPUSAMID));
     //DebugPrint_hex(&DongleOut->ucCPUSAMID,sizeof(DongleOut->ucCPUSAMID),"ucCPUSAMID",DebugMode_TX);  
 
     //5364
     memcpy(&Trans->CPUSAMINFOData.ucSAMVersion, &DongleOut->ucSAMVersion, sizeof (DongleOut->ucSAMVersion));
-    memcpy(&Trans->CPUSAMINFOData.ucSAMUsageControl, &DongleOut->ucSAMUsageControl, sizeof (DongleOut->ucSAMUsageControl));
+    memcpy(Trans->CPUSAMINFOData.ucSAMUsageControl, DongleOut->ucSAMUsageControl, sizeof (DongleOut->ucSAMUsageControl));
     memcpy(&Trans->CPUSAMINFOData.ucSAMAdminKVN, &DongleOut->ucSAMAdminKVN, sizeof (DongleOut->ucSAMAdminKVN));
     memcpy(&Trans->CPUSAMINFOData.ucSAMIssuerKVN, &DongleOut->ucSAMIssuerKVN, sizeof (DongleOut->ucSAMIssuerKVN));
-    memcpy(&Trans->CPUSAMINFOData.ucTagListTable, &DongleOut->ucTagListTable, sizeof (DongleOut->ucTagListTable));
+    memcpy(Trans->CPUSAMINFOData.ucTagListTable, DongleOut->ucTagListTable, sizeof (DongleOut->ucTagListTable));
 
-    memcpy(&Trans->CPUSAMINFOData.ucSAMIssuerSpecData, &DongleOut->ucSAMIssuerSpecData, sizeof (DongleOut->ucSAMIssuerSpecData));
+    memcpy(Trans->CPUSAMINFOData.ucSAMIssuerSpecData, DongleOut->ucSAMIssuerSpecData, sizeof (DongleOut->ucSAMIssuerSpecData));
     //5365
-    memcpy(&Trans->SAMtransInfoData.ucAuthCreditLimit, &DongleOut->ucAuthCreditLimit, sizeof (DongleOut->ucAuthCreditLimit));
+    memcpy(Trans->SAMtransInfoData.ucAuthCreditLimit, DongleOut->ucAuthCreditLimit, sizeof (DongleOut->ucAuthCreditLimit));
 
-    memcpy(&Trans->SAMtransInfoData.ucAuthCreditBalance, &DongleOut->ucAuthCreditBalance, sizeof (DongleOut->ucAuthCreditBalance));
+    memcpy(Trans->SAMtransInfoData.ucAuthCreditBalance, DongleOut->ucAuthCreditBalance, sizeof (DongleOut->ucAuthCreditBalance));
 
-    memcpy(&Trans->SAMtransInfoData.ucAuthCreditCumulative, &DongleOut->ucAuthCreditCumulative, sizeof (DongleOut->ucAuthCreditCumulative));
+    memcpy(Trans->SAMtransInfoData.ucAuthCreditCumulative, DongleOut->ucAuthCreditCumulative, sizeof (DongleOut->ucAuthCreditCumulative));
     //DebugPrint_hex(&DongleOut->ucAuthCreditCumulative,sizeof(DongleOut->ucAuthCreditCumulative),"ucAuthCreditCumulative");  
-    memcpy(&Trans->SAMtransInfoData.ucAuthCancelCreditCumulative, &DongleOut->ucAuthCancelCreditCumulative, sizeof (DongleOut->ucAuthCancelCreditCumulative));
+    memcpy(Trans->SAMtransInfoData.ucAuthCancelCreditCumulative, DongleOut->ucAuthCancelCreditCumulative, sizeof (DongleOut->ucAuthCancelCreditCumulative));
     //5366	
-    memcpy(&Trans->ucSingleCreditTxnAmtLimit, &DongleOut->ucSingleCreditTxnAmtLimit, sizeof (DongleOut->ucSingleCreditTxnAmtLimit));
+    memcpy(Trans->ucSingleCreditTxnAmtLimit, DongleOut->ucSingleCreditTxnAmtLimit, sizeof (DongleOut->ucSingleCreditTxnAmtLimit));
     //DebugPrint_hex(&DongleOut->ucCPUDeviceID,sizeof(DongleOut->ucCPUDeviceID),"ucCPUDeviceID");  
-    memcpy(&Trans->ucCPUDeviceID, &DongleOut->ucCPUDeviceID, sizeof (DongleOut->ucCPUDeviceID));
-    memcpy(&Trans->ucSTC, &DongleOut->ucSTC, sizeof (DongleOut->ucSTC));
+    memcpy(Trans->ucCPUDeviceID, DongleOut->ucCPUDeviceID, sizeof (DongleOut->ucCPUDeviceID));
+    BYTE temp[6];
+    memset(temp, 0x00, sizeof(temp));
+    if(memcmp(Trans->ucCPUDeviceID, temp, 6)==0){
+        myDebugPrinter(ERROR, "PPR_Reset newDeviceID was all ZERO, dongle output(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)"
+                , DongleOut->ucCPUDeviceID[0]
+                , DongleOut->ucCPUDeviceID[1]
+                , DongleOut->ucCPUDeviceID[2]
+                , DongleOut->ucCPUDeviceID[3]
+                , DongleOut->ucCPUDeviceID[4]
+                , DongleOut->ucCPUDeviceID[5]);
+    }
+    
+    memcpy(Trans->ucSTC, DongleOut->ucSTC, sizeof (DongleOut->ucSTC));
     //DebugPrint_hex(&Trans->ucSTC,sizeof(Trans->ucSTC),"ucSTC",DebugMode_TX);    
-    memcpy(&Trans->ucRSAM, &DongleOut->ucRSAM, sizeof (DongleOut->ucRSAM));
+    memcpy(Trans->ucRSAM, DongleOut->ucRSAM, sizeof (DongleOut->ucRSAM));
     //DebugPrint_hex(&DongleOut->ucRSAM,sizeof(DongleOut->ucRSAM),"ucRSAM",DebugMode_TX);          
-    memcpy(&Trans->ucRHOST, &DongleOut->ucRHOST, sizeof (DongleOut->ucRHOST));
+    memcpy(Trans->ucRHOST, DongleOut->ucRHOST, sizeof (DongleOut->ucRHOST));
     //DebugPrint_hex(&DongleOut->ucRHOST,sizeof(DongleOut->ucRHOST),"ucRHOST");          
-    memcpy(&Trans->ucSATOKEN, &DongleOut->ucSATOKEN, sizeof (DongleOut->ucSATOKEN));
+    memcpy(Trans->ucSATOKEN, DongleOut->ucSATOKEN, sizeof (DongleOut->ucSATOKEN));
     //DebugPrint_hex(&DongleOut->ucSATOKEN,sizeof(DongleOut->ucSATOKEN),"ucSATOKEN",DebugMode_TX);            
     //5369
     Trans->ucSAMSignOnControlFlag = DongleOut->stSAMParameterInfo_t.bSAMSignOnControlFlag4 |

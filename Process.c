@@ -1137,7 +1137,7 @@ USHORT Process_Settle() {
         ret = ShowMessage2line(gTransTitle, "尚有交易未上傳", "請重試結帳!!", Type_ComformOK);
         //return d_OK;
         //CTOS_PrinterPutString("ECR_TRY_SETTLE_AGAIN");
-        return ECR_TRY_SETTLE_AGAIN;        
+        return ECR_TRY_SETTLE_AGAIN;
     }
 
     if (!ecrObj.gData.isEcrTxn)//2014.10.30, kobe added it, if merchant need detail, press'F4' to print before settle
@@ -1156,7 +1156,7 @@ USHORT Process_Settle() {
         return ret;
     }
 
-    
+
     CTOS_LCDSelectMode(d_LCD_TEXT_320x240_MODE);
     CTOS_LCDGClearCanvas();
     ShowTitle(gTransTitle);
@@ -1439,16 +1439,16 @@ USHORT Process_SignOn2(void)//sign on 交易
     do {
         //   while(1){
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         usRet = usInitTxData(TXTYPE_SIGNON); //初始交易資料
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         usRet = ECC_CheckAPResponseCode(usRet);
         if (usRet != d_OK) goto SSL_DISCONNECT;
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         CTOS_LCDGClearCanvas();
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         ShowTitle(gTransTitle);
 
 
@@ -1463,14 +1463,14 @@ USHORT Process_SignOn2(void)//sign on 交易
         sprintf(gTransfer_ReceivedPackCnt, "%08d", ReceivedPackCnt);
         sprintf(gTransfer_SendPackSN, "%08d", SendPackSN);
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         iret = inPPR_Reset(1);
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         usRet = ECC_CheckReaderResponseCode(iret);
         if (usRet != d_OK) goto SSL_DISCONNECT;
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         //2014.05.26, kobe added it
         //if((usRet = ResetDongle()) != d_OK)
         //    return usRet;
@@ -1478,15 +1478,15 @@ USHORT Process_SignOn2(void)//sign on 交易
         ShowStatusLine("通訊中...");
         remove(SendFile);
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         gTransData.ucTXSTATUS = TransStatus_REQ;
 
         usRet = Process_TransComm2(&gTransData, 1);
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         usRet = ECC_CheckAPResponseCode(usRet);
         if (usRet != d_OK) goto SSL_DISCONNECT;
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
 
 
         ShowStatusLine("已完成");
@@ -1497,7 +1497,7 @@ USHORT Process_SignOn2(void)//sign on 交易
             continue;
         }
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         usRet = ECC_CheckCMASResponseCode(gTransData.ucResponseCode);
         if (usRet != d_OK) goto SSL_DISCONNECT;
 
@@ -1515,21 +1515,21 @@ USHORT Process_SignOn2(void)//sign on 交易
         ShowLine(0, 40 + 16, Big_Font_Size, "資料傳輸中..", FALSE);
         ShowStatusLine("Reader SignOn...");
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         iret = inPPR_SignOn();
 
         if (iret == 0x6308) {// 2014.08.25, reader 回6308 表示需重作sigon 直接進continue
             usRet = UpdateTransSN();
             continue;
         }
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
-        
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
+
         usRet = ECC_CheckReaderResponseCode(iret);
         if (usRet != d_OK) {
             goto SSL_DISCONNECT;
         }
 
-        printf("[%s,%d] trace...\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         usRet = UpdateTransSN();
         //Process_DownloadTMS();  //2014.07.30, V11fixed bug for Updated AP
         //UnpackTMSParameter();   //2014.07.30, V11fixed bug for Updated AP
@@ -1627,6 +1627,7 @@ int iProcess_ReadCardBasicData() {
     return inRetVal;
 }
 
+
 int iProcessWaitCard(void) {
     USHORT usRet;
     BYTE key;
@@ -1654,6 +1655,7 @@ int iProcessWaitCard(void) {
         iret = inPPR_ReadCardNumber2();
         if (iret == 0x9000) {
             //     CTOS_Beep();
+            printf("[%s,%d] got card, txn go~~~time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
             iret = iProcess_ReadCardBasicData();
             if (iret != 0x6201) {
                 usRet = ECC_CheckReaderResponseCode(iret);
@@ -1668,6 +1670,7 @@ int iProcessWaitCard(void) {
     } while (1);
     return d_ERR_USERCANCEL;
 }
+
 
 int iProcessWaitCardwithTimer(int sec) {
     USHORT usRet;
@@ -1805,7 +1808,7 @@ USHORT Process_Autoload(int amt) {
     memset(temp2, 0x00, sizeof (temp2));
 
     ev = BYTE3Data2LONG((char *) gBasicData.ucEV);
-    //memcpy(&ev,(BYTE *)&gBasicData.ucEV,sizeof(gBasicData.ucEV));20140709, kobe fixed bug
+
     if (ev - amt >= 0)//2014.05.19, kobe modified that balance amt >=0
         return d_ERR_AUTOLOADNOTNEED;
     if (gBasicData.bAutoLoad != TRUE)
@@ -1827,7 +1830,7 @@ USHORT Process_Autoload(int amt) {
 
     USHORT RTCDOSDate;
     fnGetRTCDOSData((BYTE *) & RTCDOSDate);
-    //if(RTCDOSDate==gBasicData.AutoloadDate && gBasicData.AutoloadCounter>1)
+    
     if ((memcmp((BYTE *) & RTCDOSDate, (BYTE *) & gBasicData.AutoloadDate, 2) == 0) && gBasicData.AutoloadCounter > 1)
         return d_ERR_AUTOLOADNOTALLOW;
 

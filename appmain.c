@@ -43,7 +43,7 @@ void checkEccappToEccapp2(void) {
     }
     printf("[%s,%d]got file, size=%lu\n", __FUNCTION__, __LINE__, size);
 
-    //ret = CTOS_FileGetSize ("bkDeviceInfo.txt", &size);
+    
 
     //copy ECCAPP origSetting
     ret = CTOS_FileOpenAttrib(filename, d_STORAGE_FLASH, &pulFileHandle, d_FA_PUBLIC);
@@ -90,7 +90,7 @@ void checkEccappToEccapp2(void) {
     remove("/home/ap/pub/bkDeviceInfo.txt");
 
     //if origAP ECCAPP ecrOn was FALSE, return
-    //if(data[27]=='0') return;
+    if(data[27]=='0') return;
 
     //upgrade ECR setting file
     remove(AROUND_DEVICE_CONFIG); //delete AROUND_DEVICE_CONFIG first, if existed
@@ -113,9 +113,7 @@ void checkEccappToEccapp2(void) {
     fp2 = fopen((char *) destPath, "rb");
     if (fp2 == NULL) {
         printf("[%s,%d] fopen not found file\n", __FUNCTION__, __LINE__);
-        myDebugPrinter(ERROR, "ECR config missing");
-
-
+        myDebugPrinter(ERROR, "%s missing",destPath);
     } else {
         char buf[1024];
         memset(buf, 0x00, sizeof (buf));

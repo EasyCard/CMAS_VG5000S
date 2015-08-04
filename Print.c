@@ -1036,28 +1036,7 @@ USHORT PrintDetail(TRANS_DATA2 *TransData) {
 }
 
 USHORT GetCardTYPEPrintStr(BYTE PersonalProfile, BYTE CardType, BYTE *strPersonalProfileName) {
-    /*modify by bruce*/
-    /*  if(!(PersonalProfile==5 && CardType==0x0a))
-      {
-          PersonalProfile=0;
-      }*/
-    /*
-   
-     if(PersonalProfile==4){
-                                if(memcmp(&gBasicData.SocialSecuityCode,nullid,6)!=0)//比對身份證字號非空值
-                                {
-                                        if(memcmp(&gSSC,&csctx.SocialSecuityCode,6)==0)//比對身份證字號
-                                        {	
-                                                flag=true;
-                                                memset(&gSSC,0x00,6);
-                                        }
-                                }
-                   }else if(csctx.profile==2 || csctx.profile==3){
-                                memcpy(&gSSC,&csctx.SocialSecuityCode,6);
-                   }else{
-                                memset(&gSSC,0x00,6);
-                   }    
-     */
+
     switch (PersonalProfile) {
         case 0:
             sprintf(strPersonalProfileName, "普");

@@ -618,7 +618,7 @@ USHORT ShowTXBalance(int amt) {
     if (iret) usRet = ECC_CheckReaderResponseCode(iret);
     if (usRet != d_OK) return usRet;
 
-    // vdUIntToAsc((BYTE *)gBasicData.ucCardID,sizeof(gBasicData.ucCardID),(BYTE *)&cardID,17,' ',10);
+    
     if (gScrpitTesting == 1) return d_OK;
     //2014-04-01, kobe added for ECR
     if (ecrObj.gData.isEcrTxn) return d_OK;
@@ -801,24 +801,6 @@ USHORT CheckCardProfile(int PersonalProfile, int CardType) {
         }
     }
     gTXCardProfile = PersonalProfile;
-    /*
-   
-        if(PersonalProfile==4){
-                                   if(memcmp(&gBasicData.SocialSecuityCode,nullid,6)!=0)//比對身份證字號非空值
-                                   {
-                                           if(memcmp(&gSSC,&csctx.SocialSecuityCode,6)==0)//比對身份證字號
-                                           {	
-                                                   flag=true;
-                                                   memset(&gSSC,0x00,6);
-                                           }
-                                   }
-                      }else if(csctx.profile==2 || csctx.profile==3){
-                                   memcpy(&gSSC,&csctx.SocialSecuityCode,6);
-                      }else{
-                                   memset(&gSSC,0x00,6);
-                      }    
-     */
-
     return d_OK;
 }
 
@@ -889,7 +871,7 @@ USHORT GetAutoDeductAmt() {
     ULONG ev = BYTE3Data2LONG((char *) gBasicData.ucEV);
     BYTE strPersonalProfileName[32];
     memset(strPersonalProfileName, 0x00, sizeof (strPersonalProfileName));
-    //     CheckCardProfile(gBasicData.ucPersonalProfile,gBasicData.ucCardType);
+    
     GetCard_PersonalProfile(strPersonalProfileName);
 
     sprintf(line1, "卡片種類  %s", strPersonalProfileName);
@@ -904,10 +886,11 @@ USHORT GetAutoDeductAmt() {
 
 }
 
-void *Process_AfterTXSueeess() {
+void Process_AfterTXSueeess() {
 
     gTransData.ucTXSTATUS = TransStatus_ADVREQ;
     usSaveTxData(&gTransData);
+    printf("[%s,%d] save batch, txn finish~~~time(%lu)\n",__FUNCTION__,__LINE__,CTOS_TickGet());
     PrintReceipt();
 
     if (bgNETWORKChannel == CHANNEL_ETHERNET) {//接實体網路時，購貨交易advice 採背景上傳
@@ -917,11 +900,6 @@ void *Process_AfterTXSueeess() {
             Process_SendCurrentTxAdvice2();
         }
     }
-
-
-    // SSLSocketDisConnect();    
-    //Process_SendAdvice3(0);
-    // pthread_exit(NULL);
 }
 
 USHORT Trans_Deduct()//購貨交易
@@ -931,7 +909,7 @@ USHORT Trans_Deduct()//購貨交易
     USHORT usRet;
 
     if ((strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) || (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_FIX") == 0)) {
-        usRet = Trans_Deduct_Auto();
+        usRet = Trans_Deduct_Auto();        
         return usRet;
     }
 
@@ -1102,7 +1080,7 @@ USHORT Trans_Deduct()//購貨交易
                             //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                         }
                     } while (ret != 0x9000);
-                    //      if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
+                    
                     continue;
                 }
                 usRet = ECC_CheckReaderResponseCode(usRet);
@@ -1110,9 +1088,7 @@ USHORT Trans_Deduct()//購貨交易
                     goto DISCONNECT;
                 }
             }
-            /*             tend  = CTOS_TickGet();    
-                     sprintf(tmp,"tend-tstart=%ld",  tend-tstart);      
-                     CTOS_PrinterPutString(tmp);*/
+            
             mkHWSupport = Eth_CheckDeviceSupport();
             if ((mkHWSupport & d_MK_HW_CONTACTLESS) == d_MK_HW_CONTACTLESS) {
                 CTOS_CLLEDSet(0x0f, d_CL_LED_GREEN);
@@ -1364,7 +1340,7 @@ START:
                                 //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                             }
                         } while (ret != 0x9000);
-                        //      if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
+                        
                         continue;
                     }
                     usRet = ECC_CheckReaderResponseCode(usRet);
@@ -1432,6 +1408,7 @@ DISCONNECT:
     return usRet;
 }
 
+
 USHORT Trans_Deduct_Auto()//購貨交易
 {
     //   BYTE Buffer[sizeof(ReadCardBasicData_TM_Out)];
@@ -1471,6 +1448,9 @@ USHORT Trans_Deduct_Auto()//購貨交易
     Reader_CLEAR_LED();
     BYTE BarCode[20 + 1];
 
+    //check device supports contactless or not
+    mkHWSupport = (Eth_CheckDeviceSupport()& d_MK_HW_CONTACTLESS);
+        
 START:
     do {
         gTXCardProfile = 0;
@@ -1487,7 +1467,7 @@ START:
             sprintf(gTransTitle, "購貨-%s", gConfig.TX.AMTTABLE[gSelectTable].NAME);
         }
         gucLCDControlFlag = 1;
-        //tstart = CTOS_TickGet();
+        
         usRet = iProcessWaitCard();
         if (usRet != d_OK) {
             if (usRet == d_ERR_USERCANCEL)
@@ -1507,8 +1487,9 @@ START:
                 Process_Autoload(amt);
             }
         }
-        mkHWSupport = Eth_CheckDeviceSupport();
-        if ((mkHWSupport & d_MK_HW_CONTACTLESS) == d_MK_HW_CONTACTLESS) {
+        
+        //mkHWSupport = Eth_CheckDeviceSupport();
+        if (mkHWSupport == d_MK_HW_CONTACTLESS) {
             CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);
         }
         usInitTxData(TXTYPE_DEDUCT);
@@ -1571,39 +1552,37 @@ START:
                                 //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                             }
                         } while (ret != 0x9000);
-                        //      if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
+                        
                         continue;
                     }
-                    usRet = ECC_CheckReaderResponseCode(usRet);
-                    if (usRet != d_OK) {
-                        goto START;
+                    if(usRet != 0x9000){
+                        usRet = ECC_CheckReaderResponseCode(usRet);
+                        if (usRet != d_OK) {
+                            goto START;
+                        }
                     }
                 }
-                /*tend  = CTOS_TickGet();    
-                sprintf(tmp,"tend-tstart=%ld",  tend-tstart);      
-                CTOS_PrinterPutString(tmp); 
-                 */ //      PrintReceipt( );
-
-                // STR Line[15+1];
-                // sprintf( Line,"交易完成");
-                // WaitRemoveCard("交易完成.","請記得帶走卡片."); 
-                mkHWSupport = Eth_CheckDeviceSupport();
-                if ((mkHWSupport & d_MK_HW_CONTACTLESS) == d_MK_HW_CONTACTLESS) {
+                
+                //if device was contavtless, show green LED
+                if (mkHWSupport == d_MK_HW_CONTACTLESS) {
                     CTOS_CLLEDSet(0x0f, d_CL_LED_GREEN);
                 }
+                printf("[%s,%d] Auth ok~~~time(%lu)\n",__FUNCTION__,__LINE__,CTOS_TickGet());
                 remove(ReversalFile);
-                CTOS_Beep();
-                CTOS_Beep();
+                //CTOS_Beep();
+                //CTOS_Beep();
                 BYTE strPersonalProfileName[32];
                 memset(strPersonalProfileName, 0x00, sizeof (strPersonalProfileName));
                 GetCard_PersonalProfile(strPersonalProfileName);
                 sprintf(line, "卡片餘額  %ld", gTransData.lEVafterTxn);
                 sprintf(line1, "卡片種類  %s", strPersonalProfileName);
                 sprintf(line3, "交易金額  %ld", gTransData.lTxnAmt);
-                ShowMessage3line(gTransTitle, line1, line3, line, Type_ComformNONE);
+                //ShowMessage3line(gTransTitle, line1, line3, line, Type_ComformNONE);
+                //printf("[%s,%d] remove card, txn finish~~~time(%lu)\n",__FUNCTION__,__LINE__,CTOS_TickGet());
                 Process_AfterTXSueeess();
                 ShowSystemMemoryStatus("Process_AfterTXSueeess 1");
 
+                
                 ShowMessage3line(gTransTitle, line1, line3, line, Type_RemoveCard);
 
                 gAutoloadAMT = 0;
@@ -1726,7 +1705,7 @@ USHORT Trans_Cancel() {
                         //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                     }
                 } while (ret != 0x9000);
-                //   if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
+                
                 continue;
             }
 
@@ -1877,15 +1856,7 @@ USHORT Trans_Refund() {
                     Reader_ERR_LED();
                     continue;
                 }
-                /*2014.07.24, version_11,fixed bug
-                 iret = iProcess_ReadCardBasicData();
-                  if(iret!=0x9000){
-                      //無法確認是否已扣款，報警處理
-                  }
-              //   if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
-                      continue;
-                 */
-
+               
 
                 if (usRet == 0x9970) {//2014.08.25, 每個交易的Auth 之後 檢查  讀卡機當機後 需讀basicdata 直到讀出來為止，再判斷是否要進retry
                     Reader_ERR_LED();
@@ -1897,7 +1868,7 @@ USHORT Trans_Refund() {
                             //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                         }
                     } while (ret != 0x9000);
-                    //        if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
+                    
                     continue;
 
                 }
@@ -2064,14 +2035,7 @@ USHORT Trans_ADD() {
                     ShowMessage2line(gTransTitle, "交易未完成", "請放回卡片", Type_ComformNONE);
                     continue;
                 }
-                /*2014.07.24, version_11,fixed bug
-                 iret = iProcess_ReadCardBasicData();
-                  if(iret!=0x9000){
-                      //無法確認是否已扣款，報警處理
-                  }
-          //       if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
-                      continue;
-                 */
+                
                 if (iret == 0x9970) {//2014.08.25, 每個交易的Auth 之後 檢查  讀卡機當機後 需讀basicdata 直到讀出來為止，再判斷是否要進retry
                     do {
                         CTOS_Beep();
@@ -2081,7 +2045,7 @@ USHORT Trans_ADD() {
                             //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                         }
                     } while (ret != 0x9000);
-                    //          if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
+                    
                     continue;
 
                 }
@@ -2189,7 +2153,7 @@ USHORT Trans_AutoloadEnable() {
                         //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                     }
                 } while (ret != 0x9000);
-                //  if(memcmp(&gCardRemainEV,&gBasicData.ucEV,3)!=0)//若卡片餘額不等於交易前卡片餘額 則retry重確認交易是否完成
+                
                 continue;
             }
 

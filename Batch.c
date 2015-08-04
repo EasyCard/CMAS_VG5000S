@@ -214,7 +214,7 @@ USHORT GetBatchTotal() {
 USHORT usSetCurrBatchDevID2(BYTE * DeviceID) {
 
     USHORT ret;
-    memcpy(&gBatchTotal.DEVICEID, DeviceID, 6);
+    memcpy(gBatchTotal.DEVICEID, DeviceID, 6);
     SavetBatchTotal();
     return d_OK;
 }

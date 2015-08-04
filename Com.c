@@ -38,7 +38,8 @@ USHORT send_apdu(BYTE COMPORT, const BYTE* buf, USHORT buf_size) {
         SystemLogInt("send_apdu", ret, "CTOS_RS232TxData Fail");
         return ret;
     }
-
+    printf("[%s,%d] CTOS_RS232TxData time(%lu)\n",__FUNCTION__,__LINE__, APDUSendTime);
+    
     DebugPrint_hex((BYTE *) buf, buf_size, "Send to Reader", DebugMode_TX);
 
     SystemLogHex("Sendto Reader  form EDC", (BYTE *) buf, buf_size);
@@ -120,6 +121,7 @@ USHORT recv_apdu(BYTE COMPORT, BYTE* buf, int inTimeout) {
         return 0;
     }
     APDUReceiveTime = CTOS_TickGet();
+    printf("[%s,%d] recv APDU time(%lu)\n",__FUNCTION__,__LINE__,APDUReceiveTime);
     recv_size += OUT_DATA_OFFSET/*sizeof(epilog_t)*/;
     return recv_size;
 }
@@ -129,7 +131,7 @@ int inTSendRecvAPDU(BYTE *bSendData, int inSendLen, BYTE *bRecvData, int * inRec
     int inRetVal;
 
 
-    //printf("[%s,%d] inTSendRecvAPDU apduName(%s)\n",__FUNCTION__,__LINE__, TESTACTIONNAME);
+    printf("[%s,%d] inTSendRecvAPDU apduName(%s)\n",__FUNCTION__,__LINE__, TESTACTIONNAME);
     if ((gScrpitTesting == 1) && (ezxml_get(gTestAction, TESTACTIONNAME, -1) != NULL)) {
         ezxml_t APDURESP = ezxml_get(gTestAction, TESTACTIONNAME, -1);
         BYTE *strbuf = ezxml_txt(APDURESP);

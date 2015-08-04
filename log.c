@@ -268,10 +268,7 @@ USHORT usInitTxData(BYTE TXTYPE) {
     gTransData.ucLocationID = gTransData.ucSubMerchantID[0]; //location id �]�� new location id low byte     
 
 
-    /* memset(Data,0x00,sizeof(Data));
-     usRet=ECC_GetXMLTag3(ConfigXML,"DEVICE","READER", "CPU","CPUDEVICEID", Data);
-      wub_str_2_hex(Data,(char *)&gTransData.ucCPUDeviceID, strlen(Data));
-     */
+    
     //for Settlement, Host responsed T3900=03, the reason was data fulled zero in T4100    
     wub_str_2_hex(gConfig.DEVICE.READER.CPU.CPUDEVICEID, (char *)gTransData.ucCPUDeviceID, strlen(gConfig.DEVICE.READER.CPU.CPUDEVICEID));
     if(TXTYPE==TXTYPE_SETTLEMENT){
