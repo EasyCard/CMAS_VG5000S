@@ -156,7 +156,8 @@ USHORT pollStatusResult(BYTE *func, USHORT theRTN) {
 USHORT Eth_TCPConnect(void) {
 
     USHORT usRet;
-    BYTE baMsg[512];
+    
+    printf("[%s,%d] Eth_TCPConnect start\n",__FUNCTION__,__LINE__);
     /* Set TCP connecting timeout (ms) and retry time */
     usRet = CTOS_TCP_SetConnectTO(CONNECT_TO_MS);
     usRet = CTOS_TCP_SetRetryCounter(CONNECT_RETRY);
@@ -176,7 +177,7 @@ USHORT Eth_TCPConnect(void) {
                     return usRet;
                 }
             }
-            return d_OK;
+            
         } else {
             usRet = CTOS_TCP_GPRSConnectURL(&bSocket, gHOSTVIPIP, usPort);
             usRet = pollStatusResult("GPRS Connect ", usRet);
@@ -195,9 +196,6 @@ USHORT Eth_TCPConnect(void) {
                     return usRet;
                 }
             }
-
-
-            return d_OK;
         } else {
             usRet = CTOS_EthernetConnectEx(gHOSTVIPIP, strlen(gHOSTVIPIP), gHOSTPORT, strlen(gHOSTPORT));
             if (usRet != d_OK) {
@@ -206,6 +204,9 @@ USHORT Eth_TCPConnect(void) {
             }
         }
     }
+    
+    printf("[%s,%d] Eth_TCPConnect end\n",__FUNCTION__,__LINE__);
+    return d_OK;
 }
 
 USHORT GPRS_SSLSocketConnect() {

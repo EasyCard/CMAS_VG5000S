@@ -165,7 +165,8 @@ extern "C" {
 #define d_ERR_CANNOT_FINDTX                                     0x9952 
 #define d_ERR_CMAS_RESPONSE_ERROR      				0x9951
 #define d_ERR_NO_PASSWORD             				0x9950   
-#define d_ERR_SYSTEM_ERROR             				0x9949  
+#define d_ERR_SYSTEM_ERROR             				0x9949
+#define d_ERR_FTP_DL_FAIL                                       0x9948
 #define d_ERR_ETH_NOTCONNECT                                    0x4202
 #define SW_ERROR  						0xffff
 #define d_ERR_READER_6608                                       0x6608        

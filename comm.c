@@ -197,25 +197,27 @@ USHORT SSLSocketConnect() {
     USHORT usRet;
     void *threadResult;
     printf("[%s,%d] sslConnect start !\n", __FUNCTION__, __LINE__);
+    myDebugPrinter(ERROR,"[%s,%d] sslConnect start !\n", __FUNCTION__, __LINE__);
     usRet = Eth_PutDeviecBackOnBase();
     if (usRet != d_OK) return usRet;
     int result = 0;
     if (pthread_self() != thread_SendAdvice) {
+        printf("[%s,%d] pthread_self() != thread_SendAdvice, ready to join\n", __FUNCTION__, __LINE__);
+        myDebugPrinter(ERROR,"[%s,%d] pthread_self() != thread_SendAdvice, ready to join\n", __FUNCTION__, __LINE__);
         result = pthread_join(thread_SendAdvice, &threadResult);
         if (result != 0) {
             printf("[%s,%d] thread_SendAdvice join fail(%d)\n ", __FUNCTION__, __LINE__, result);
+            myDebugPrinter(ERROR,"[%s,%d] thread_SendAdvice join fail(%d)\n ", __FUNCTION__, __LINE__, result);
             //return d_NO;
-        } else printf("[%s,%d] join OK, return msg(%s)\n", __FUNCTION__, __LINE__, (char*) threadResult);
-    } else printf("[%s,%d] thread_SendAdvice cannot join itself, so go head\n", __FUNCTION__, __LINE__);
-    /*
-    if(pthread_self() != thread_AfterTxSuccess){
-       result = pthread_join(thread_AfterTxSuccess, &threadResult);
-       if(result != 0){
-           printf("[%s,%d] thread_SendAdvice join fail(%d)\n ",__FUNCTION__,__LINE__,result);
-           //return d_NO;
-       } else printf("[%s,%d] join OK, return msg(%s)\n",__FUNCTION__,__LINE__,(char*)threadResult);
-    } else printf("[%s,%d] thread_SendAdvice cannot join itself, so go head\n",__FUNCTION__,__LINE__);
-     */
+        } else {
+            printf("[%s,%d] join OK, return msg(%s)\n", __FUNCTION__, __LINE__, (char*) threadResult);
+            myDebugPrinter(ERROR,"[%s,%d] join OK, return msg(%s)\n", __FUNCTION__, __LINE__, (char*) threadResult);
+        }
+    } else {
+        printf("[%s,%d] thread_SendAdvice cannot join itself, so go head\n", __FUNCTION__, __LINE__);
+        myDebugPrinter(ERROR,"[%s,%d] thread_SendAdvice cannot join itself, so go head\n", __FUNCTION__, __LINE__);
+    }
+
     SSLSocketDisConnect();
     if (Eth_CheckDeviceStatus() != d_OK) {
         gCOMMSTATUS = COMM_STATUS_ConnecteFail;
@@ -245,26 +247,9 @@ USHORT SSLSocketConnect() {
         goto DISCONNECT;
     }
 
-    /*
-        BYTE ca[2048];
-        memset(ca,0x00,sizeof(ca));
-        int  Filesize= File_GetLen("ck1.cer");
-        if(Filesize==0) return d_ERR_SSLCA_ERROR;   
-        usRet=usReadFileData("ck1.cer",&Filesize,ca);
-     */
-    /*   usRet = CTOS_SSLLoadObject(d_SSL_OBJ_X509_CERT, gCA,gCAlen , NULL);
-       if (usRet != d_OK){   
-             usRet=d_ERR_SSLCA_ERROR;  
-             gCOMMSTATUS=COMM_STATUS_ConnecteFail;
-             goto DISCONNECT;
-       }
-     */
-
-
-    // CTOS_SSLSetReadTimeout(2000);       //Set the Read Timeout to 2s
-    //ShowStatusLine("SSL 連接中");
-
     usRet = CTOS_SSLConnect();
+    printf("[%s,%d] CTOS_SSLConnect result(%d)\n", __FUNCTION__, __LINE__, usRet);
+    myDebugPrinter(ERROR,"[%s,%d] CTOS_SSLConnect result(%d)\n", __FUNCTION__, __LINE__, usRet);
     if (usRet != d_OK) {
         usRet = d_ERR_SSL_CreateFail;
         gCOMMSTATUS = COMM_STATUS_ConnecteFail;
@@ -275,10 +260,16 @@ USHORT SSLSocketConnect() {
     CTOS_LEDSet(d_LED_GREEN, d_ON);
 
 
+    printf("[%s,%d]SSLSocketConnect return(%d)\n", __FUNCTION__, __LINE__, usRet);
+    myDebugPrinter(ERROR,"[%s,%d]SSLSocketConnect return(%d)\n", __FUNCTION__, __LINE__, usRet);
     return usRet;
 DISCONNECT:
 
     Ethernet_Disconnect();
+
+
+    printf("[%s,%d] jum DISCONNECT SSLSocketConnect return(%d)\n", __FUNCTION__, __LINE__, usRet);
+
     return usRet;
 }
 

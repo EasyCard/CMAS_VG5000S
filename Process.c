@@ -207,7 +207,7 @@ USHORT Process_DownloadBLC() {
 }
 
 USHORT Process_DownloadTMS() {
-    USHORT ret;
+    USHORT ret = d_OK;
     SystemLog("Process_DownloadTMS", "Start");
     STR Downloadfile[128];
     BYTE urliplen;
@@ -218,7 +218,7 @@ USHORT Process_DownloadTMS() {
     BYTE vernum[5 + 1];
     memset(vernum, 0x00, sizeof (vernum));
 
-    ret = File_exist(APFILE);
+    File_exist(APFILE);
     remove(APFILE);
 
     currversion = atoi(gConfig.CURRVERSION.BLC.VERSION);
@@ -251,7 +251,8 @@ USHORT Process_DownloadTMS() {
                 ShowMessage3line("下載鎖卡名單", str1, str2, "DOWNLOAD OK", Type_ComformNONE);
             }
         } else {
-
+            ret = d_ERR_FTP_DL_FAIL;
+            SystemLog("Process_DownloadTMS", "Download BLC File Fail");
             ShowMessage3line("下載鎖卡名單", "", "版本無需更新", "", Type_ComformNONE);
         }
     }
@@ -285,6 +286,8 @@ USHORT Process_DownloadTMS() {
 
             }
         } else {
+            ret = d_ERR_FTP_DL_FAIL;
+            SystemLog("Process_DownloadTMS", "Download AP File Fail");
             ShowMessage3line("下載AP", "", "版本無需更新", "", Type_ComformNONE);
         }
     }
@@ -474,15 +477,15 @@ void *SendAdvice_Background(void) {
             goto Disconnect;
         }
     } else {
-        printf("[%s,%d] sendAdvice in Background start\n", __FUNCTION__, __LINE__);
+        myDebugPrinter(ERROR, "[%s,%d] sendAdvice in Background start\n", __FUNCTION__, __LINE__);
         memset(buf, 0x00, sizeof (buf));
 
-        memset(&UpLoadlist, 0x00, sizeof (UpLoadlist));
-        usRet = GetUnuploadTx2(&TotalCount, (long*) &UpLoadlist);
+        memset(UpLoadlist, 0x00, sizeof (UpLoadlist));
+        usRet = GetUnuploadTx2(&TotalCount, (long*)UpLoadlist);
         remove(SendFile);
         fp = fopen(TransDataFile, "r+");
         if (fp == NULL) {
-            printf("[%s,%d] thread d_ERR_FILE_OPEN\n", __FUNCTION__, __LINE__);
+            myDebugPrinter(ERROR, "[%s,%d] thread d_ERR_FILE_OPEN\n", __FUNCTION__, __LINE__);
             usRet = d_ERR_FILE_OPEN;
             pthread_exit("TransDataFile open fail");
             return;
@@ -492,20 +495,20 @@ void *SendAdvice_Background(void) {
 
         ulFileSize = ftell(fp);
         if (ulFileSize <= 0) {
-            printf("[%s,%d] thread ulFileSize <= 0\n", __FUNCTION__, __LINE__);
+            myDebugPrinter(ERROR, "[%s,%d] thread ulFileSize <= 0\n", __FUNCTION__, __LINE__);
             fclose(fp);
             pthread_exit("advice file size <=0");
             return;
         }
         if (ulFileSize % sizeof (TRANS_DATA2) != 0) {
-            printf("[%s,%d] thread d_ERR_FILE_SIZE_ERR\n", __FUNCTION__, __LINE__);
+            myDebugPrinter(ERROR, "[%s,%d] thread d_ERR_FILE_SIZE_ERR\n", __FUNCTION__, __LINE__);
             fclose(fp);
             usRet = d_ERR_FILE_SIZE_ERR;
             pthread_exit("advice size mismatch");
             return;
         }
         if (TotalCount == 0) {
-            printf("[%s,%d] thread TotalCount==0\n", __FUNCTION__, __LINE__);
+            myDebugPrinter(ERROR, "[%s,%d] thread TotalCount==0\n", __FUNCTION__, __LINE__);
             pthread_exit("no any advice existed");
             return;
         }
@@ -516,13 +519,14 @@ void *SendAdvice_Background(void) {
         offset = 0;
         //CTOS_EthernetOpen();   
         if (gIDLE == FALSE) {
-            printf("[%s,%d] thread not in IDLE UI\n", __FUNCTION__, __LINE__);
+            myDebugPrinter(ERROR, "[%s,%d] thread not in IDLE UI\n", __FUNCTION__, __LINE__);
             pthread_exit("not in IDLE now");
             return;
         }
+        myDebugPrinter(ERROR, "[%s,%d] advice ready to SSLSocketConnect\n",__FUNCTION__,__LINE__);
         usRet = SSLSocketConnect();
         if (usRet != d_OK) {
-            printf("[%s,%d] thread sslConect fail\n", __FUNCTION__, __LINE__);
+            myDebugPrinter(ERROR, "[%s,%d] thread sslConect fail\n", __FUNCTION__, __LINE__);
             pthread_exit("ssl connect fail");
             return;
         }
@@ -583,6 +587,7 @@ void *SendAdvice_Background(void) {
         //      printf("[%s,%d] sendAdvice no.%d\n",__FUNCTION__,__LINE__,iCount);
         //offset+=sizeof(TRANS_DATA2);
         if (iCount >= 100) break;
+        myDebugPrinter(ERROR, "[%s,%d]loop\n",__FUNCTION__,__LINE__);
     } while (iCount < TotalCount);
     fclose(fp);
 
@@ -594,7 +599,7 @@ Disconnect:
     //  Eth_SSLSocketDisConnect();       
     SSLSocketDisConnect();
 
-    printf("[%s,%d] sendAdvice in Background end\n", __FUNCTION__, __LINE__);
+    myDebugPrinter(ERROR, "[%s,%d] sendAdvice in Background end\n", __FUNCTION__, __LINE__);
     pthread_exit("send Advice finish");
 }
 

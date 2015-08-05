@@ -379,11 +379,8 @@ USHORT SaveTransData(TRANS_DATA2 *TransData) {
 
 USHORT Function_Signon() {
     BYTE buf[15 + 1];
-    USHORT ret;
-    BYTE Initflag = 0;
-    void *threadResult;
-    unsigned long ltmp;
-    unsigned int itmp;
+    USHORT ret, result;
+    
     memset(buf, 0x00, sizeof (buf));
     sprintf(gTransTitle, "系統登入");
     /* ret=Eth_SSLConnect_SOCKET(); 
@@ -407,7 +404,7 @@ USHORT Function_Signon() {
      //end*/
     BYTE baMsg[64];
     ret = SSLSocketConnect();
-    printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
+    myDebugPrinter(ERROR, "[%s,%d] SSLSocketConnect result(%d)...\n", __FUNCTION__, __LINE__, ret);
     if (ret != d_OK) {
         MessageBox(gTransTitle, "", "網路連線異常", "請檢查並重試", "", d_MB_CHECK);
         /*    ret = CTOS_TCP_GPRSOpen("\x00\x00\x00\x00", APN, ID, PW);
@@ -457,8 +454,14 @@ USHORT Function_Signon() {
             //ret=UnpackTMSParameter();
 
 
-            ret = Process_DownloadTMS(); //2014.07.30, V11fixed bug for Updated AP
-            ret = UnpackTMSParameter(); //2014.07.30, V11fixed bug for Updated AP
+            if(Process_DownloadTMS() != d_OK){ //2014.07.30, V11fixed bug for Updated AP
+                printf("[%s,%d] FTP download file fail\n",__FUNCTION__,__LINE__);
+            }
+            
+            if((result = UnpackTMSParameter()) != d_OK){ //2014.07.30, V11fixed bug for Updated AP
+                printf("[%s,%d] UnpackTMSParameter fail(%d)\n",__FUNCTION__,__LINE__,result);
+            }
+            
             CheckNewVersionAP(); //shit! bruceLin marked it, fxxk...
 
             //     Process_DownloadTMS();
@@ -470,22 +473,20 @@ USHORT Function_Signon() {
         }
     } while (ret == d_ERR_RESP_RETRY);
 
-    printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
+    
     //2014.08.06, kobe fixed SIGNONMAXTIME must work
     CTOS_TimeOutSet(TIMER_ID_1, gSignOnlimit);
 DISCONNECT:
     //   Eth_SSLSocketDisConnect();       
     SSLSocketDisConnect();
-    printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
+    
     return ret;
 }
 
 USHORT Function_Signon_forMaintenance() {
     BYTE buf[15 + 1];
-    USHORT ret;
-    //BYTE keyinflag=0;
-    unsigned long ltmp;
-    unsigned int itmp;
+    USHORT ret, result;
+    
     memset(buf, 0x00, sizeof (buf));
     /*   ret=Eth_SSLConnect_SOCKET(); 
       if(ret!=d_OK){
@@ -548,8 +549,13 @@ USHORT Function_Signon_forMaintenance() {
             MechineStatus &= (~(Status_SignOnFail));
             ECC_CheckAPResponseCode(ret);
             
-            ret = Process_DownloadTMS(); //2014.07.30, V11fixed bug for Updated AP
-            ret = UnpackTMSParameter(); //2014.07.30, V11fixed bug for Updated AP            
+            if(Process_DownloadTMS() != d_OK){ //2014.07.30, V11fixed bug for Updated AP
+                printf("[%s,%d] FTP download file fail\n",__FUNCTION__,__LINE__);
+            }
+            
+            if((result = UnpackTMSParameter()) != d_OK){ //2014.07.30, V11fixed bug for Updated AP
+                printf("[%s,%d] UnpackTMSParameter fail(%d)\n",__FUNCTION__,__LINE__,result);
+            }
             CheckNewVersionAP();
             //           CheckNewVersionFile();
             break;
