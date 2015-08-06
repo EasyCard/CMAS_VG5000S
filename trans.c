@@ -404,7 +404,7 @@ USHORT Function_Signon() {
      //end*/
     BYTE baMsg[64];
     ret = SSLSocketConnect();
-    myDebugPrinter(ERROR, "[%s,%d] SSLSocketConnect result(%d)...\n", __FUNCTION__, __LINE__, ret);
+    printf("[%s,%d] SSLSocketConnect result(%d)...\n", __FUNCTION__, __LINE__, ret);
     if (ret != d_OK) {
         MessageBox(gTransTitle, "", "網路連線異常", "請檢查並重試", "", d_MB_CHECK);
         /*    ret = CTOS_TCP_GPRSOpen("\x00\x00\x00\x00", APN, ID, PW);

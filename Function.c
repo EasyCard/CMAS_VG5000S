@@ -1440,7 +1440,7 @@ USHORT CTOS_WriteFile(STR * Filename,BYTE * Data,ULONG Datelen)
   USHORT ret = CTOS_FileOpen(Filename, d_STORAGE_FLASH, &ulHandle);
 
   if(ret == 0x200B) myDebugPrinter(ERROR,"write %s fail d_FS_NOT_OWNER", Filename);
-  printf("[%s,%d] CTOS_WriteFile fileName=%s\n",__FUNCTION__,__LINE__,Filename);
+  //printf("[%s,%d] CTOS_WriteFile fileName=%s\n",__FUNCTION__,__LINE__,Filename);
   if (ret != d_OK){
      printf("[%s,%d] CTOS_FileOpen fail ret=%d\n",__FUNCTION__,__LINE__,ret);
      return ret;

@@ -114,7 +114,7 @@ USHORT SetDEBUGInfo() {
 USHORT GetTXInfo() {
     BYTE tmp[36];
     BYTE table[16];
-    BYTE tablename[36];
+    
     BYTE amtname[16];
     int tableindex = 0, amtindex = 0;
     USHORT ret = ECC_CheckXML(TXINFO_Path);
@@ -146,16 +146,23 @@ USHORT GetTXInfo() {
 
     for (tableindex = 0; tableindex < 15; tableindex++) {
         sprintf(table, "AMTTABLE%d", tableindex);
+        memset(tmp, 0x00, sizeof(tmp));
         ret = GetField2L(TXINFO_Path, "TX", table, "AREACODE", tmp);
         gConfig.TX.AMTTABLE[tableindex].AREACODE = atoi(tmp);
+        
+        memset(tmp, 0x00, sizeof(tmp));
         ret = GetField2L(TXINFO_Path, "TX", table, "NAME", tmp);
-
         sprintf(gConfig.TX.AMTTABLE[tableindex].NAME, "%s", tmp);
+        //printf("[%s,%d] got xml config to gConfig.TX.AMTTABLE[%d], areaCode(%d), name(%s)\n",__FUNCTION__,__LINE__,tableindex, gConfig.TX.AMTTABLE[tableindex].AREACODE, gConfig.TX.AMTTABLE[tableindex].NAME);
+        
         for (amtindex = 0; amtindex < 10; amtindex++) {
             sprintf(amtname, "AMT%d", amtindex);
+            memset(tmp, 0x00, sizeof(tmp));
             ret = GetField2L(TXINFO_Path, "TX", table, amtname, tmp);
             gConfig.TX.AMTTABLE[tableindex].AMT[amtindex] = atoi(tmp);
+            //printf("[%s,%d] i(%d)=%d\n",__FUNCTION__,__LINE__,amtindex,gConfig.TX.AMTTABLE[tableindex].AMT[amtindex]);
         }
+        
     }
     return d_OK;
 }
@@ -880,11 +887,18 @@ USHORT ResetSysInfoData(STR * FileName, STR * TagName) {
     STR msgstr[64];
     ezxml_t configfile = ezxml_parse_file(ConfigXML);
     ezxml_t ConfigNode = ezxml_get(configfile, TagName, -1);
+    
+    //printf("[%s,%d] ResetSysInfoData start\n",__FUNCTION__,__LINE__);
     if (ConfigNode == NULL) {
         sprintf(msgstr, "Get XML %s Tag Fail", TagName);
         SystemLog("ECC_GetXMLTag", msgstr);
         return d_ERR_XMLError;
     }
+    //for debug 
+    //BYTE *test  = ezxml_toxml(ConfigNode);
+    //printf("[%s,%d] write (%s) in file(%s), data:%s\n",__FUNCTION__,__LINE__, TagName, FileName, test);
+    //for debug end
+    
     USHORT ret = ECC_WriteXMLFILE2(FileName, ConfigNode, "EDC");
     ezxml_free(configfile);
 }

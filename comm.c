@@ -197,25 +197,23 @@ USHORT SSLSocketConnect() {
     USHORT usRet;
     void *threadResult;
     printf("[%s,%d] sslConnect start !\n", __FUNCTION__, __LINE__);
-    myDebugPrinter(ERROR,"[%s,%d] sslConnect start !\n", __FUNCTION__, __LINE__);
+    
     usRet = Eth_PutDeviecBackOnBase();
     if (usRet != d_OK) return usRet;
     int result = 0;
     if (pthread_self() != thread_SendAdvice) {
         printf("[%s,%d] pthread_self() != thread_SendAdvice, ready to join\n", __FUNCTION__, __LINE__);
-        myDebugPrinter(ERROR,"[%s,%d] pthread_self() != thread_SendAdvice, ready to join\n", __FUNCTION__, __LINE__);
+        
         result = pthread_join(thread_SendAdvice, &threadResult);
         if (result != 0) {
             printf("[%s,%d] thread_SendAdvice join fail(%d)\n ", __FUNCTION__, __LINE__, result);
-            myDebugPrinter(ERROR,"[%s,%d] thread_SendAdvice join fail(%d)\n ", __FUNCTION__, __LINE__, result);
+            
             //return d_NO;
         } else {
-            printf("[%s,%d] join OK, return msg(%s)\n", __FUNCTION__, __LINE__, (char*) threadResult);
-            myDebugPrinter(ERROR,"[%s,%d] join OK, return msg(%s)\n", __FUNCTION__, __LINE__, (char*) threadResult);
+            printf("[%s,%d] join OK, return msg(%s)\n", __FUNCTION__, __LINE__, (char*) threadResult);            
         }
     } else {
-        printf("[%s,%d] thread_SendAdvice cannot join itself, so go head\n", __FUNCTION__, __LINE__);
-        myDebugPrinter(ERROR,"[%s,%d] thread_SendAdvice cannot join itself, so go head\n", __FUNCTION__, __LINE__);
+        printf("[%s,%d] thread_SendAdvice cannot join itself, so go head\n", __FUNCTION__, __LINE__);        
     }
 
     SSLSocketDisConnect();
@@ -248,8 +246,7 @@ USHORT SSLSocketConnect() {
     }
 
     usRet = CTOS_SSLConnect();
-    printf("[%s,%d] CTOS_SSLConnect result(%d)\n", __FUNCTION__, __LINE__, usRet);
-    myDebugPrinter(ERROR,"[%s,%d] CTOS_SSLConnect result(%d)\n", __FUNCTION__, __LINE__, usRet);
+    printf("[%s,%d] CTOS_SSLConnect result(%d)\n", __FUNCTION__, __LINE__, usRet);    
     if (usRet != d_OK) {
         usRet = d_ERR_SSL_CreateFail;
         gCOMMSTATUS = COMM_STATUS_ConnecteFail;
@@ -261,7 +258,7 @@ USHORT SSLSocketConnect() {
 
 
     printf("[%s,%d]SSLSocketConnect return(%d)\n", __FUNCTION__, __LINE__, usRet);
-    myDebugPrinter(ERROR,"[%s,%d]SSLSocketConnect return(%d)\n", __FUNCTION__, __LINE__, usRet);
+    
     return usRet;
 DISCONNECT:
 

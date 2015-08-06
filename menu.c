@@ -1948,7 +1948,7 @@ USHORT SelectAMTTABLE() {
     BYTE i = 0;
     //   USHORT SelectAmtOption=atoi(gConfig.TX.AMTTABLE[0].AREACODE);
 
-    for (i = 0; i < 15; i++) {
+    for (i = 0; i < 15; i++) {        
         sprintf(MenuItem[i].itemname, "[%d] %s", i + 1, gConfig.TX.AMTTABLE[i].NAME);
         if (gSelectTable == i)
             MenuItem[i].checked = TRUE;

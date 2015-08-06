@@ -1038,7 +1038,7 @@ USHORT GetFunctionSwitch(BYTE * function) {
 USHORT SetFunctionSwitch(BYTE * function, BOOL flag) {
     int i;
     for (i = 0; i < 20; i++) {
-        printf("[%s,%d]%d. g(%s)...set(%s)\n", __FUNCTION__, __LINE__, i, gConfigFUNCTION.TXFUNCTION[i].TagName, function);
+        //printf("[%s,%d]%d. g(%s)...set(%s)\n", __FUNCTION__, __LINE__, i, gConfigFUNCTION.TXFUNCTION[i].TagName, function);
         if (strcmp(gConfigFUNCTION.TXFUNCTION[i].TagName, function) == 0) {
             gConfigFUNCTION.TXFUNCTION[i].enable = flag;
             CTOS_WriteFile(FUNCTIONFile, (BYTE *) & gConfigFUNCTION, sizeof (gConfigFUNCTION));

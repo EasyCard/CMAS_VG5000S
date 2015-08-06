@@ -58,6 +58,7 @@ USHORT ECC_GetXMLTag2(STR * FILE, STR * Node1Name, STR * Node2Name,STR *ItemName
         ret= d_ERR_XMLError;
         goto exit;
     }
+    
     if(strlen(ConfigNode->txt)==0) {
      
       ret= d_Fail;

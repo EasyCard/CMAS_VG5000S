@@ -468,7 +468,7 @@ USHORT CheckUnuploadTxCount() {
         if (offset >= ulFileSize) break;
     }
     fclose(fp);
-    //   gUNUPLOADCOUNT=icount;
+    
     return iCount;
 }
 

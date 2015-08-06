@@ -204,7 +204,7 @@ int main(int argc, char *argv[]) {
     int kill_rc;
 
     //CTOS_PrinterFline(5);
-    myDebugPrinter(WARN, "app main start, the warnning words just testing printer function working fine or not");
+    //myDebugPrinter(WARN, "app main start, the warnning words just testing printer function working fine or not");
     //delete ECCAPP
     deleteOldApp("ECCAPP");
 

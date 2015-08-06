@@ -477,7 +477,7 @@ void *SendAdvice_Background(void) {
             goto Disconnect;
         }
     } else {
-        myDebugPrinter(ERROR, "[%s,%d] sendAdvice in Background start\n", __FUNCTION__, __LINE__);
+        printf("[%s,%d] sendAdvice in Background start\n", __FUNCTION__, __LINE__);
         memset(buf, 0x00, sizeof (buf));
 
         memset(UpLoadlist, 0x00, sizeof (UpLoadlist));
@@ -485,7 +485,7 @@ void *SendAdvice_Background(void) {
         remove(SendFile);
         fp = fopen(TransDataFile, "r+");
         if (fp == NULL) {
-            myDebugPrinter(ERROR, "[%s,%d] thread d_ERR_FILE_OPEN\n", __FUNCTION__, __LINE__);
+            printf("[%s,%d] thread d_ERR_FILE_OPEN\n", __FUNCTION__, __LINE__);
             usRet = d_ERR_FILE_OPEN;
             pthread_exit("TransDataFile open fail");
             return;
@@ -495,20 +495,20 @@ void *SendAdvice_Background(void) {
 
         ulFileSize = ftell(fp);
         if (ulFileSize <= 0) {
-            myDebugPrinter(ERROR, "[%s,%d] thread ulFileSize <= 0\n", __FUNCTION__, __LINE__);
+            printf("[%s,%d] thread ulFileSize <= 0\n", __FUNCTION__, __LINE__);
             fclose(fp);
             pthread_exit("advice file size <=0");
             return;
         }
         if (ulFileSize % sizeof (TRANS_DATA2) != 0) {
-            myDebugPrinter(ERROR, "[%s,%d] thread d_ERR_FILE_SIZE_ERR\n", __FUNCTION__, __LINE__);
+            printf("[%s,%d] thread d_ERR_FILE_SIZE_ERR\n", __FUNCTION__, __LINE__);
             fclose(fp);
             usRet = d_ERR_FILE_SIZE_ERR;
             pthread_exit("advice size mismatch");
             return;
         }
         if (TotalCount == 0) {
-            myDebugPrinter(ERROR, "[%s,%d] thread TotalCount==0\n", __FUNCTION__, __LINE__);
+            printf("[%s,%d] thread TotalCount==0\n", __FUNCTION__, __LINE__);
             pthread_exit("no any advice existed");
             return;
         }
@@ -519,14 +519,14 @@ void *SendAdvice_Background(void) {
         offset = 0;
         //CTOS_EthernetOpen();   
         if (gIDLE == FALSE) {
-            myDebugPrinter(ERROR, "[%s,%d] thread not in IDLE UI\n", __FUNCTION__, __LINE__);
+            printf("[%s,%d] thread not in IDLE UI\n", __FUNCTION__, __LINE__);
             pthread_exit("not in IDLE now");
             return;
         }
-        myDebugPrinter(ERROR, "[%s,%d] advice ready to SSLSocketConnect\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d] advice ready to SSLSocketConnect\n",__FUNCTION__,__LINE__);
         usRet = SSLSocketConnect();
         if (usRet != d_OK) {
-            myDebugPrinter(ERROR, "[%s,%d] thread sslConect fail\n", __FUNCTION__, __LINE__);
+            printf("[%s,%d] thread sslConect fail\n", __FUNCTION__, __LINE__);
             pthread_exit("ssl connect fail");
             return;
         }
@@ -587,7 +587,7 @@ void *SendAdvice_Background(void) {
         //      printf("[%s,%d] sendAdvice no.%d\n",__FUNCTION__,__LINE__,iCount);
         //offset+=sizeof(TRANS_DATA2);
         if (iCount >= 100) break;
-        myDebugPrinter(ERROR, "[%s,%d]loop\n",__FUNCTION__,__LINE__);
+        printf("[%s,%d]loop\n",__FUNCTION__,__LINE__);
     } while (iCount < TotalCount);
     fclose(fp);
 
@@ -599,7 +599,7 @@ Disconnect:
     //  Eth_SSLSocketDisConnect();       
     SSLSocketDisConnect();
 
-    myDebugPrinter(ERROR, "[%s,%d] sendAdvice in Background end\n", __FUNCTION__, __LINE__);
+    printf("[%s,%d] sendAdvice in Background end\n", __FUNCTION__, __LINE__);
     pthread_exit("send Advice finish");
 }
 
@@ -617,7 +617,7 @@ USHORT Process_SendAdvice3(BYTE SettleFlag) {
     // gOFFLINETXLIMIT=5;
     long UpLoadlist[1000];
     memset(&UpLoadlist, 0x00, sizeof (UpLoadlist));
-    USHORT usRet = GetUnuploadTx2(&TotalCount, (long *) &UpLoadlist);
+    USHORT usRet = GetUnuploadTx2(&TotalCount, (long *)UpLoadlist);
     if (SettleFlag != 1) {
         if (usRet == d_OK) {
             if (TotalCount < gOFFLINETXLIMIT) {
@@ -628,7 +628,7 @@ USHORT Process_SendAdvice3(BYTE SettleFlag) {
     }
 
     if (TotalCount == 0) return d_OK;
-    USHORT DispLine1Y = 40 + 16, DispLine2Y = 120 + 16, DispLine3Y = 120 + 16;
+    
     CTOS_LCDSelectMode(d_LCD_TEXT_320x240_MODE);
     CTOS_LCDGClearCanvas();
     ShowTitle(gTransTitle);
@@ -669,7 +669,7 @@ USHORT Process_SendAdvice3(BYTE SettleFlag) {
         sprintf(buf, "%d/%d", iCount, TotalCount);
         ShowLine(0, 40 + 40 + 16 + 10, Big_Font_Size, buf, FALSE);
         fseek(fp, UpLoadlist[iCount], SEEK_SET);
-        iSize = fread((BYTE *) & TransData, sizeof (TRANS_DATA2), 1, fp);
+        iSize = fread((BYTE *) &TransData, sizeof (TRANS_DATA2), 1, fp);
         // if(TransData.ucAdviceFLAG==0){
         if (TransData.ucTXSTATUS == TransStatus_ADVREQ) {
             remove(SendFile);
@@ -683,37 +683,23 @@ USHORT Process_SendAdvice3(BYTE SettleFlag) {
             usRet = Eth_PutDeviecBackOnBase();
             usRet = Process_TransComm2(&TransData, 0);
 
-            //sprintf(temp, "trans result[%02X]",usRet);
-            //CTOS_PrinterPutString(temp);
-
-            // usRet= ECC_CheckAPResponseCode(usRet);
-
-            //sprintf(temp, "check result[%02X]",usRet);
-            //CTOS_PrinterPutString(temp);
+           
 
             if (usRet != d_OK) {
-                fclose(fp);
-                //usRet= SSLSocketDisConnect();//20141114, kobe modified it
-                //                        SSLSocketDisConnect();
-                //    Eth_SSLDisconnect();
-
+                fclose(fp);           
                 goto Disconnect;
             }
-            //  usRet= ECC_CheckCMASResponseCode(TransData.ucResponseCode);
-            //    if(usRet==d_OK){
+            
             if (strcmp(TransData.ucResponseCode, "00") == 0) {
                 TransData.ucTXSTATUS = TransStatus_OK;
                 fseek(fp, UpLoadlist[iCount], SEEK_SET);
-                fwrite((UCHAR *) & TransData, sizeof (TRANS_DATA2), 1, fp);
+                fwrite((UCHAR *) &TransData, sizeof (TRANS_DATA2), 1, fp);
 
             }
 
         }
         iCount++;
         if (iCount >= 1000) break;
-
-        //offset+=sizeof(TRANS_DATA2);
-
     } while (iCount < TotalCount);
     fclose(fp);
     // usRet= SSLSocketDisConnect();
@@ -1122,7 +1108,7 @@ USHORT Process_Settle() {
     sprintf(gTransTitle, "結帳");
 
     USHORT TXCount = CheckBatchCount();
-    BYTE temp[512];
+    
 
     if (TXCount == 0) {
         ret = ShowMessage2line(gTransTitle, "目前無交易", "無需結帳!!", Type_ComformOK);

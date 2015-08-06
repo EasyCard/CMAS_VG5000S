@@ -1,7 +1,7 @@
 #include "ECCAPP.h"
 #include <signal.h>
 
-pthread_t MONITOR_COMPORT_STATUS;
+//pthread_t MONITOR_COMPORT_STATUS = 0x00;
 void rs232Initial(void *p1)
 {
     RS232_OBJ *rs232 = (RS232_OBJ*)p1;
@@ -29,78 +29,12 @@ int inOpenComport(void *p1)
         CTOS_Beep();
     }
     
-    //thread for monitor RS232 Status
-    printf("[%s,%d] monitorRS232Status thread Create\n",__FUNCTION__,__LINE__);
-    pthread_create(&MONITOR_COMPORT_STATUS, NULL, (void *)monitorRS232Status, p1);
-    
+    //thread for monitor RS232 Status    
+    //pthread_create(&MONITOR_COMPORT_STATUS, NULL, (void *)monitorRS232Status, p1);
+    //myDebugPrinter(ERROR,"[%s,%d] monitorRS232Status thread Create(%d)\n",__FUNCTION__,__LINE__,MONITOR_COMPORT_STATUS);
     return result; 
 }
-/*
-int inSendData(void *p1, void *p2, ULONG size)
-{
-    RS232_OBJ *rs232 = (RS232_OBJ*)p1;
-    BYTE *data = (BYTE*)p2;
-    //BYTE *buffer;
-    BYTE temp[16];
-    USHORT len;
-    int j;
-    BYTE sendCnt;
-    BYTE log[2048];
-    //if((buffer=malloc(size+3))==NULL)return COMM_MEMORY_FAIL;
-    
-    //sprintf(buffer,"%c%s%c",0x02,data,0x03);
-    
-    while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK);
-    if(CTOS_RS232TxData(rs232->protocal.comport, data, size) != d_OK)    
-    {              
-        CTOS_Beep();   
-        //free(buffer);
-        return RS232_SEND_FAIL;        
-    }     
-    //free(buffer);
-        
-    //CTOS_Delay ( 1000 );
-    if(rs232->waitACKCnt>0)        
-    {        
-            len=0;     
-            sendCnt=3;
-            //CTOS_RS232RxReady(rs232->protocal.comport, &len);                
-            do
-            {                    
-                //j=len;            
-                CTOS_Delay ( 2000 );//wait 2sec             
-                CTOS_RS232RxReady(rs232->protocal.comport, &len);
-                
-                if(len==0)
-                {
-                    while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK);                        
-                    if(CTOS_RS232TxData(rs232->protocal.comport, data, size) != d_OK)        
-                    {                                      
-                        CTOS_Beep();                   
-                        //return RS232_SEND_FAIL;                        
-                    }  
-                    sendCnt--;
-                    sprintf(log,"response Cnt(%d)",sendCnt);
-                    SystemLog("RS232_inSendData",log);
-                }
-                else
-                    break;
-                
-            }while(sendCnt>0);
-            memset(temp,0x00,sizeof(temp));
-            CTOS_RS232RxData(rs232->protocal.comport, temp, &len);
-            if(temp[0]!=ACK)
-            {
-//                /CTOS_PrinterPutString("No ACK");
-                sprintf(log,"not ACK (%04X)",temp[0]);                    
-                SystemLog("RS232_inSendData",log);
-                return RS232_FORMAT_ERROR;        
-            }
-    }
-    
-    return d_OK;
-}
-*/
+
 int inSendData(void *p1, void *p2, ULONG size)
 {
     RS232_OBJ *rs232 = (RS232_OBJ*)p1;
@@ -118,17 +52,20 @@ int inSendData(void *p1, void *p2, ULONG size)
     printf("[%s,%d] RS232(%d) send data start\n",__FUNCTION__,__LINE__,rs232->protocal.comport);
     
     //dumpByteArrayToHexString(data, size, "RS232 send");
-    
+
+#if 1
     //while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK);
     //while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK){
     //    printf("[%s,%d] RS232 TxReady not OK~~\n",__FUNCTION__,__LINE__);
     //}
+    vdCheckRS232TxReadyV2(rs232);
     
+#else
     if(checkRS232TxReady(rs232) == FALSE){
         printf("[%s,%d] check Rs232 Tx Ready fail\n",__FUNCTION__,__LINE__);
         return RS232_SEND_FAIL;
     }
-    
+#endif    
     
     printf("[%s%d] RS232 Ready finish\n",__FUNCTION__,__LINE__);
     if(CTOS_RS232TxData(rs232->protocal.comport, data, size) != d_OK)    
@@ -210,152 +147,6 @@ int inSendData(void *p1, void *p2, ULONG size)
     
     return d_OK;
 }
-
-/*dynamic realloc ...not finish stop
-int myDynamicDataCat(BYTE* dest, int destIndex, BYTE* src, int srcLen)
-{
-    BYTE *temp;
-    temp = realloc(dest, sizeof(BYTE)*(destIndex+srcLen));
-    if(!temp) return COMM_MEMORY_FAIL;
-    
-    dest = temp;
-    memcpy(dest+destIndex, src, srcLen);
-    
-    return d_OK;
-}
-
-
-int inRecvDataV2(void*p1)
-{
-   RS232_OBJ *rs232 = (RS232_OBJ*)p1;    
-    
-    USHORT len;
-    int j;
-    int result;
-    BYTE temp[16];
-    BYTE printBuf[512];
-    BYTE temp2[16];
-    BYTE recvBufferTemp[512];
-    int l;
-    int t;
-    int recvBufferTempLen;
-    int c;
-    BOOL gotEtx;
-    
-    len=0;
-    l=1;
-    t=0;
-    gotEtx = FALSE;
-    recvBufferTempLen= sizeof(recvBufferTemp);
-    result=COMM_ESCAPE;
-    if((CTOS_RS232RxReady(rs232->protocal.comport, &j)) == d_OK && j>0)//got data in
-    {        
-        //Recv Data
-        while(1)
-        {    
-            c = CTOS_RS232RxData(rs232->protocal.comport, temp2, &l);
-            if(c>0)
-            {
-                if(temp2[0] == STX)//start
-                {
-                    recvBufferTemp[t++] = temp2[0];
-                    len++;
-                    while(1)
-                    {
-                        c = CTOS_RS232RxData(rs232->protocal.comport, temp2, &l);
-                        if(c<=0) 
-                        {
-                            if(myDynamicDataCat(rs232->recvMsg, len))
-                            break;
-                        }
-                        if(temp[0] == ETX){
-                            recvBufferTemp[t++] = temp2[0];
-                            len++;
-                            rs232->recvMsg = realloc(rs232->recvMsg, sizeof(BYTE)*len);
-                            if(!rs232->recvMsg) {                            
-                                return COMM_MEMORY_FAIL;
-                            }
-                            memcpy(rs232->recvMsg+(len-(len%recvBufferTempLen)), recvBufferTemp, t);
-                                
-                            gotEtx = TRUE;
-                            break;//stop
-                        } 
-
-                        recvBufferTemp[t] = temp2[0];
-                        t++;
-                        len++;
-
-                        if(t>=recvBufferTempLen)
-                        {
-                            rs232->recvMsg = realloc(rs232->recvMsg, sizeof(BYTE)*recvBufferTempLen);
-                            if(!rs232->recvMsg) {                            
-                                return COMM_MEMORY_FAIL;
-                            }
-                            memcpy(rs232->recvMsg+((int)(len/recvBufferTempLen)*recvBufferTempLen), recvBufferTemp, recvBufferTempLen);
-                            //reset tempBuffer and index
-                            memset(recvBufferTemp, 0x00, recvBufferTempLen);
-                            t=0;
-                        }
-                    }
-                }
-            }
-            else
-                break;
-        }   
-       // }while(j!=len);  
-        
-        rs232->recvSize = len;
-        result = len;                
-    }
-    else//no data in
-        return COMM_ESCAPE;
-
-    //allocate memory
-    //if((rs232->recvMsg = calloc(len+1,sizeof(BYTE)))==NULL)
-    //    return COMM_MEMORY_FAIL;
-   
-    //CTOS_RS232RxData(rs232->protocal.comport,rs232->recvMsg,&(rs232->recvSize));
-    
-    CTOS_RS232FlushRxBuffer(rs232->protocal.comport);
-    CTOS_RS232FlushTxBuffer(rs232->protocal.comport);
-    
-    
-    if(inCheckDataCompleteness(rs232) == d_OK)
-    {    
-        //response ACK
-        while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK);
-        memset(temp,0x00,sizeof(temp));
-        for(j=0;j<rs232->sendACKCnt;j++)sprintf(temp+j,"%c",ACK);
-        
-        if(CTOS_RS232TxData(rs232->protocal.comport, temp, strlen(temp)) != d_OK)
-        {
-                CTOS_Beep();
-                if(rs232->recvMsg) free(rs232->recvMsg);
-                rs232->recvMsg=NULL;
-                return RS232_SEND_FAIL;
-        }        
-    }            
-    else
-    {
-        if(rs232->recvMsg) free(rs232->recvMsg);
-        rs232->recvMsg=NULL;
-        //response NAK
-        while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK);
-        memset(temp,0x00,sizeof(temp));
-        for(j=0;j<rs232->sendACKCnt;j++)sprintf(temp+j,"%c",NAK);
-        
-        if(CTOS_RS232TxData(rs232->protocal.comport, temp, strlen(temp)) != d_OK)
-        {
-                CTOS_Beep();
-                return RS232_SEND_FAIL;
-        }        
-        return RS232_FORMAT_ERROR;
-    }
-    
-    return d_OK;
-    
-}
-*/
 
 int inRecvDataV2(void*p1)
 {
@@ -440,124 +231,11 @@ int inRecvDataV2(void*p1)
 }
 
 
-
-/*
- * orig function backup
-int inRecvDataV2(void*p1)
-{
-   RS232_OBJ *rs232 = (RS232_OBJ*)p1;    
-    
-    USHORT len;
-    int j;
-    int result;
-    BYTE temp[16];
-    BYTE printBuf[512];
-    BYTE temp2[16];
-    
-    len=0;
-    result=COMM_ESCAPE;
-    if((CTOS_RS232RxReady(rs232->protocal.comport, &len)) == d_OK && len>0)//got data in
-    {        
-        //Recv Data
-        do
-        {    
-            j=len;               
-            CTOS_Delay ( 100 );                
-            CTOS_RS232RxReady(d_COM1, &len);
-        }while(j!=len);  
-        
-        rs232->recvSize = len;
-        result = len;                
-    }
-    else//no data in
-        return COMM_ESCAPE;
-
-    //allocate memory
-    if((rs232->recvMsg = calloc(len+1,sizeof(BYTE)))==NULL)
-        return COMM_MEMORY_FAIL;
-   
-    CTOS_RS232RxData(rs232->protocal.comport,rs232->recvMsg,&(rs232->recvSize));
-    
-   
-    
-    if(inCheckDataCompleteness(rs232) == d_OK)
-    {    
-        //response ACK
-        while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK);
-        memset(temp,0x00,sizeof(temp));
-        for(j=0;j<rs232->sendACKCnt;j++)sprintf(temp+j,"%c",ACK);
-        
-        if(CTOS_RS232TxData(rs232->protocal.comport, temp, strlen(temp)) != d_OK)
-        {
-                CTOS_Beep();
-                free(rs232->recvMsg);
-                rs232->recvMsg=NULL;
-                return RS232_SEND_FAIL;
-        }        
-    }            
-    else
-    {
-        free(rs232->recvMsg);
-        rs232->recvMsg=NULL;
-        //response NAK
-        while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK);
-        memset(temp,0x00,sizeof(temp));
-        for(j=0;j<rs232->sendACKCnt;j++)sprintf(temp+j,"%c",NAK);
-        
-        if(CTOS_RS232TxData(rs232->protocal.comport, temp, strlen(temp)) != d_OK)
-        {
-                CTOS_Beep();
-                return RS232_SEND_FAIL;
-        }        
-        return RS232_FORMAT_ERROR;
-    }
-    
-    return d_OK;
-    
-}
-
-int inCheckDataCompleteness(void*p1)
-{
-    RS232_OBJ* rs232 = (RS232_OBJ*)p1;
-    int result;
-    BYTE buffer[64];
-    
-    BYTE lrc;
-    int size;
-    result = d_OK;            
-   
-    if(rs232->dataCheckType==ECR_VER_NORMAL)//normal version
-    {
-        rs232->sendACKCnt=1;
-        rs232->waitACKCnt=1;
-        if(rs232->recvMsg[0] != 0x02 || rs232->recvMsg[rs232->recvSize-1] != 0x03)    
-            result =-1;       
-    }
-    else if(rs232->dataCheckType==ECR_VER_HOSPITAL)//hospital version
-    {
-        rs232->sendACKCnt=2;
-        rs232->waitACKCnt=2;
-        if(rs232->recvMsg[0] != 0x02 || rs232->recvMsg[rs232->recvSize-2] != 0x03)               
-            result=-1;
-        size = rs232->recvSize-2;
-        lrc = btRs232CalculateLrc(rs232->recvMsg+1, &size);
-        if(lrc != rs232->recvMsg[rs232->recvSize-1])
-            return -1;
-    }
-    else
-    {
-        sprintf(buffer, "!!! error !!!, UnKnowen ECR Version(%d)",rs232->dataCheckType);    
-        CTOS_PrinterPutString(buffer);
-        result=-1;
-    }           
-    return result;            
-}
-*/
-
 int inCloseComport(void *p1)
 {
     RS232_OBJ* rs232 = (RS232_OBJ*)p1;
-    
+    int result=0;
+    int kill_rc=0; 
     return CTOS_RS232Close(rs232->protocal.comport);
     
 }
@@ -699,12 +377,15 @@ BYTE btRs232CalculateLrc(void *p1, void *p2)
     return lrc;
 }
 
+
 void monitorRS232Status(void *p1){
 
     RS232_OBJ* rs232 = (RS232_OBJ*)p1;
     
     printf("[%s,%d] monitorRS232Status Start\n",__FUNCTION__,__LINE__);
     while(1){    
+        
+        CTOS_PrinterPutString("loop");
         rs232->fTxReady = FALSE;
         //printf("[%s,%d]ready loop forever\n",__FUNCTION__,__LINE__);
         
@@ -725,6 +406,47 @@ void monitorRS232Status(void *p1){
     return;
 }
 
+void vdCheckRS232TxReadyV2(void *p1){
+
+    int result;
+    BOOL reboot = FALSE;
+    int retry = 2;
+    
+        
+    RS232_OBJ* rs232 = (RS232_OBJ*)p1;
+     
+    CTOS_TimeOutSet(TIMER_ID_3, 500);//5 Sec Timeout            
+        
+    while(CTOS_RS232TxReady(rs232->protocal.comport) != d_OK){              
+        if(retry < 0) {
+            reboot = TRUE;
+            break;
+        }
+        if(CTOS_TimeOutCheck(TIMER_ID_3) == d_YES){
+            retry--;
+            printf("[%s,%d] check RS232 TxReady Timeout, maybe comport something wrong, closed it & opened it again\n",__FUNCTION__,__LINE__);
+        
+            if((result=rs232->openComport(rs232)) != d_OK){
+                printf("[%s,%d] open comport fail(%d)\n",__FUNCTION__,__LINE__,result);
+                reboot = TRUE;
+                break;
+                //myDebugPrinter(ERROR, "[%s,%d] CTOS_RS232TxReady fail and ReOpen port fail, EDC Reboot",__FUNCTION__,__LINE__);
+                //CTOS_SystemReset();//reboot
+            }                        
+            printf("[%s,%d] reOpened comport Success\n",__FUNCTION__,__LINE__);            
+            CTOS_TimeOutSet(TIMER_ID_3, 500);//5 Sec Timeout  
+        }
+    } 
+    
+    if(reboot == TRUE){        
+        myDebugPrinter(ERROR, "[%s,%d] CTOS_RS232TxReady fail and ReOpen port fail, EDC Reboot",__FUNCTION__,__LINE__);
+        CTOS_SystemReset();//reboot    
+    }
+    
+    return;
+}
+
+#if 0
 BOOL checkRS232TxReady(void *p1){
 
     int result;
@@ -736,20 +458,17 @@ BOOL checkRS232TxReady(void *p1){
     CTOS_TimeOutSet(TIMER_ID_3, 500);//5 Sec Timeout            
             
     while(1){  
+        
         if(rs232->fTxReady == TRUE){
             txReady = TRUE;
             break;
         } else if(CTOS_TimeOutCheck(TIMER_ID_3) == d_YES){
             printf("[%s,%d] check RS232 TxReady Timeout, maybe comport something wrong, closed it & opened it again\n",__FUNCTION__,__LINE__);
         
-            //result = pthread_join(MONITOR_COMPORT_STATUS, &threadResult);
+            /*
             result = pthread_cancel(MONITOR_COMPORT_STATUS);
             printf("[%s,%d] monitor thread cancel result(%d)\n",__FUNCTION__,__LINE__,result);
-            //close comport
-            //if((result=rs232->closeComport(rs232)) != d_OK){
-            //    printf("[%s,%d] close comport fail(%d)\n",__FUNCTION__,__LINE__,result);
-            //}
-            
+            */
             if((result=rs232->openComport(rs232)) != d_OK){
                 printf("[%s,%d] open comport fail(%d)\n",__FUNCTION__,__LINE__,result);                 
                 CTOS_SystemReset();//reboot
@@ -769,3 +488,4 @@ BOOL checkRS232TxReady(void *p1){
     
     return txReady;
 }
+#endif

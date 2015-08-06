@@ -3305,7 +3305,7 @@ USHORT usUnFormatTMSTag(ezxml_t Tag) {
     memset(tmpstr, 0x00, sizeof (tmpstr));
     //    if(strlen(Tag->txt)<=1) return d_OK; 
 
-    printf("[%s,%d] unFormat TMS tag:%s\n", __FUNCTION__, __LINE__, Tag->name);
+    //printf("[%s,%d] unFormat TMS tag:%s\n", __FUNCTION__, __LINE__, Tag->name);
     if (strcmp(Tag->name, "TM05") == 0) {
         memset(gConfig.ETHERNET.HOST_PRODUCTION.FTP.IP, 0x00, sizeof (gConfig.ETHERNET.HOST_PRODUCTION.FTP.IP));
         memcpy(gConfig.ETHERNET.HOST_PRODUCTION.FTP.IP, Tag->txt, strlen(Tag->txt));
@@ -3898,7 +3898,7 @@ USHORT UnpackTMSParameter() {
     ezxml_t ezxml_TMS;
     ezxml_TMS = LoadXMLFile(TMSFILE);
 
-    printf("[%s,%d] TMS File: %s\n", __FUNCTION__, __LINE__, ezxml_toxml(ezxml_TMS));
+    //printf("[%s,%d] TMS File: %s\n", __FUNCTION__, __LINE__, ezxml_toxml(ezxml_TMS));
 
     if (ezxml_TMS == NULL) { //找不到tms file 表示無資料更新  
         SystemLog("UnpackTMSParameter", "LOAD TMS FILE XML STRUCT FAIL");
@@ -3907,13 +3907,7 @@ USHORT UnpackTMSParameter() {
     ezxml_t TMSVer = ezxml_get(ezxml_TMS, "VERSION", -1);
     if (TMSVer == NULL) return d_ERR_XMLError;
     int iTMSVerNO = atoi(ezxml_attr(TMSVer, "VER"));
-    // int iTMSVerNO=atoi( gConfig.TMS.PARAMETER);
-    // ezxml_t ConfigVer = ezxml_get(gConfigDATA,"CURRVERSION",0,"PARAMETER",-1);
-    // if(ConfigVer==NULL) return d_ERR_XMLError;    
-    // BYTE CurrParameter[6+1];
-    // memset(CurrParameter,0x00,sizeof(CurrParameter));
-    // ret= GetConfigTag("CURRVERSION","PARAMETER",CurrParameter);
-
+    
     int iConfigVerNO = atoi(gConfig.CURRVERSION.PARAMETER);
     //版本號相同 不需更新 delete tms file
 
@@ -3929,10 +3923,19 @@ USHORT UnpackTMSParameter() {
     ecrObj.gData.tmsUpdateFld = calloc(1, sizeof (TMS_UPDATE_FIELD));
     //end
 
-    unsigned long CurrTime, TmsTime;
+    unsigned long nowDate, tmsDate;
+    CTOS_RTC SetRTC;       
+    BYTE szDate[16];
+    memset(szDate,0x00,sizeof(szDate));
+    ret = CTOS_RTCGet(&SetRTC);
+    sprintf(szDate,"%04d%02d%02d",SetRTC.bYear + 2000,SetRTC.bMonth,SetRTC.bDay);
+    nowDate = atol(szDate);
+    //printf("[%s,%d]nowDate(%s)\n",__FUNCTION__,__LINE__,nowDate);
+    
+    
     BYTE tmpdata[14 + 1];
     BYTE * TMSStartData;
-    fnGetRTCUNIXDataTime(&CurrTime);
+    //fnGetRTCUNIXDataTime(&CurrTime);
     ezxml_t tag = TMSVer->child;
     while (tag != NULL) {
 
@@ -3942,16 +3945,18 @@ USHORT UnpackTMSParameter() {
             tag = tag->sibling;
             continue;
         }
-        sprintf(tmpdata, "%s000000", TMSStartData);
-        fngetUnixTimeCnt((BYTE *) & TmsTime, (BYTE *) & tmpdata);
+        tmsDate = atol(TMSStartData);
+        
+        //sprintf(tmpdata, "%s000000", TMSStartData);
+        //fngetUnixTimeCnt((BYTE *) & TmsTime, (BYTE *) & tmpdata);
         //尚未生效 暫不更新 不刪檔案
 
-        printf("[%s,%d] nowTime:%lu, TMSTime:%lu\n", __FUNCTION__, __LINE__, CurrTime, TmsTime);
-        if (CurrTime < TmsTime) {
-            // tag=tag->sibling;
-            //continue;
+        //printf("[%s,%d] tag(%s), nowDate(%lu), tmsDate(%lu)\n", __FUNCTION__, __LINE__, tag->name, nowDate, tmsDate);
+        if (nowDate < tmsDate) {                     
             printf("[%s,%d] Tag:%s not yet Timeout to updade TMS para.\n", __FUNCTION__, __LINE__, tag->name);
-            return d_ERR_NOTNEEDUPDATEPARAMETER;
+            tag=tag->sibling;   
+            continue;
+            //return d_ERR_NOTNEEDUPDATEPARAMETER;
         }
         ret = usUnFormatTMSTag(tag);
 
@@ -3969,9 +3974,8 @@ USHORT UnpackTMSParameter() {
     ECC_SetXMLTag2(VERSIONINFO_Path, "VERSION", "CURRVERSION", "PARAMETER", gConfig.CURRVERSION.PARAMETER);
     //  SetConfigTag("CURRVERSION","PARAMETER",ezxml_attr(TMSVer,"VER"));
 
-    // ret= Config_SetData();
-    // ret=SetCURRVERSIONInfo();
-    // ConfigFunction_GetData();  
+    //return d_OK;
+    
     //2014.04.15, kobe added it,response to POS first and save TMS parameters for ECR
     if (ecrObj.gData.isEcrTxn)//ecr SignOn return first
     {
@@ -3994,13 +3998,14 @@ USHORT UnpackTMSParameter() {
     }
     //end
 
+    //return d_OK;
     sprintf(tmpbuf, "版本號:%s", ezxml_attr(TMSVer, "VER"));
     //ShowMessage3line("TMS","參數已更新",tmpbuf,"",Type_ComformAnykey);
     ret = ShowMessage3line("TMS", "參數已更新!", tmpbuf, "是否列印參數", Type_ComformOK);
     if (ret == d_OK) {
         PrintParameter();
     }
-    //ret= InitConfigData();
+    
     Sysinfo2_InitConfigData();
     SendDebugFile(TMSFILE);
     SendDebugFile(ConfigXML);

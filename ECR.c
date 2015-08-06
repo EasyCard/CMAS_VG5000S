@@ -1275,7 +1275,7 @@ int inTmsBecomeEffective(void *p1, void *p2) {
                  if(p!=NULL)//stopbit
                  {
                      ecr->rs232.protocal.stopBits = atoi(p);
-                     p = strtok (NULL, delim);
+                     //p = strtok (NULL, delim);
                  }                          
             }
         }
@@ -1332,6 +1332,7 @@ int inEcrConfigSave(void*p1) {
     
 
 
+    
     if (ecr->gData.tmsUpdateFld)//if true ,measn config save from singOn, otherwise config Save from manual setting comport
         if ((result = inTmsBecomeEffective(ecr, NULL)) != d_OK)//move signon tms data to ecr object
             return result;
@@ -1382,7 +1383,7 @@ int inEcrConfigSave(void*p1) {
                             ezxml_set_attr_d(rs232Tag, "comport", temp);
 
                             //baud_rate
-                            sprintf(temp,"%ld",ecr->rs232.protocal.baudRate);
+                            sprintf(temp,"%lu",ecr->rs232.protocal.baudRate);
                             ezxml_set_attr_d(rs232Tag, "baud_rate", temp);
 
                             //bits

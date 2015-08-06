@@ -76,7 +76,7 @@ int inCheckDataCompleteness(void*p1);
 BYTE btRs232CalculateLrc(void *p1, void *p2);
 
 void monitorRS232Status(void *p1);
-BOOL checkRS232TxReady(void *p1);
+void vdCheckRS232TxReadyV2(void *p1);
 #ifdef	__cplusplus
 }
 #endif
