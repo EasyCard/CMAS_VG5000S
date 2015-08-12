@@ -118,8 +118,7 @@ USHORT Process_ReBootCheckStatus() {
             sprintf(RS232STR, "讀卡機測試:正常");
         }
 
-    }
-    //  SystemCheck(RS232STR); 
+    }    
 
     if (ecrObj.ecrOn)
         return d_OK;
@@ -1186,11 +1185,8 @@ USHORT Process_Settle() {
         CheckNewVersionAP();
         CheckMemoarystatus();
         if (ecrObj.ecrOn) ezSystemReset(); //kobe added for V15, forced reboot
-        if (ShowMessage2line(gTransTitle, "結帳完成", "是否關機?", Type_ComformOK) == d_OK) {
-            ezPowerOff();
-        } else {
-            ezSystemReset();
-        }
+        ShowMessage2line(gTransTitle, "結帳完成", "正在重開機...", Type_ComformNONE);
+        ezSystemReset();
 
         //     ret=UnpackTMSParameter();
 
@@ -1390,6 +1386,19 @@ USHORT uCheckSignOnTime(unsigned long * LastSignonTime) {
     return usRet;
 }
 
+void checkReaderChanged(){
+    
+    if(CheckDeviceID((BYTE *)gTransData.ucCPUDeviceID)!=d_OK){
+        SystemLog("checkReaderChanged", "detected User changed Reader");
+        if(ecrObj.ecrOn && ecrObj.gData.isEcrTxn) {
+            sprintf(ecrObj.ngData->errMsg,"讀卡機已變更,設備將重新開機,檢查設定。");
+            ecrObj.errorResponse(&ecrObj, d_ERR_DEVICE_CHANGED);            
+        }
+        else ShowMessage3line("讀卡機已變更", "請注意!!", "設備將重新開機", "檢查設定。", Type_wait2sec);        
+        CTOS_SystemReset();
+    }
+}
+
 USHORT Process_SignOn2(void)//sign on 交易
 {
     SystemLog("Process_SignOn", "Start");
@@ -1456,6 +1465,7 @@ USHORT Process_SignOn2(void)//sign on 交易
 
         printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         iret = inPPR_Reset(1);
+        checkReaderChanged();
 
         printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
         usRet = ECC_CheckReaderResponseCode(iret);
@@ -1607,6 +1617,7 @@ int iProcess_ReadCardBasicData() {
     if (inRetVal == SW_ERROR) return inRetVal;
 
 
+    printf("[%s,%d] check BLC, time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
     if ((inRetVal == 0x6103) || (inRetVal == 0x640E) || (inRetVal == 0x610F) || (inRetVal == 0x6418))
         //if((inRetVal == 0x6103)||(inRetVal == 0x640E))
     {
@@ -1615,6 +1626,7 @@ int iProcess_ReadCardBasicData() {
         inRetVal = iProcess_CheckBlockCard((BYTE *) & gBasicData.ucCardID);
     }
 
+    printf("[%s,%d] check BLC OK, time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
     return inRetVal;
 }
 
@@ -1635,12 +1647,14 @@ int iProcessWaitCard(void) {
     ShowStatusLine("離開請按<X>離開");
     //  ShowMessage3line(gTransTitle,"請將悠遊卡","放上讀卡機","離開請按<X>離開",Type_ComformNONE);  
 
-    do {
-        mkHWSupport = Eth_CheckDeviceSupport();
-        if ((mkHWSupport & d_MK_HW_CONTACTLESS) == d_MK_HW_CONTACTLESS) {
-            CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);
+    mkHWSupport = (Eth_CheckDeviceSupport() & d_MK_HW_CONTACTLESS);
+
+    
+    do {            
+        if (mkHWSupport == d_MK_HW_CONTACTLESS) {
+            CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);        
         }
-        //Sysinfo2_GetEDCSystemMemoryStatus();
+        
         CTOS_LCDGTextOut(0, 240 - 18 - 18 - 25, gConfig.DEVICE.MEMORY.USEDRAMSIZE, d_FONT_9x18, FALSE);
         CTOS_KBDBufFlush();
         iret = inPPR_ReadCardNumber2();
@@ -1648,6 +1662,7 @@ int iProcessWaitCard(void) {
             //     CTOS_Beep();
             printf("[%s,%d] got card, txn go~~~time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
             iret = iProcess_ReadCardBasicData();
+            if(iret == 0x9000) return d_OK;//V2, kobe added it, 9000 does not needed to parse XML file
             if (iret != 0x6201) {
                 usRet = ECC_CheckReaderResponseCode(iret);
                 return usRet;
@@ -1804,7 +1819,7 @@ USHORT Process_Autoload(int amt) {
         return d_ERR_AUTOLOADNOTNEED;
     if (gBasicData.bAutoLoad != TRUE)
         return d_ERR_AUTOLOADNOTSUPPORT;
-    memcpy((BYTE *) & autoloadAMT, (BYTE *) & gBasicData.ucAutoLoadAmt, sizeof (gBasicData.ucAutoLoadAmt));
+    memcpy((BYTE *) & autoloadAMT, (BYTE *)gBasicData.ucAutoLoadAmt, sizeof (gBasicData.ucAutoLoadAmt));
     //20150522 bruce modify 自動加值金額可為卡片自動加值之倍數，上限為1000
     addamt = autoloadAMT;
     do {

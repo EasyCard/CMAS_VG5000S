@@ -486,10 +486,10 @@ void PrintTitle() {
     FONT_Height = d_FONT_12x24 & 0x00ff;
     offsetY = offsetY + FONT_Height + 2;
 
-    GetBatchTotal_DevID((BYTE *) gTransData.ucCPUDeviceID);
+    //GetBatchTotal_DevID((BYTE *) gTransData.ucCPUDeviceID);//kobe removed it for V2
     memset(TerminalID, 0x00, sizeof (TerminalID));
 
-    fnBINTODEVASC((char *) gTransData.ucCPUDeviceID, TerminalID, 16, LEVEL2);
+    fnBINTODEVASC((char *) gBatchTotal.DEVICEID, TerminalID, 16, LEVEL2);
     sprintf(tmpbuf, "設備編號:%s", TerminalID);
     PrintStr(1, offsetY, tmpbuf, d_FONT_12x24, FALSE);
     FONT_Height = d_FONT_12x24 & 0x00ff;

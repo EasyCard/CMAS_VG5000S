@@ -45,6 +45,7 @@ USHORT Process_SendCurrentTxAdvice(void);
 USHORT GetUnuploadTx2(USHORT *Count,long *UnuploadList);
 USHORT Process_SendCurrentTxAdvice2(void);
 void  Thread_SendCurrentTxAdvice(void);
+void checkReaderChanged(void);
 #ifdef	__cplusplus
 }
 #endif

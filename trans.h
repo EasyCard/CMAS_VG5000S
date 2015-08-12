@@ -235,6 +235,7 @@ typedef struct{
         BYTE ucSATOKEN[16];                   //6408
         BYTE HostToken[16];                   //6409  
      
+        
         BYTE end;
     }TRANS_DATA2;
 USHORT CheckResponseCode(STR * TYPE, USHORT Respcode);

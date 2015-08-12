@@ -201,7 +201,8 @@ USHORT SSLSocketConnect() {
     usRet = Eth_PutDeviecBackOnBase();
     if (usRet != d_OK) return usRet;
     int result = 0;
-    if (pthread_self() != thread_SendAdvice) {
+    printf("[%s,%d] thread_SendAdvice ID(%lu)\n",__FUNCTION__,__LINE__,thread_SendAdvice);
+    if (pthread_self() != thread_SendAdvice && thread_SendAdvice) {
         printf("[%s,%d] pthread_self() != thread_SendAdvice, ready to join\n", __FUNCTION__, __LINE__);
         
         result = pthread_join(thread_SendAdvice, &threadResult);

@@ -849,7 +849,7 @@ USHORT GetAutoDeductAmt() {
     USHORT amt = 0;
     BYTE line1[32], line2[32], line3[32];
     unsigned long UnixSec, profileexpdate;
-    memcpy(&profileexpdate, &gBasicData.ucProfileExpiryDate, 4);
+    memcpy(&profileexpdate, gBasicData.ucProfileExpiryDate, 4);
     if (gBasicData.ucPersonalProfile != 0) {
         fnGetRTCUNIXDataTime(&UnixSec);
         if (UnixSec > profileexpdate) {
@@ -884,7 +884,7 @@ USHORT GetAutoDeductAmt() {
     sprintf(line2, "可用餘額  %ld", ev);
     sprintf(line3, "交易金額  %d", amt);
 
-    ShowMessage3line(gTransTitle, line1, line2, line3, Type_ComformNONE);
+    //ShowMessage3line(gTransTitle, line1, line2, line3, Type_ComformNONE);
 
 
 
@@ -1481,23 +1481,29 @@ START:
             else
                 continue;
         }
+        
+        checkReaderChanged();//kobe added for V2
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) {
             amt = GetAutoDeductAmt();
         }
-        ShowMessage2line(gTransTitle, "交易進行中.", "請勿移動卡片", Type_ComformNONE);
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        //ShowMessage2line(gTransTitle, "交易進行中.", "請勿移動卡片", Type_ComformNONE);
 
 
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         if (GetFunctionSwitch("AUTOLOAD")) {
             gAutoloadAMT = 0;
             if ((gBasicData.bAutoLoad == TRUE)) {
                 Process_Autoload(amt);
             }
         }
-        
-        //mkHWSupport = Eth_CheckDeviceSupport();
+                
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         if (mkHWSupport == d_MK_HW_CONTACTLESS) {
             CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);
         }
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         usInitTxData(TXTYPE_DEDUCT);
         if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) {
             sprintf(gTransData.POSID, "%s", gConfig.TX.AMTTABLE[gSelectTable].NAME);
@@ -1505,7 +1511,7 @@ START:
         gTransData.lTxnAmt = amt;
         gTransData.ucBasicData_CardProfile = gTXCardProfile;
 
-        BYTE baMsg[16];
+        
         while (1) {
             usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR
             if (usRet == 0x6415 || usRet == 0x9000) {
@@ -1585,12 +1591,14 @@ START:
                 sprintf(line3, "交易金額  %ld", gTransData.lTxnAmt);
                 //ShowMessage3line(gTransTitle, line1, line3, line, Type_ComformNONE);
                 //printf("[%s,%d] remove card, txn finish~~~time(%lu)\n",__FUNCTION__,__LINE__,CTOS_TickGet());
+                printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
                 Process_AfterTXSueeess();
                 ShowSystemMemoryStatus("Process_AfterTXSueeess 1");
 
+                printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+                //ShowMessage3line(gTransTitle, line1, line3, line, Type_RemoveCard);
+                printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
                 
-                ShowMessage3line(gTransTitle, line1, line3, line, Type_RemoveCard);
-
                 gAutoloadAMT = 0;
                 gEVBeforeAutoload = 0;
 
@@ -1607,6 +1615,7 @@ START:
 
             break;
         }
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         USHORT TotalCount;
         TotalCount = CheckUnuploadTxCount();
         if (TotalCount > gFORCEONLINELIMIT) {
@@ -1615,7 +1624,9 @@ START:
             return usRet;
         }
 
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         CheckMemoarystatus();
+        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
     } while (1);
 
 DISCONNECT:
@@ -1665,6 +1676,7 @@ USHORT Trans_Cancel() {
             CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);
         }
         iret = inPPR_TxnReqOnline();
+        checkReaderChanged();
         if (iret == 0x6415 || iret == 0x9000) {
             if (iret == 0x6415) {
                 gTransData.ucTXSTATUS = TransStatus_REQ;
@@ -1826,10 +1838,8 @@ USHORT Trans_Refund() {
     gTransData.lTxnAmt = amt;
 
     do {
-
-        // gTransData.ulTMTxnSN=0;
-
         iret = inPPR_TxnReqOnline();
+        checkReaderChanged();
         if (iret == 0x6415 || iret == 0x9000) {
             if (iret == 0x6415) {
                 gTransData.ucTXSTATUS = TransStatus_REQ;

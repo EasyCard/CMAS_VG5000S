@@ -23,41 +23,65 @@ USHORT UpdateSystemInfo() {
 
     BYTE ucCPUSAMID[16 + 1], cpudeviceid[16 + 1], TerminalID[16 + 1], newspid[8 + 1], ReaderSN[8 + 1], deviceid[8 + 1], ReaderFWVersion[12 + 1], SAMID[16 + 1];
     BYTE *buf;
-    BYTE *tmpstr;
-    int result;
-
+    BYTE *tmpstr;       
+    USHORT usRet;
 
     memset(cpudeviceid, 0x00, sizeof (cpudeviceid));
     wub_hex_2_str((char *)gTransData.ucCPUDeviceID, (char *)cpudeviceid, sizeof (gTransData.ucCPUDeviceID));
-    USHORT usRet = GetBatchTotal();
+    //USHORT usRet = GetBatchTotal(); appmain.c Init() already did it
     usRet = CheckDeviceID((BYTE *)gTransData.ucCPUDeviceID);
     if (usRet != d_OK) {
-        usRet = ShowMessage3line("系統檢查", "請注意!!", "讀卡機已變更!!", "資料將重新設定。", TYPE_ECR_FORCE_TO_CONFIRM_0);
-        if (usRet != d_OK) return;
+        printf("[%s,%d] nowReaderNewDeviceID(%s)\n",__FUNCTION__,__LINE__,cpudeviceid);
+        BYTE log[256],ascTemp[16], hexTemp[6];
+        memset(ascTemp, 0x00, sizeof(ascTemp));
+        memset(hexTemp, 0x00, sizeof(hexTemp));
+        GetBatchTotal_DevID(hexTemp);     
+        wub_hex_2_str((char *)hexTemp, (char *)ascTemp, sizeof (hexTemp));
+        
+        sprintf(log,"[%s,%d]nowReaderNewDeviceID(%s) and batchNewDeviceID(%s) different",__FUNCTION__,__LINE__,cpudeviceid, ascTemp);
+        SystemLog("UpdateSystemInfo", log);
+        
+        //sprintf(cpudeviceid, "%s", temp);
+        
+        printf("[%s,%d]batchNewDeviceID(%s)\n",__FUNCTION__,__LINE__,cpudeviceid);
+        
+        usRet = ShowMessage3line("系統檢查", "請注意!!", "讀卡機已變更!!", "資料將重新設定。", Type_wait2sec);
+        //if (usRet != d_OK) return;
+        /*kobe removed it
         BYTE buff[10 + 1];
         memset(buff, 0x00, sizeof (buff));
         if ((result = ShowInputBox("", "請輸入密碼", buff, 10, INPUT_TYPE_Number, '*')) != d_OK)
             return result;
-        //if(result != d_OK) return result;
+        
+        
         if (strcmp(buff, "70765909") != 0) {
             usRet = ShowMessage3line("系統檢查", "密碼錯誤，請注意!!", "非設備維護人員", "請勿任意變更設備。", TYPE_ECR_FORCE_TO_CONFIRM_ANY_KEY);
             return;
-        }
-        usRet = ShowMessage3line("系統檢查", "請注意!!", "", "資料將重新設定。", TYPE_ECR_FORCE_TO_CONFIRM_0);
+        }*/
+        
         USHORT TXCount = CheckBatchCount();
-        if (TXCount > 0) {
-            ECC_CheckAPResponseCode(d_ERR_BATCHNOTEMPTY);
-            usRet = Process_Settle();
-            if (usRet != d_OK) return usRet;
+        if (TXCount > 0) {           
+            //ECC_CheckAPResponseCode(d_ERR_BATCHNOTEMPTY);
+            usRet = d_Fail;
+            while(usRet!=d_OK){
+                ShowMessage3line("讀卡機已變更", "請注意!!", "", "請先進行結帳。", Type_wait2sec);
+                usRet = Process_Settle();
+                CTOS_Delay(2000);
+            }
+            //if (usRet != d_OK) return usRet;
+        } else {
+            SystemLog("UpdateSystemInfo", "Change Reader, and batch empthy");
+            usSetCurrBatchDevID2((BYTE *)gTransData.ucCPUDeviceID);
         }
-        SystemReset();
 
-
+        if(!ecrObj.ecrOn)        
+            SystemReset();
     }
 
     //ret= ECC_SetXMLTag3(ConfigFile, "DEVICE","READER","CPU","CPUDEVICEID",cpudeviceid);
     wub_hex_2_str(gTransData.ucReaderFWVersion, ReaderFWVersion, sizeof (gTransData.ucReaderFWVersion));
 
+    
     if(memcmp(cpudeviceid,"000000000000", 12)==0)
         myDebugPrinter(ERROR, "cpudeviceid all zero");
     sprintf((BYTE *)gConfig.DEVICE.READER.CPU.CPUDEVICEID, "%s", cpudeviceid);
@@ -144,6 +168,7 @@ int inBuildResetOutput_2(int inTxnType, TRANS_DATA2 *Trans, Reset_APDU_In *Dongl
     memcpy(Trans->ucSingleCreditTxnAmtLimit, DongleOut->ucSingleCreditTxnAmtLimit, sizeof (DongleOut->ucSingleCreditTxnAmtLimit));
     //DebugPrint_hex(&DongleOut->ucCPUDeviceID,sizeof(DongleOut->ucCPUDeviceID),"ucCPUDeviceID");  
     memcpy(Trans->ucCPUDeviceID, DongleOut->ucCPUDeviceID, sizeof (DongleOut->ucCPUDeviceID));
+    
     BYTE temp[6];
     memset(temp, 0x00, sizeof(temp));
     if(memcmp(Trans->ucCPUDeviceID, temp, 6)==0){
@@ -315,7 +340,7 @@ int inBuildTxnReqOnlineOutput_2(int inTxnType, TRANS_DATA2 *Trans, TxnReqOnline_
     memcpy(&Trans->ucReaderFWVersion, &DongleOut->ucReaderFWVersion, sizeof (DongleOut->ucReaderFWVersion));
     memcpy(&Trans->ucDeviceID, &DongleOut->ucDeviceID, sizeof (DongleOut->ucDeviceID));
     //DebugPrint_hex(&DongleOut->ucDeviceID,sizeof(DongleOut->ucDeviceID),"ucDeviceID",DebugMode_TX);  
-    memcpy(&Trans->ucCPUDeviceID, &DongleOut->ucCPUDeviceID, sizeof (DongleOut->ucCPUDeviceID));
+    memcpy(Trans->ucCPUDeviceID, DongleOut->ucCPUDeviceID, sizeof (DongleOut->ucCPUDeviceID));
     memcpy(&Trans->ucCPUSPID, &DongleOut->ucCPUSPID, sizeof (DongleOut->ucCPUSPID));
     memcpy(&Trans->ucSubMerchantID, &DongleOut->ucCPULocationID, sizeof (DongleOut->ucCPULocationID));
 
@@ -465,7 +490,7 @@ int BuildTxnReqOfflineOutput_2(int inTxnType, TRANS_DATA2 *Trans, TxnReqOffline_
     Trans->ucHostSpecVersionNo = DongleOut->ucHostSpecVersionNo;
     memcpy(&Trans->ucReaderFWVersion, DongleOut->ucReaderFWVersion, sizeof (Trans->ucReaderFWVersion));
     memcpy(&Trans->ucDeviceID, &DongleOut->ucDeviceID, sizeof (DongleOut->ucDeviceID));
-    memcpy(&Trans->ucCPUDeviceID, &DongleOut->ucCPUDeviceID, sizeof (DongleOut->ucCPUDeviceID));
+    memcpy(Trans->ucCPUDeviceID, DongleOut->ucCPUDeviceID, sizeof (DongleOut->ucCPUDeviceID));
     memcpy(&Trans->ucCPUSPID, &DongleOut->ucCPUSPID, sizeof (DongleOut->ucCPUSPID));
     memcpy(&Trans->ucSubMerchantID, &DongleOut->ucCPULocationID, sizeof (DongleOut->ucCPULocationID));
 
@@ -848,6 +873,7 @@ USHORT usFormatTransTag2(TRANS_DATA2 * TransData, BYTE * TAG, BYTE * NAME, ezxml
             
             wub_hex_2_str((BYTE*)TransData->ucCPUDeviceID, buf, 6);
 
+            
             BYTE temp[16];
             memset(temp, 0x00, 16);
             if(memcmp(TransData->ucCPUDeviceID, temp, 6)==0)
@@ -1594,7 +1620,13 @@ USHORT usFormatTransTag3(TRANS_DATA2 * TransData, BYTE * TAG, BYTE * NAME, BYTE 
         case 4100:
             // wub_hex_2_str((BYTE*)&TransData->ucCPUDeviceID,(BYTE*)&buf4100, 6);
 
-            wub_hex_2_str((BYTE*) & TransData->ucCPUDeviceID, buf, 6);
+            if(memcmp(TransData->ucMessageType,"0500", 4)==0){
+                BYTE temp[16];
+                memset(temp,0x00,sizeof(temp));
+                GetBatchTotal_DevID(temp);
+                wub_hex_2_str((BYTE*)temp, buf, 6);
+            }
+            else wub_hex_2_str((BYTE*)TransData->ucCPUDeviceID, buf, 6);
 
             //fnBINTODEVASC(TransData->ucCPUDeviceID,TransData_STR.ucCPUDeviceID,sizeof(TransData_STR.ucCPUDeviceID),LEVEL2);//n_TXN Device ID
             myxml_ADDXMLNODE(TransLog, TAG, NAME, buf);
