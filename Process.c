@@ -1389,6 +1389,20 @@ USHORT uCheckSignOnTime(unsigned long * LastSignonTime) {
 void checkReaderChanged(){
     
     if(CheckDeviceID((BYTE *)gTransData.ucCPUDeviceID)!=d_OK){
+        myDebugPrinter(ERROR,"[%s,%d] nowReaderNewDeviceID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x), batch(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)"
+                ,__FUNCTION__,__LINE__
+                ,gTransData.ucCPUDeviceID[0]
+                ,gTransData.ucCPUDeviceID[1]
+                ,gTransData.ucCPUDeviceID[2]
+                ,gTransData.ucCPUDeviceID[3]
+                ,gTransData.ucCPUDeviceID[4]
+                ,gTransData.ucCPUDeviceID[5]                
+                ,gBatchTotal.DEVICEID[0]
+                ,gBatchTotal.DEVICEID[1]
+                ,gBatchTotal.DEVICEID[2]
+                ,gBatchTotal.DEVICEID[3]
+                ,gBatchTotal.DEVICEID[4]
+                ,gBatchTotal.DEVICEID[5]);
         SystemLog("checkReaderChanged", "detected User changed Reader");
         if(ecrObj.ecrOn && ecrObj.gData.isEcrTxn) {
             sprintf(ecrObj.ngData->errMsg,"讀卡機已變更,設備將重新開機,檢查設定。");

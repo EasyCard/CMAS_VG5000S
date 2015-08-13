@@ -1596,7 +1596,7 @@ START:
                 ShowSystemMemoryStatus("Process_AfterTXSueeess 1");
 
                 printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
-                //ShowMessage3line(gTransTitle, line1, line3, line, Type_RemoveCard);
+                ShowMessage3line(gTransTitle, line1, line3, line, Type_RemoveCard);
                 printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
                 
                 gAutoloadAMT = 0;

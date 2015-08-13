@@ -305,7 +305,7 @@ USHORT usGetCurrBatchSN(BYTE * bBatchSN, USHORT * usBatchSN) {
     USHORT ret = GetBatchTotal(); //add 20140121
     if (ret != d_OK) return ret; //add 20140121
 
-    memcpy(bBatchSN, &gBatchTotal.ucBatchSN, 8);
+    memcpy(bBatchSN, gBatchTotal.ucBatchSN, 8);
     bBatchSN[8] = 0x00;
     *usBatchSN = gBatchTotal.usBatchSN;
 
