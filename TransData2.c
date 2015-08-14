@@ -484,7 +484,7 @@ int BuildTxnReqOfflineOutput_2(int inTxnType, TRANS_DATA2 *Trans, TxnReqOffline_
     Trans->ucBasicData_CardProfile = DongleOut->ucPersonalProfile;
     memcpy(&Trans->ucCardVaildDate, &DongleOut->ucProfileExpiryDate, sizeof (DongleOut->ucProfileExpiryDate));
     Trans->ucAreaCode = DongleOut->ucAreaCode;
-    memcpy(&Trans->ucCardID, &DongleOut->ucCardID, sizeof (DongleOut->ucCardID));
+    memcpy(Trans->ucCardID, DongleOut->ucCardID, sizeof (DongleOut->ucCardID));
     Trans->ucChipIDLength = DongleOut->ucCardIDLen;
     Trans->lTxnAmt = BYTE3Data2LONG((BYTE *) & DongleOut->ucTxnAmt);
     Trans->ucHostSpecVersionNo = DongleOut->ucHostSpecVersionNo;

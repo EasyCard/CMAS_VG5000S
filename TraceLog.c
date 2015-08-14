@@ -59,12 +59,14 @@ USHORT SystemLog(STR * EVENT,STR * DATA)
     sprintf(filename,"%s/log%02d.xml",path,GetRTC.bHour);
     sprintf(time,"%02d:%02d:%02d",GetRTC.bHour,GetRTC.bMinute,GetRTC.bSecond);
     STR logstr[2048];
-    snprintf(logstr,sizeof(2048),"%s %s=%s",time,EVENT,DATA);//V15, modified by kobe, sprintf -> snprintf
+    snprintf(logstr,sizeof(logstr),"%s %s=%s",time,EVENT,DATA);//V15, modified by kobe, sprintf -> snprintf
   
   f = fopen(filename, "at+");
   if (f == NULL) 
           return -1;
    fprintf(f,"%s\n",logstr);
+   fflush(f);
+   fsync(fileno(f));
    fclose(f);
    return ret;
 }

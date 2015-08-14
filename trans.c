@@ -1416,12 +1416,8 @@ DISCONNECT:
 
 
 USHORT Trans_Deduct_Auto()//購貨交易
-{
-    //   BYTE Buffer[sizeof(ReadCardBasicData_TM_Out)];
-    //  ReadCardBasicData_TM_Out BasicData;
-    int inOutLen, inRecvlen;
-    char operationMode[16];
-    ULONG tstart, tend;
+{    
+    char operationMode[16];    
     int ret;
     gucLockReason = 0;
     USHORT usRet;
@@ -1514,6 +1510,15 @@ START:
         
         while (1) {
             usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR
+            //for avoid readBasicData reade from ACard, but TxnReqoffline readed from BCard
+            if(memcmp(gBasicData.ucCardID, gTransData.ucCardID, sizeof(gTransData.ucCardID) != 0)){
+                BYTE log[512];
+                sprintf(log,"readBasicData'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x), txnReqoffline'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)",
+                        gBasicData.ucCardID[0],gBasicData.ucCardID[1],gBasicData.ucCardID[2],gBasicData.ucCardID[3],gBasicData.ucCardID[4],gBasicData.ucCardID[5],gBasicData.ucCardID[6],
+                        gTransData.ucCardID[0],gTransData.ucCardID[1],gTransData.ucCardID[2],gTransData.ucCardID[3],gTransData.ucCardID[4],gTransData.ucCardID[5],gTransData.ucCardID[6]);
+                SystemLog("Trans_Deduct_Auto CardID no the same", log);
+                goto START;
+            }
             if (usRet == 0x6415 || usRet == 0x9000) {
                 /*記錄交易前卡片餘額，備交易retry判斷用*/
                 memset(&gCardRemainEV, 0x00, sizeof (gCardRemainEV));
