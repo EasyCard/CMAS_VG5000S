@@ -1106,12 +1106,11 @@ BYTE bBuf[5];
 
 USHORT usWriteFile(BYTE *strFileName,BYTE *bData,int size)
 {
-   int indatalen;
-    BYTE len;
+   
    int ret=remove(strFileName);
     
    FILE *f = fopen(strFileName, "w+");
-    if (f == NULL)    return d_ERR_FILE_OPEN;
+    if (f == NULL) return d_ERR_FILE_OPEN;
     
     fseek(f,0,SEEK_SET);
     ret=fwrite(bData,1,size,f);

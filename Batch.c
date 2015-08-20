@@ -95,7 +95,9 @@ USHORT Disp_BatchData(Batch_Totle_STRUCT *BatchTotal) {
 
 USHORT SAVEBatchSN(STR* batchNo) {
     USHORT ret = usWriteFile(BatchSnFile, batchNo, strlen(batchNo));
+    if(ret!=d_OK) myDebugFile((char*)__FUNCTION__,__LINE__,"write BatchSnFile fail(%d)", ret);
     ret = usWriteFile(SDBatchSnFile, batchNo, strlen(batchNo));
+    if(ret!=d_OK) myDebugFile((char*)__FUNCTION__,__LINE__,"write SDBatchSnFile fail(%d)", ret);
     return ret;
 }
 
@@ -316,8 +318,11 @@ USHORT SavetBatchTotal() {
 
     int size = sizeof (gBatchTotal);
     USHORT ret = CTOS_WriteFile(BatchTotleFile, (BYTE *) & gBatchTotal, size);
-    if (ret != d_OK) return ret;
-    // ret= SaveBackupBatchData();
+    if (ret != d_OK) {
+        myDebugFile((char*)__FUNCTION__,__LINE__,"save BatchTotleFile fail(%d)",ret);
+        return ret;
+    }
+        // ret= SaveBackupBatchData();
     //ret= usWriteFile(SDBatchTotleFile,&gBatchTotal,size);
     return ret;
 }

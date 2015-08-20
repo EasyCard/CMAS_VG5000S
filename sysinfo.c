@@ -210,7 +210,9 @@ USHORT UpdateTransSN() {
 
 USHORT SAVETransSn(STR* SN) {
     USHORT ret = usWriteFile(TransSnFile, SN, strlen(SN));
+    if(ret!=d_OK) myDebugFile((char*)__FUNCTION__,__LINE__,"write TransSnFile fail(%d)", ret);
     ret = usWriteFile(SDTransSnFile, SN, strlen(SN));
+    if(ret!=d_OK) myDebugFile((char*)__FUNCTION__,__LINE__,"write SDTransSnFile fail(%d)", ret);
     return ret;
 }
 

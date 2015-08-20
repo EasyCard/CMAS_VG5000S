@@ -236,7 +236,7 @@ int main(int argc, char *argv[]) {
     }
 
 
-
+    myDebugFile((char*)__FUNCTION__,__LINE__,"App main Start(%d)", 123);
     CTOS_TimeOutSet(TIMER_ID_2, Sleeptime);
     CTOS_TimeOutSet(TIMER_ID_1, gSignOnlimit);
 
