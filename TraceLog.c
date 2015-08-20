@@ -31,6 +31,23 @@ void SaveDebugData(TRANS_DATA2* TransData)
         }
 
 }
+
+void myDebugFile(char* function,int line, const char* fmt, ...) {
+    char szLog[1024];
+    char szEvent[512];
+    va_list marker;
+
+    memset(szLog, 0x00, sizeof (szLog));    
+    va_start(marker, fmt);
+    vsprintf(szLog, fmt, marker);
+    va_end(marker);
+
+    sprintf(szEvent,"[%s,%d]",function, line);
+
+    SystemLog(szEvent, szLog);
+}
+
+
 USHORT SystemLog(STR * EVENT,STR * DATA)
 {
     

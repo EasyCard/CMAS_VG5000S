@@ -1388,9 +1388,10 @@ USHORT uCheckSignOnTime(unsigned long * LastSignonTime) {
 
 void checkReaderChanged(){
     
+    BYTE log[512];
     if(CheckDeviceID((BYTE *)gTransData.ucCPUDeviceID)!=d_OK){
-        myDebugPrinter(ERROR,"[%s,%d] nowReaderNewDeviceID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x), batch(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)"
-                ,__FUNCTION__,__LINE__
+        sprintf(log,"TxnType:%d, nowReaderNewDeviceID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x), batch(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)"                
+                ,gTransData.ucTXTYPE
                 ,gTransData.ucCPUDeviceID[0]
                 ,gTransData.ucCPUDeviceID[1]
                 ,gTransData.ucCPUDeviceID[2]
@@ -1403,7 +1404,9 @@ void checkReaderChanged(){
                 ,gBatchTotal.DEVICEID[3]
                 ,gBatchTotal.DEVICEID[4]
                 ,gBatchTotal.DEVICEID[5]);
-        SystemLog("checkReaderChanged", "detected User changed Reader");
+        
+        myDebugPrinter(ERROR,"%s",log);                        
+        SystemLog("checkReaderChanged", log);
         if(ecrObj.ecrOn && ecrObj.gData.isEcrTxn) {
             sprintf(ecrObj.ngData->errMsg,"讀卡機已變更,設備將重新開機,檢查設定。");
             ecrObj.errorResponse(&ecrObj, d_ERR_DEVICE_CHANGED);            
@@ -1478,7 +1481,7 @@ USHORT Process_SignOn2(void)//sign on 交易
         sprintf(gTransfer_SendPackSN, "%08d", SendPackSN);
 
         printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);
-        iret = inPPR_Reset(1);
+        if((iret = inPPR_Reset(1)) != 0x9000) return iret;
         checkReaderChanged();
 
         printf("[%s,%d] trace...\n", __FUNCTION__, __LINE__);

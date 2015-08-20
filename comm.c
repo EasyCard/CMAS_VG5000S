@@ -297,6 +297,7 @@ USHORT SSLSocketSendandRecv2(BYTE DisplayStatus) {
             getlen = RemainSize;
 
         CTOS_LEDSet(d_LED_ORANG, d_ON);
+        memset(SendPack, 0x00, sizeof(SendPack));
         usRet = usReadFileData(SendFile, &getlen, SendPack);
         if (usRet != d_OK) return usRet;
         SystemLog("SSLSocketSendandRecv2", "usReadFileData=ok");

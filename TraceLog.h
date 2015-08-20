@@ -16,7 +16,7 @@ USHORT SystemLog(STR * EVENT,STR * DATA);
 
 USHORT SystemLogInt(STR * EVENT,int  digi,STR * str);
 USHORT SystemLogHex(STR * EVENT,unsigned char* DATA,int len);
-
+void myDebugFile(char* function,int line, const char* fmt, ...);
 #ifdef	__cplusplus
 }
 #endif

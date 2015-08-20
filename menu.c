@@ -1946,24 +1946,28 @@ USHORT SelectAuto_FixDeductAMT() {
 USHORT SelectAMTTABLE() {
     Optionmenu_item MenuItem[20];
     BYTE i = 0;
-    //   USHORT SelectAmtOption=atoi(gConfig.TX.AMTTABLE[0].AREACODE);
+    int j=0;
+    int totalSets = 15;
 
-    for (i = 0; i < 15; i++) {        
-        sprintf(MenuItem[i].itemname, "[%d] %s", i + 1, gConfig.TX.AMTTABLE[i].NAME);
+    for (i = 0; i < totalSets; i++) {        
+        sprintf(MenuItem[i].itemname, "[%d] %s", i + 1, gConfig.TX.AMTTABLE[i].NAME);        
         if (gSelectTable == i)
             MenuItem[i].checked = TRUE;
+        if(strlen(gConfig.TX.AMTTABLE[i].NAME)<=0) {
+            sprintf(MenuItem[i].itemname,"維運測試0元");
+            sprintf(gConfig.TX.AMTTABLE[i].NAME,"維運測試0元");
+            j=i;
+            break;
+        }
     }
 
 
 
-    USHORT ret = ECC_ShowCheckListMeun2("請選擇票價表", MenuItem, 15, TRUE, TRUE);
-    for (i = 0; i < 15; i++) {
+    USHORT ret = ECC_ShowCheckListMeun2("請選擇票價表", MenuItem, j+1, TRUE, TRUE);
+    for (i = 0; i < totalSets; i++) {
         if (MenuItem[i].checked == TRUE) {//modify by bruce
-            gConfig.TX.AMTTABLE[0].AREACODE = i;
-
-
-            gSelectTable = i;
-            // sprintf(gConfig.TX.AMTTABLE[0].AREACODE,"%d",i);
+            //gConfig.TX.AMTTABLE[0].AREACODE = i;
+            gSelectTable = i;            
         }
     }
 

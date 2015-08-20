@@ -1037,10 +1037,11 @@ USHORT Trans_Deduct()//購貨交易
         memcpy(gTransData.ucTMINVOICENO, BarCode, sizeof (BarCode));
     }
 
-    BYTE baMsg[16];
+    
     while (1) {
-        usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR 
+        usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR         
         if (usRet == 0x6415 || usRet == 0x9000) {
+            checkReaderChanged();
             /*記錄交易前卡片餘額，備交易retry判斷用*/
             memset(&gCardRemainEV, 0x00, sizeof (gCardRemainEV));
             memcpy(&gCardRemainEV, (BYTE *) & gTransData.lEVBeforeTxn, sizeof (gTransData.lEVBeforeTxn));
@@ -1477,17 +1478,16 @@ START:
             else
                 continue;
         }
-        
-        checkReaderChanged();//kobe added for V2
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+                
+        //printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) {
             amt = GetAutoDeductAmt();
         }
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        //printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         //ShowMessage2line(gTransTitle, "交易進行中.", "請勿移動卡片", Type_ComformNONE);
 
 
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        //printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
         if (GetFunctionSwitch("AUTOLOAD")) {
             gAutoloadAMT = 0;
             if ((gBasicData.bAutoLoad == TRUE)) {
@@ -1510,6 +1510,7 @@ START:
         
         while (1) {
             usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR
+            checkReaderChanged();//kobe added for V2            
             //for avoid readBasicData reade from ACard, but TxnReqoffline readed from BCard
             if(memcmp(gBasicData.ucCardID, gTransData.ucCardID, sizeof(gTransData.ucCardID) != 0)){
                 BYTE log[512];
