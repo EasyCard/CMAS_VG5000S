@@ -407,8 +407,16 @@ USHORT BackupBatchDataUpload() {
             ret = Process_SendBackupTXLOGAdvice(filename);
 
 
+            //socketConnect
+            ShowMessage2line(gTransTitle, "網路連線中", "請稍候", Type_ComformNONE);                
+            USHORT usRet;    
+            usRet = SSLSocketConnect();    
+            if (usRet != d_OK) {        
+                MessageBox(gTransTitle, "", "網路連線異常", "請檢查並重試", "", d_MB_CHECK);        
+                return usRet;    
+            }
+            
             ShowLine(0, 40 + 16, Big_Font_Size, "結帳作業中.", FALSE);
-
             sprintf(filename, "%sBatchTotal%s.dat", path, BatchNO);
             iSize = sizeof (Batch_Totle_STRUCT);
             USHORT ret = usReadFileData(filename, &iSize, (BYTE *) & BatchTotal);
@@ -421,10 +429,12 @@ USHORT BackupBatchDataUpload() {
             gTransData.ulSettle_TotleCnt = BatchTotal.TotleCnt;
             gTransData.lSettle_TotleAmt = BatchTotal.TotleAMT;
             gTransData.ucTXSTATUS = TransStatus_REQ;
-
             ret = Process_TransComm2(&gTransData, 1);
             remove(SettleFile);
             PrintSettlementReceipt(&BatchTotal);
+            
+            //disConnect SSLsocket
+            SSLSocketDisConnect();
         }
     }
 }

@@ -1823,24 +1823,42 @@ USHORT Process_Autoload(int amt) {
     SystemLog("Process_Autoload", "Start");
     USHORT usRet;
     int iret;
-    long autoloadAMT, ev, addamt;
+    long autoloadAMT=0, ev=0, addamt=0;
     int autoloadlimit = atoi(gConfig.TX.AUTOLOADLIMITAMT);
-    int i = 0;
-    BYTE temp[128];
+    
+    
     BYTE temp2[128];
     memset(temp2, 0x00, sizeof (temp2));
 
-    ev = BYTE3Data2LONG((char *) gBasicData.ucEV);
-
+    //ev = BYTE3Data2LONG((char *) gBasicData.ucEV);
+    memcpy((BYTE *)&ev, gBasicData.ucEV, sizeof(gBasicData.ucEV));
+    
+    
+    //printf("[%s,%d] autoloadlimit(%d)\n",__FUNCTION__,__LINE__,autoloadlimit);
+    //printf("[%s,%d] ev(%lu), gBasicData(%02x)(%02x)(%02x)\n"
+    //        ,__FUNCTION__,__LINE__
+    //        ,ev
+    //        ,gBasicData.ucEV[0], gBasicData.ucEV[1], gBasicData.ucEV[2]);
+    
     if (ev - amt >= 0)//2014.05.19, kobe modified that balance amt >=0
         return d_ERR_AUTOLOADNOTNEED;
     if (gBasicData.bAutoLoad != TRUE)
         return d_ERR_AUTOLOADNOTSUPPORT;
     memcpy((BYTE *) & autoloadAMT, (BYTE *)gBasicData.ucAutoLoadAmt, sizeof (gBasicData.ucAutoLoadAmt));
+    
+    
+        
+    //printf("[%s,%d] autoloadAMT(%lu) hexValue(%08x), gBasicData(%02x)(%02x)(%02x)\n"
+    //        ,__FUNCTION__,__LINE__
+    //        ,autoloadAMT
+    //        ,autoloadAMT
+    //       ,gBasicData.ucAutoLoadAmt[0], gBasicData.ucAutoLoadAmt[1], gBasicData.ucAutoLoadAmt[2]);
+    
+    
     //20150522 bruce modify 自動加值金額可為卡片自動加值之倍數，上限為1000
     addamt = autoloadAMT;
     do {
-        if ((addamt + ev) > amt) {
+        if ((addamt + ev) >= amt) {//modified > to >= by kobe @ 2015/08/24
             break;
             //  return d_ERR_EVNOTENOGHT;
         } else {
@@ -1964,11 +1982,7 @@ USHORT Process_SendBackupTXLOGAdvice(STR * TxLogfile) {
     offset = 0;
     //CTOS_EthernetOpen();   
 
-    /*  USHORT usRet=Eth_SSLConnect_SOCKET(); 
-          if(usRet!=d_OK){
-                  MessageBox(gTransTitle,"","網路連線異常","請檢查並重試","",d_MB_CHECK);
-                   return usRet;
-          }*/
+    
     ShowMessage2line(gTransTitle, "網路連線中", "請稍候", Type_ComformNONE);
     USHORT usRet;
     usRet = SSLSocketConnect();
