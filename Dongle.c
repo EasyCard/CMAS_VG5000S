@@ -860,6 +860,7 @@ int inPPR_ReadCardNumber2() {
         return inRetVal;
     }
 
+    
 #else 
     inRetVal = inSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout);
     if (inRetVal != SUCCESS) {
@@ -869,7 +870,8 @@ int inPPR_ReadCardNumber2() {
 
     inRetVal = (cOutputData[cOutputData[2] + 1] << 8) | (cOutputData[cOutputData[2] + 2]);
     if (inRetVal == 0x9000) {
-        memcpy(&gCardNumberInfo, &cOutputData, sizeof (ReadCardNumber_APDU_Out));
+        memset(&gCardNumberInfo, 0x00, sizeof(ReadCardNumber_APDU_Out));
+        memcpy(&gCardNumberInfo, &cOutputData[OUT_DATA_OFFSET], sizeof (ReadCardNumber_APDU_Out));
         //  inOutLen=sizeof(ReadCardNumber_APDU_Out);
     }
 

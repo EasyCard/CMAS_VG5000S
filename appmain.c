@@ -203,6 +203,7 @@ int main(int argc, char *argv[]) {
     int Sleeptime = 100 * 60; //60秒 
     int kill_rc;
 
+    myDebugFile((char*)__FUNCTION__,__LINE__,"*****App main start *****");
     //CTOS_PrinterFline(5);
     //myDebugPrinter(WARN, "app main start, the warnning words just testing printer function working fine or not");
     //delete ECCAPP

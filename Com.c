@@ -21,8 +21,11 @@ ULONG APDUReceiveTime, APDUSendTime;
 USHORT send_apdu(BYTE COMPORT, const BYTE* buf, USHORT buf_size) {
     USHORT ret;
 
-    //        while(CTOS_RS232TxReady(COMPORT) != d_OK);
+    //if(gDebugFlag == 0x01)            
+        myDebugFile((char*)__FUNCTION__,__LINE__,"Call ReadySend port(%d)",COMPORT);
     if (CTOS_RS232TxReady(COMPORT) != d_OK) {
+        //if(gDebugFlag == 0x01)                    
+            myDebugFile((char*)__FUNCTION__,__LINE__,"Call ReadySend fail");
         //CTOS_RS232Close (COMPORT);
         //ret = CTOS_RS232Open(COMPORT,gREADERPORT.ulBaudRate , gREADERPORT.bParity, gREADERPORT.bDataBits, gREADERPORT.bStopBits);
         /*if(ret!=d_OK){ 
@@ -33,14 +36,19 @@ USHORT send_apdu(BYTE COMPORT, const BYTE* buf, USHORT buf_size) {
     }
     // Send data via COM2 port  //
     APDUSendTime = CTOS_TickGet();
+    
+    myDebugFile((char*)__FUNCTION__,__LINE__,"Call CTOS Send size(%d)",buf_size);
     ret = CTOS_RS232TxData(COMPORT, (BYTE *) buf, buf_size);
+    //if(gDebugFlag == 0x01)//for readBasicData
+    myDebugFile((char*)__FUNCTION__,__LINE__,"Call CTOS Send ok");
+
     if (ret != d_OK) {
         SystemLogInt("send_apdu", ret, "CTOS_RS232TxData Fail");
         return ret;
     }
     printf("[%s,%d] CTOS_RS232TxData time(%lu)\n",__FUNCTION__,__LINE__, APDUSendTime);
     
-    DebugPrint_hex((BYTE *) buf, buf_size, "Send to Reader", DebugMode_TX);
+    //DebugPrint_hex((BYTE *) buf, buf_size, "Send to Reader", DebugMode_TX);
 
     SystemLogHex("Sendto Reader  form EDC", (BYTE *) buf, buf_size);
     return SUCCESS;
@@ -58,7 +66,12 @@ USHORT recv_from(BYTE COMPORT, BYTE * buf, USHORT recv_size, int inTimeout) {
     
     do {
         CTOS_Delay(10);
+           
+       
+        myDebugFile((char*)__FUNCTION__,__LINE__,"Call ReadyRead wantedLen(%d)",recv_size);
         ret = CTOS_RS232RxReady(COMPORT, &data_len);        
+        myDebugFile((char*)__FUNCTION__,__LINE__,"Call ReadyRead OK,nowLen(%d)",data_len);
+        
         /* no needed it
         if (data_len >= recv_size) {
             printf("[%s,%d] data_len(%d) >= recv_size (%d)\n",__FUNCTION__,__LINE__,data_len, recv_size);
@@ -66,6 +79,7 @@ USHORT recv_from(BYTE COMPORT, BYTE * buf, USHORT recv_size, int inTimeout) {
         }*/
         i++;
         if (i == retry_count) {
+            myDebugFile((char*)__FUNCTION__,__LINE__,"ERROR, Call ReadyRead, retryCnt got)");
             printf("[%s,%d] no recv anything~~i(%d), recv_size(%d),data_len(%d) \n", __FUNCTION__, __LINE__, i, recv_size, data_len);
             return 0;
         }
@@ -73,7 +87,10 @@ USHORT recv_from(BYTE COMPORT, BYTE * buf, USHORT recv_size, int inTimeout) {
     //printf("[%s,%d] data_len(%d) == recv_size (%d)\n",__FUNCTION__,__LINE__,recv_size, data_len);
     
     data_len = recv_size;
+    
+    myDebugFile((char*)__FUNCTION__,__LINE__,"Call CTOS Read totalLen(%d)",data_len);
     ret = CTOS_RS232RxData(COMPORT, recvbuf, &data_len);   
+    myDebugFile((char*)__FUNCTION__,__LINE__,"Call CTOS Read OK");
     if (ret != d_OK) {
         printf("[%s,%d] CTOS_RS232RxData fail~~ret(%d)\n", __FUNCTION__, __LINE__, ret);
         SystemLogInt("recv_from", ret, "CTOS_RS232RxData Fail");
@@ -82,7 +99,7 @@ USHORT recv_from(BYTE COMPORT, BYTE * buf, USHORT recv_size, int inTimeout) {
     recv_size = data_len;
     memcpy(buf, recvbuf, data_len);
 
-    DebugPrint_hex(buf, data_len, "RECV from Reader", DebugMode_TX);
+    //DebugPrint_hex(buf, data_len, "RECV from Reader", DebugMode_TX);
 
     SystemLogHex("Recv form Reader", buf, data_len);
 
@@ -123,6 +140,8 @@ USHORT recv_apdu(BYTE COMPORT, BYTE* buf, int inTimeout) {
     APDUReceiveTime = CTOS_TickGet();
     printf("[%s,%d] recv APDU time(%lu)\n",__FUNCTION__,__LINE__,APDUReceiveTime);
     recv_size += OUT_DATA_OFFSET/*sizeof(epilog_t)*/;
+    
+    //dumpByteArrayToHexString(cOutputData, recv_size, "recv from reader");
     return recv_size;
 }
 #ifdef TESTMODE
@@ -131,6 +150,8 @@ int inTSendRecvAPDU(BYTE *bSendData, int inSendLen, BYTE *bRecvData, int * inRec
     int inRetVal;
 
 
+    myDebugFile((char*)__FUNCTION__,__LINE__,"Cmd:%s start",TESTACTIONNAME);
+    memset(cOutputData, 0x00, sizeof(cOutputData));
     printf("[%s,%d] inTSendRecvAPDU apduName(%s)\n",__FUNCTION__,__LINE__, TESTACTIONNAME);
     if ((gScrpitTesting == 1) && (ezxml_get(gTestAction, TESTACTIONNAME, -1) != NULL)) {
         ezxml_t APDURESP = ezxml_get(gTestAction, TESTACTIONNAME, -1);

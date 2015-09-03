@@ -1109,6 +1109,7 @@ USHORT Process_Settle() {
     USHORT TXCount = CheckBatchCount();
     
 
+    myDebugFile((char*)__FUNCTION__,__LINE__,"***** Settle start *****");
     if (TXCount == 0) {
         ret = ShowMessage2line(gTransTitle, "目前無交易", "無需結帳!!", Type_ComformOK);
         //return d_OK;
@@ -1181,6 +1182,7 @@ USHORT Process_Settle() {
     PrintSettlementReceipt(&gBatchTotal);
     ret = usCloseBatch();
     if (ret == d_OK) {
+        myDebugFile((char*)__FUNCTION__,__LINE__,"***** Settle ok *****");
         //  MessageBox(gTransTitle,"","結帳完成!!","","",d_MB_CHECK);
         CheckNewVersionAP();
         CheckMemoarystatus();
@@ -1676,6 +1678,15 @@ int iProcessWaitCard(void) {
         CTOS_KBDBufFlush();
         iret = inPPR_ReadCardNumber2();
         if (iret == 0x9000) {
+            myDebugFile((char*)__FUNCTION__,__LINE__,"===== Got Card len(%d),(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x) Txn Start ====="
+                    ,gCardNumberInfo.ucCardIDLength
+                    ,gCardNumberInfo.ucCardID[0]
+                    ,gCardNumberInfo.ucCardID[1]
+                    ,gCardNumberInfo.ucCardID[2]
+                    ,gCardNumberInfo.ucCardID[3]
+                    ,gCardNumberInfo.ucCardID[4]
+                    ,gCardNumberInfo.ucCardID[5]
+                    ,gCardNumberInfo.ucCardID[6]);
             //     CTOS_Beep();
             printf("[%s,%d] got card, txn go~~~time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
             iret = iProcess_ReadCardBasicData();

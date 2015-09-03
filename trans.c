@@ -1471,7 +1471,9 @@ START:
         }
         gucLCDControlFlag = 1;
         
+        //gDebugFlag = 0x01;// for read basicdata debug used
         usRet = iProcessWaitCard();
+        //gDebugFlag = 0x00;
         if (usRet != d_OK) {
             if (usRet == d_ERR_USERCANCEL)
                 goto DISCONNECT;
@@ -1595,9 +1597,9 @@ START:
                 sprintf(line, "卡片餘額  %ld", gTransData.lEVafterTxn);
                 sprintf(line1, "卡片種類  %s", strPersonalProfileName);
                 sprintf(line3, "交易金額  %ld", gTransData.lTxnAmt);
-                //ShowMessage3line(gTransTitle, line1, line3, line, Type_ComformNONE);
-                //printf("[%s,%d] remove card, txn finish~~~time(%lu)\n",__FUNCTION__,__LINE__,CTOS_TickGet());
+                
                 printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+                myDebugFile((char*)__FUNCTION__,__LINE__,"===== Txn ok =====");
                 Process_AfterTXSueeess();
                 ShowSystemMemoryStatus("Process_AfterTXSueeess 1");
 

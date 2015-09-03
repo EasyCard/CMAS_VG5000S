@@ -34,7 +34,7 @@ void SaveDebugData(TRANS_DATA2* TransData)
 
 void myDebugFile(char* function,int line, const char* fmt, ...) {
     char szLog[1024];
-    char szEvent[512];
+    //char szEvent[512];
     va_list marker;
 
     memset(szLog, 0x00, sizeof (szLog));    
@@ -42,9 +42,45 @@ void myDebugFile(char* function,int line, const char* fmt, ...) {
     vsprintf(szLog, fmt, marker);
     va_end(marker);
 
-    sprintf(szEvent,"[%s,%d]",function, line);
+    //sprintf(szEvent,"[%s,%d]",function, line);
 
-    SystemLog(szEvent, szLog);
+    //SystemLog(szEvent, szLog);
+    STR path[32];
+    STR filename[46];
+    STR logstr[2048];
+    STR time[32];
+    USHORT ret;
+    int iret;
+    CTOS_RTC GetRTC;   
+    FILE * f;
+ 
+    ret = CTOS_RTCGet(&GetRTC);
+    if(ret!=0){
+        return ;
+    }    
+    memset(path,0x00,sizeof(path));
+    sprintf(path,"/media/mdisk/%04d/%02d/%02d/Log",GetRTC.bYear+2000,GetRTC.bMonth,GetRTC.bDay);
+    iret=CreateDir(path);  
+    if(iret!=0){
+        ret=d_ERR_createdir;       
+    }
+    
+    memset(filename,0x00,sizeof(filename));
+    sprintf(filename,"%s/debugLog.xml",path);
+    sprintf(time,"%02d:%02d:%02d",GetRTC.bHour,GetRTC.bMinute,GetRTC.bSecond);
+    
+    snprintf(logstr,1024,"[%s %s,%d] %s",time,function,line, szLog);//V15, modified by kobe, sprintf -> snprintf
+  
+  
+    f = fopen(filename, "at+");  
+    if (f == NULL)          
+        return;
+   
+    fprintf(f,"%s\n",logstr);   
+    fflush(f);   
+    fsync(fileno(f));   
+    fclose(f);   
+    return;
 }
 
 

@@ -437,7 +437,7 @@ _EXTERN  pthread_t thread_AfterTxSuccess;
 _EXTERN  pthread_t thread_SendAdvice;  
 _EXTERN ReadCardNumber_APDU_Out gCardNumberInfo;
 _EXTERN BYTE gSelectTable;
-
+_EXTERN BYTE gDebugFlag;
 //_EXTERN UINT gUNUPLOADCOUNT;
 #ifdef	__cplusplus
 }
