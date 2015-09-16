@@ -173,6 +173,7 @@ typedef union
         void copyFileFromUSB(char *source, char *destination);         
         int copyFiles2(char *source, char *destination);
         void deleteOldApp(BYTE*);
+        int fCheckSDCardInstalled(void);
 #ifdef	__cplusplus
 }
 #endif

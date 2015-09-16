@@ -130,8 +130,7 @@ void checkEccappToEccapp2(void) {
 }
 
 void Init(void) {
-    //設定畫面顯示參數
-    init_DisplayConfig();
+    
     CTOS_KBDSetSound(d_ON);
     CTOS_BackLightSet(d_BKLIT_LCD, d_ON);
     CTOS_BackLightSet(d_BKLIT_KBD, d_ON);
@@ -203,6 +202,12 @@ int main(int argc, char *argv[]) {
     int Sleeptime = 100 * 60; //60秒 
     int kill_rc;
 
+    //設定畫面顯示參數
+    init_DisplayConfig();
+        
+    if(fCheckSDCardInstalled()!=d_OK){
+        ShowMessage2line("確認SD卡","請確認SD卡","是否正確安裝",Type_wait2sec);
+    }    
     myDebugFile((char*)__FUNCTION__,__LINE__,"*****App main start *****");
     //CTOS_PrinterFline(5);
     //myDebugPrinter(WARN, "app main start, the warnning words just testing printer function working fine or not");
@@ -236,13 +241,12 @@ int main(int argc, char *argv[]) {
         else MessageBox("執行登入", "請使用收銀機", "發送登入...", "", "", 0);
     }
 
-
-    myDebugFile((char*)__FUNCTION__,__LINE__,"App main Start(%d)", 123);
+   
     CTOS_TimeOutSet(TIMER_ID_2, Sleeptime);
     CTOS_TimeOutSet(TIMER_ID_1, gSignOnlimit);
 
     BYTE buff[8 + 1];
-    int iSw;
+    
     BYTE key;
     ECC_ShowIDLE();
     while (1) {

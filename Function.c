@@ -1187,7 +1187,8 @@ int   CreateDir(const   char   *sPathName)
   } 
 USHORT  File_exist(char *filename)
 {  
-     FILE *f = fopen(filename, "r");
+    FILE *f = NULL;
+     f = fopen(filename, "r");
      if (f == NULL)    return d_ERR_FILE_NOTEXIST;
      fclose(f);
      return d_OK;
@@ -1772,3 +1773,69 @@ void deleteOldApp(BYTE *appName){
     
     return;
 }
+
+#if 0 
+//@@ i do not know why sdcard not exided, and system tell me existed
+int fCheckSDCardInstalled(){
+    //BOOL result = d_OK;
+    //char *file = "/media/mdisk/SD.ok";
+//int doesFileExist(const char *filename) {
+    struct stat st;
+    int result = stat("/media/mdisk/SD.ok", &st);
+    if(result != 0){        
+        FILE *f=NULL;
+        f = fopen("/media/mdisk/SD.ok", "w+");
+        //if (f == NULL) return d_ERR_FILE_NOTEXIST;     
+        fclose(f);
+        //check again
+        result = stat("/media/mdisk/SD.ok", &st);
+    }
+    
+    return (result == 0)?d_OK:d_ERR_FILE_NOTEXIST;
+//}    
+    /*
+    if(File_exist(SD_OK) != d_OK){        
+        FILE *f=NULL;
+        f = fopen(SD_OK, "w+");
+        if (f == NULL) return d_ERR_FILE_NOTEXIST;     
+        fclose(f);     
+    }
+    return result;*/
+}
+#else
+
+int fCheckSDCardInstalled(){
+
+    char *sdok = "/media/mdisk/SDOK/";
+    DIR* dir = opendir(sdok);
+    int result = d_OK;
+
+    if (dir){    
+        /* Directory exists. */    
+        closedir(dir);
+    }
+    else{    
+        CreateDir(sdok);    
+        dir = opendir(sdok);
+    
+        if(dir){//got
+        }else result = -1;
+}
+/*
+else if (ENOENT == errno)
+{
+    //Directory does not exist. 
+}
+else
+{
+    // opendir() failed for some other reason. 
+}*/
+
+return result;
+}
+
+
+
+
+#endif
+

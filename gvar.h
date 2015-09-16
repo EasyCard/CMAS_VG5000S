@@ -95,6 +95,7 @@ extern "C" {
 #define SDTransSnFile               "/media/mdisk/TransSn"
 #define TransSnFile                 "TransSn"    
 #define SDFLASHSTATUS               "/media/mdisk/FLASHFAIL.xml"        
+#define SD_OK                       "/media/mdisk/SDOK"
 /*
  #define BATCHINFO_Path          "/Config/batch.xml"
 #define DEBUGINFO_Path          "/Config/debug.xml"
