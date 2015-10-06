@@ -260,7 +260,7 @@ USHORT CheckSVCSResponseCode(STR * TYPE, BYTE *Respcode);
 USHORT Trans_SetValue(void);
 int iProcessWaitCardwithTimer(int sec);
 void Process_AfterTXSueeess(void);
-USHORT Trans_Deduct2(void);//購貨交易
+
 USHORT Trans_Deduct_Auto(void);
 USHORT checkTxnLimit(void);
 USHORT Trans_Deduct_Auto4Speed(void);//購貨交易;

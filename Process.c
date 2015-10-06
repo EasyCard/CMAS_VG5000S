@@ -1407,8 +1407,9 @@ void checkReaderChanged(){
                 ,gBatchTotal.DEVICEID[4]
                 ,gBatchTotal.DEVICEID[5]);
         
-        myDebugPrinter(ERROR,"%s",log);                        
-        SystemLog("checkReaderChanged", log);
+        myDebugPrinter(ERROR,"%s",log);
+        myDebugFile((char*)__FUNCTION__,__LINE__,"readerChanged:(%s)",log);
+        //SystemLog("checkReaderChanged", log);
         if(ecrObj.ecrOn && ecrObj.gData.isEcrTxn) {
             sprintf(ecrObj.ngData->errMsg,"讀卡機已變更,設備將重新開機,檢查設定。");
             ecrObj.errorResponse(&ecrObj, d_ERR_DEVICE_CHANGED);            

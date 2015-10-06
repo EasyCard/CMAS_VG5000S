@@ -43,8 +43,7 @@ static menu_item InitMainMenuItem[] = {
 static menu_item InitTXMenuItem[] = {
     {"SIGNON", FALSE, FALSE, "登入", FALSE, "", NULL, Function_Signon},
     {"ADDVALUE", FALSE, FALSE, "加值", FALSE, "", NULL, Trans_ADD},
-    {"DEDUCT", FALSE, FALSE, "購貨", FALSE, "", NULL, Trans_Deduct},
-    //  {"DEDUCT",FALSE ,FALSE, "購貨二",FALSE,"",NULL,Trans_Deduct2},
+    {"DEDUCT", FALSE, FALSE, "購貨", FALSE, "", NULL, Trans_Deduct},    
     {"CANCELTXN", FALSE, FALSE, "取消", FALSE, "", NULL, Trans_Cancel},
     {"RETURN", FALSE, FALSE, "退貨", FALSE, "", NULL, Trans_Refund},
     {"AUTOLOADENABLE", FALSE, TRUE, "自動加值開啟", FALSE, "", NULL, Trans_AutoloadEnable},

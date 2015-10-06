@@ -185,11 +185,11 @@ int inBuildTxnReqOfflineCommand(TxnReqOffline_APDU_In *bAPDUReq)
 	bAPDUReq->ucMsgType=gTransData.ucMsgType;
 	bAPDUReq->ucSubType=gTransData.ucSubType;   
        
-   	memcpy(&bAPDUReq->ucTxnAmt,&gTransData.lTxnAmt,sizeof(bAPDUReq->ucTxnAmt));
+   	memcpy(bAPDUReq->ucTxnAmt,&gTransData.lTxnAmt,sizeof(bAPDUReq->ucTxnAmt));
        bAPDUReq->ucReadPurseFlag=gTransData.ucReadPurseFlag;
        sprintf(bAPDUReq->ucTMLocationID,"%010ld",gTransData.ulSTCode);
-       memcpy(&bAPDUReq->ucTMID,&gTransData.ucTMPOSID,sizeof(bAPDUReq->ucTMID));//終端機(TM)機號
-       memcpy(&bAPDUReq->ucTMTxnDateTime,&gTransData.ucTxnDateTime,sizeof(bAPDUReq->ucTMTxnDateTime));//終端機(TM)交易日期時間
+       memcpy(bAPDUReq->ucTMID,gTransData.ucTMPOSID,sizeof(bAPDUReq->ucTMID));//終端機(TM)機號
+       memcpy(bAPDUReq->ucTMTxnDateTime,gTransData.ucTxnDateTime,sizeof(bAPDUReq->ucTMTxnDateTime));//終端機(TM)交易日期時間
     
        //2014.6.23, kobe marked it
        //sprintf(bAPDUReq->ucTMSerialNumber,"%ld",gTransData.ulTMTxnSN);
@@ -218,12 +218,14 @@ int inBuildAuthTxnOfflineCommand(AuthTxnOffline_APDU_In *bAPDUReq)
 {
         BYTE ucPurseVersionNumber;
     
+        
 	if(gTransData.ucCPUPurseVersionNUM== MIFARE)
              	memcpy((unsigned char *)&bAPDUReq->ucHVCrypto_HTAC,(unsigned char *)&gTransData.HTAC,sizeof(gTransData.HTAC));
 	else
              memcpy((unsigned char *)&bAPDUReq->ucHVCrypto_HTAC,(unsigned char *)&gTransData.HostCrypto,sizeof(gTransData.HostCrypto));
 		//memcpy((unsigned char *)&bAPDUReq->ucHVCrypto_HTAC,(unsigned char *)&gTransData.CPUMAC_HCrypto,sizeof(gTransData.CPUMAC_HCrypto));
-      bAPDUReq->ucLCDControlFlag=gTransData.ucLCDControlFlag;
+
+        bAPDUReq->ucLCDControlFlag=gTransData.ucLCDControlFlag;
 	
 	memset(bAPDUReq->ucRFU,0x00,sizeof(bAPDUReq->ucRFU));
 

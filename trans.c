@@ -899,13 +899,14 @@ void Process_AfterTXSueeess() {
     printf("[%s,%d] save batch, txn finish~~~time(%lu)\n",__FUNCTION__,__LINE__,CTOS_TickGet());
     PrintReceipt();
 
+    /*kobe removed it, because advice will send to host at IDLE UI
     if (bgNETWORKChannel == CHANNEL_ETHERNET) {//接實体網路時，購貨交易advice 採背景上傳
         if (gTransData.ucTXTYPE == TXTYPE_DEDUCT) {
             //  Thread_SendCurrentTxAdvice();  
         } else {
             Process_SendCurrentTxAdvice2();
         }
-    }
+    }*/
 }
 
 USHORT Trans_Deduct()//購貨交易
@@ -919,6 +920,8 @@ USHORT Trans_Deduct()//購貨交易
         return usRet;
     }
 
+    BOOL retryOn = FALSE;
+    int retryCnt = 3;
     char operationMode[16];
     int ret;
     gucLockReason = 0;
@@ -1039,6 +1042,11 @@ USHORT Trans_Deduct()//購貨交易
 
     
     while (1) {
+        if(retryOn == TRUE && retryCnt < 0){                
+            myDebugFile((char*)__FUNCTION__,__LINE__,"retry count <0, go to return"); 
+            return d_ERR_RETRY_FAIL;
+        }   
+        
         usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR         
         if (usRet == 0x6415 || usRet == 0x9000) {
             checkReaderChanged();
@@ -1081,13 +1089,14 @@ USHORT Trans_Deduct()//購貨交易
                 if (usRet == 0x9970) {
                     do {
                         CTOS_Beep();
-                        ret = (USHORT) iProcess_ReadCardBasicData();
+                        ret = (USHORT) inPPR_ReadCardNumber2();
                         if (ret != 0x9000) {
-                            CTOS_PrinterPutString("9970讀卡機接收失敗，請確認!!");
-                            //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
+                            CTOS_PrinterPutString("9970讀卡機接收失敗，請確認!!");                            
                         }
                     } while (ret != 0x9000);
                     
+                    retryOn = TRUE;
+                    retryCnt--;
                     continue;
                 }
                 usRet = ECC_CheckReaderResponseCode(usRet);
@@ -1117,7 +1126,13 @@ USHORT Trans_Deduct()//購貨交易
             if (gScrpitTesting == 1) {
                 goto DISCONNECT;
             }
-        } else {
+        } else if(retryOn == TRUE){                        
+                retryCnt--;                
+                myDebugFile((char*)__FUNCTION__,__LINE__,"retryOn, offlineReq error(%04X), puted the card Back, try again");
+                CTOS_Beep();                
+                ShowMessage2line(gTransTitle, "交易未完成", "請放回原本卡片", Type_ComformNONE);                
+                continue;                                   
+        }else {
             ECC_CheckReaderResponseCode(usRet);
             if (gScrpitTesting == 1) {
                 goto DISCONNECT;
@@ -1133,289 +1148,6 @@ DISCONNECT:
     return usRet;
 }
 
-USHORT Trans_Deduct2()//購貨交易
-{
-
-    char operationMode[16];
-    int ret;
-    gucLockReason = 0;
-    USHORT usRet;
-
-    BYTE line[64];
-    BYTE tmp[32];
-    ULONG tstart, tend, t1, t2, t3, t4;
-    // usRet=Config_GetData();
-    memset(gTransTitle, 0x00, sizeof (gTransTitle));
-    sprintf(gTransTitle, "購貨");
-    // ret=pthread_create(&Thread_Comm, NULL, (void*)SSLSocketConnect_thread, NULL);    // 執行緒 SSLSocketConnect 
-
-    if ((usRet = checkTxnLimit() != d_OK))
-        return usRet;
-
-    USHORT amt = 0;
-
-    //2014.04.21, kobe added for ECR      
-    if (ecrObj.gData.isEcrTxn) sprintf(operationMode, "ECR_TXN");
-    else sprintf(operationMode, "%s", gConfig.TX.OPERATIONMODE);
-
-
-
-    if (strcmp(operationMode, "BARCODESCANNER") == 0)
-        CTOS_USBSelectMode(d_USB_HOST_MODE);
-
-
-    //2014.04.21, kobe modified it(gConfig.TX.OPERATIONMODE to operationMode)
-    if (strcmp(operationMode, "AUTO_FIX") == 0) {
-        SelectAuto_FixDeductAMT();
-    } else if (strcmp(operationMode, "AUTO_BYTYPE") == 0) {
-        SelectAMTTABLE();
-    }
-    //modify by bruce 
-    // long ev;
-    // int amt=0;
-
-
-    //int iret;
-    //int item=0;
-    memset(gTransTitle, 0x00, sizeof (gTransTitle));
-    sprintf(gTransTitle, "購貨");
-
-
-
-    /*
-        usRet= ShowTXBalance(amt);
-        if(usRet!=d_OK){
-                return d_ERR_USERCANCEL; 
-         }   
-     */
-START:
-    Reader_CLEAR_LED();
-    BYTE BarCode[20 + 1];
-
-    int i = 0;
-    int iret;
-    do {
-        //modify by bruce 
-        tstart = CTOS_TickGet();
-        gTXCardProfile = 0;
-        //end
-        memset(BarCode, 0x00, sizeof (BarCode));
-        //   ret=pthread_create(&Thread_Comm, NULL, (void*)SSLSocketConnect_thread2, NULL);    // 執行緒 SSLSocketConnect 
-
-        if ((strcmp(operationMode, "MANUAL") == 0) || (strcmp(operationMode, "BARCODESCANNER") == 0)) {
-
-            // usRet= ShowBalanceAndInputAmt(TXTYPE_DEDUCT,&amt);
-            usRet = InputAMT(TXTYPE_DEDUCT, &amt);
-            if (usRet != d_OK) {
-                goto DISCONNECT;
-            }
-
-            if (strcmp(gConfig.TX.OPERATIONMODE, "BARCODESCANNER") == 0) {
-                usRet = ShowInputBox2(gTransTitle, "", "請刷條碼", BarCode, 20, 2, 0);
-                if (usRet != d_OK) {
-                    usRet = d_ERR_USERCANCEL;
-                    goto START;
-                }
-                CTOS_USBSelectMode(d_USB_DEVICE_MODE);
-            } else if (strcmp(gConfig.TX.OPERATIONMODE, "MANUAL") == 0) {
-                iret = iProcessWaitCardwithTimer(20);
-                if (iret != 0x9000) {
-                    goto START;
-                }
-            }
-        } else if (strcmp(operationMode, "ECR_TXN") == 0) { //2014.09.19,kobe added for response waitting card timeout                               
-            iret = iProcess_ReadCardBasicData();
-            if (iret) usRet = ECC_CheckReaderResponseCode(iret);
-            if (usRet != d_OK) {
-                goto DISCONNECT;
-            }
-
-        } else {
-
-            if (strcmp(operationMode, "AUTO_FIX") == 0) {
-                //modify by bruce                         
-                //   int i=atoi( gConfig.TX.AMTTABLE[0].AREACODE);
-                int i = gConfig.TX.AMTTABLE[0].AREACODE;
-                amt = gConfig.TX.AMTTABLE[0].AMT[i];
-
-                memset(gTransTitle, 0x00, sizeof (gTransTitle));
-                sprintf(gTransTitle, "購貨-%d元", amt);
-
-            }
-            if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) {
-                memset(gTransTitle, 0x00, sizeof (gTransTitle));
-                sprintf(gTransTitle, "購貨-%s", gConfig.TX.AMTTABLE[gSelectTable].NAME);
-            }
-            usRet = iProcessWaitCard();
-            if (usRet != d_OK) {
-                if (usRet == d_ERR_USERCANCEL)
-                    goto START;
-                else
-                    continue;
-            }
-            if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) {
-
-                amt = GetAutoDeductAmt();
-            }
-        }
-        if (strcmp(operationMode, "AUTO_BYTYPE") != 0)
-            ShowMessage2line(gTransTitle, "交易進行中.", "請勿移動卡片", Type_ComformNONE);
-
-        if (ecrObj.gData.isEcrTxn) {
-            amt = ecrObj.ngData->txnAmt;
-            if (amt > 10000 || amt == 0) {
-                usRet = ECR_TXN_AMT_WRONG;
-                goto START;
-            }//return ECR_TXN_AMT_WRONG;    
-        }
-
-        if (GetFunctionSwitch("AUTOLOAD")) {
-            gAutoloadAMT = 0;
-            if ((gBasicData.bAutoLoad == TRUE)) {
-                Process_Autoload(amt);
-            }
-        }
-        ShowMessage2line(gTransTitle, "交易進行中.", "請勿移動卡片", Type_ComformNONE);
-
-
-        //   CTOS_Delay(500);//2014.07.31, fixed that when reade cleaned flash, no response to EDC  
-        usInitTxData(TXTYPE_DEDUCT);
-
-        gTransData.lTxnAmt = amt;
-        gTransData.ucBasicData_CardProfile = gTXCardProfile;
-        if (strcmp(operationMode, "BARCODESCANNER") == 0) {
-            memcpy(gTransData.ucTMINVOICENO, BarCode, sizeof (BarCode));
-        }
-
-        //      unsigned long ulTick,pStart,p1,p2;
-        BYTE baMsg[16];
-        while (1) {
-            //int iret= inPPR_TxnReqOffline();//2014.04.22, kobe removed it, always return "usRet" Variable
-
-            usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR
-
-            if (usRet == 0x6415 || usRet == 0x9000) {
-                /*記錄交易前卡片餘額，備交易retry判斷用*/
-                memset(&gCardRemainEV, 0x00, sizeof (gCardRemainEV));
-                memcpy(&gCardRemainEV, (BYTE *) & gTransData.lEVBeforeTxn, sizeof (gTransData.lEVBeforeTxn));
-
-
-                if (usRet == 0x6415) {
-                    gTransData.ucTXSTATUS = TransStatus_REQ;
-                    gSaveReversalflag = 1;
-                    /* while(1){
-                             kill_rc = pthread_kill(Thread_Comm,0);
-                             if(kill_rc==ESRCH) break;
-                             ShowMessage2line(gTransTitle,"交易進行中..","請勿移動卡片",Type_ComformNONE);
-                      }*/
-                    ShowMessage2line(gTransTitle, "網路連線中", "請稍候", Type_ComformNONE);
-                    usRet = SSLSocketConnect();
-                    if (usRet != d_OK) {
-                        MessageBox(gTransTitle, "", "網路連線異常", "請檢查並重試", "", d_MB_CHECK);
-                        goto START;
-                    }
-                    usRet = Process_TransComm2(&gTransData, 1);
-                    SSLSocketDisConnect();
-                    CTOS_Delay(500);
-                    ECC_CheckAPResponseCode(usRet);
-                    if (usRet != d_OK) {
-                        ShowMessage2line(gTransTitle, "通訊異常", "請重試交易", Type_ComformOK);
-                        goto START;
-                    }
-                    SetTransSN(gTransData.ulTerminalInvoiceNum);
-                    usRet = ECC_CheckCMASResponseCode(gTransData.ucResponseCode);
-                    if (usRet != d_OK) {
-                        goto START;
-                    }
-                }
-
-                usRet = (USHORT) inPPR_AuthTxnOffline();
-
-
-                if (usRet != 0x9000) {
-                    if (usRet == 0x6088 || usRet == 0x9969 || usRet == 0x9968 || usRet == 6004) {
-                        ShowMessage2line(gTransTitle, "交易未完成", "請放回卡片", Type_ComformNONE);
-                        continue;
-                    }
-
-                    if (usRet == 0x9970) {
-                        do {
-                            CTOS_Beep();
-                            ret = (USHORT) iProcess_ReadCardBasicData();
-                            if (ret != 0x9000) {
-                                CTOS_PrinterPutString("9970讀卡機接收失敗，請確認!!");
-                                //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
-                            }
-                        } while (ret != 0x9000);
-                        
-                        continue;
-                    }
-                    usRet = ECC_CheckReaderResponseCode(usRet);
-                    if (usRet != d_OK) {
-                        goto START;
-                    }
-                }
-                //PrintReceipt( );
-
-                // STR Line[15+1];
-                // sprintf( Line,"交易完成");
-                // WaitRemoveCard("交易完成.","請記得帶走卡片."); 
-
-                //pthread_create(&thread_AfterTxSuccess, NULL,(void*) Process_AfterTXSueeess, NULL);    // 執行緒 SSLSocketConnect  
-                // Reader_FINISHED_LED();
-                USHORT mkHWSupport = Eth_CheckDeviceSupport();
-                if ((mkHWSupport & d_MK_HW_CONTACTLESS) == d_MK_HW_CONTACTLESS) {
-                    CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);
-                }
-
-                sprintf(line, "卡片餘額  %ld", gTransData.lEVafterTxn);
-                ShowMessage3line(gTransTitle, "交易完成...", line, "請記得帶走卡片.", Type_ComformNONE);
-                remove(ReversalFile);
-                Process_AfterTXSueeess();
-
-                CTOS_Beep();
-                CTOS_Beep();
-                //  PrintReceipt();                        
-                ShowMessage3line(gTransTitle, "交易完成...", line, "請記得帶走卡片.", Type_RemoveCard);
-                gAutoloadAMT = 0;
-                gEVBeforeAutoload = 0;
-                /*tend  = CTOS_TickGet();    
-
-                sprintf(tmp,"tend-tstart=%ld",  tend-tstart);      
-                CTOS_PrinterPutString(tmp); */
-                goto START;
-                //  Process_SendCurrentTxAdvice();
-                //  SSLSocketDisConnect();    
-
-                /*  while(1){
-                         kill_rc = pthread_kill(thread_AfterTxSuccess,0);
-                         if(kill_rc==ESRCH) break;
-                   }*/
-                // SSLSocketDisConnect();        
-
-
-            } else {
-                ECC_CheckReaderResponseCode(usRet);
-
-
-            }
-
-            break;
-        }
-        if ((strcmp(operationMode, "MANUAL") == 0) ||
-                (strcmp(operationMode, "BARCODESCANNER") == 0) ||
-                (ecrObj.gData.isEcrTxn == TRUE))
-            break;
-    } while (1);
-    USHORT TotalCount;
-DISCONNECT:
-
-
-    CheckMemoarystatus();
-    return usRet;
-}
-
-
 USHORT Trans_Deduct_Auto()//購貨交易
 {    
     char operationMode[16];    
@@ -1428,7 +1160,9 @@ USHORT Trans_Deduct_Auto()//購貨交易
     BYTE line[64];
     BYTE line1[64], line2[64], line3[64];
     USHORT mkHWSupport;
-    // usRet=Config_GetData();
+    BOOL retryOn = FALSE;
+    int retryCnt = 3;
+    
     memset(gTransTitle, 0x00, sizeof (gTransTitle));
     sprintf(gTransTitle, "購貨");
 
@@ -1456,6 +1190,8 @@ USHORT Trans_Deduct_Auto()//購貨交易
         
 START:
     do {
+        retryOn = FALSE;
+        retryCnt = 3;
         gTXCardProfile = 0;
         memset(BarCode, 0x00, sizeof (BarCode));
         if (strcmp(operationMode, "AUTO_FIX") == 0) {
@@ -1511,31 +1247,42 @@ START:
 
         
         while (1) {
-            usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR
-            checkReaderChanged();//kobe added for V2            
-            //for avoid readBasicData reade from ACard, but TxnReqoffline readed from BCard
-            if(memcmp(gBasicData.ucCardID, gTransData.ucCardID, sizeof(gTransData.ucCardID) != 0)){
-                BYTE log[512];
-                sprintf(log,"readBasicData'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x), txnReqoffline'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)",
-                        gBasicData.ucCardID[0],gBasicData.ucCardID[1],gBasicData.ucCardID[2],gBasicData.ucCardID[3],gBasicData.ucCardID[4],gBasicData.ucCardID[5],gBasicData.ucCardID[6],
-                        gTransData.ucCardID[0],gTransData.ucCardID[1],gTransData.ucCardID[2],gTransData.ucCardID[3],gTransData.ucCardID[4],gTransData.ucCardID[5],gTransData.ucCardID[6]);
-                SystemLog("Trans_Deduct_Auto CardID no the same", log);
+            if(retryOn == TRUE && retryCnt < 0){
+                myDebugFile((char*)__FUNCTION__,__LINE__,"retry count <0, go to start");
                 goto START;
-            }
+            }            
+            usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR            
             if (usRet == 0x6415 || usRet == 0x9000) {
+                checkReaderChanged();//kobe added for V2            
+               
+                
+                //for avoid readBasicData reade from ACard, but TxnReqoffline readed from BCard            
+                if(memcmp(gBasicData.ucCardID, gTransData.ucCardID, sizeof(gTransData.ucCardID) != 0)){                
+                    if(retryOn == TRUE){
+                        retryCnt--;
+                        myDebugFile((char*)__FUNCTION__,__LINE__,"retryOn, puted the card Back");
+                        CTOS_Beep();
+                        ShowMessage2line(gTransTitle, "交易未完成", "請放回原本卡片", Type_ComformNONE);
+                        continue;                        
+                    }
+                    BYTE log[512];                
+                    sprintf(log,"readBasicData'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x), txnReqoffline'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)",
+                    gBasicData.ucCardID[0],gBasicData.ucCardID[1],gBasicData.ucCardID[2],gBasicData.ucCardID[3],gBasicData.ucCardID[4],gBasicData.ucCardID[5],gBasicData.ucCardID[6],
+                    gTransData.ucCardID[0],gTransData.ucCardID[1],gTransData.ucCardID[2],gTransData.ucCardID[3],gTransData.ucCardID[4],gTransData.ucCardID[5],gTransData.ucCardID[6]);
+                    myDebugFile((char*)__FUNCTION__,__LINE__,"Trans_Deduct_Auto CardID not the same", log);                
+                    goto START;            
+                }
+                
+                
                 /*記錄交易前卡片餘額，備交易retry判斷用*/
                 memset(&gCardRemainEV, 0x00, sizeof (gCardRemainEV));
                 memcpy(&gCardRemainEV, (BYTE *) & gTransData.lEVBeforeTxn, sizeof (gTransData.lEVBeforeTxn));
 
-
+                
                 if (usRet == 0x6415) {
                     gTransData.ucTXSTATUS = TransStatus_REQ;
                     gSaveReversalflag = 1;
-                    /* while(1){
-                             kill_rc = pthread_kill(Thread_Comm,0);
-                             if(kill_rc==ESRCH) break;
-                             ShowMessage2line(gTransTitle,"交易進行中..","請勿移動卡片",Type_ComformNONE);
-                      }*/
+                    
                     ShowMessage2line(gTransTitle, "網路連線中", "請稍候", Type_ComformNONE);
                     usRet = SSLSocketConnect();
                     if (usRet != d_OK) {
@@ -1556,22 +1303,27 @@ START:
                         goto START;
                     }
                 }
+                
                 usRet = (USHORT) inPPR_AuthTxnOffline();
+                
                 if (usRet != 0x9000) {
                     if (usRet == 0x6088 || usRet == 0x9969 || usRet == 0x9968 || usRet == 6004) {
                         ShowMessage2line(gTransTitle, "交易未完成", "請放回卡片", Type_ComformNONE);
                         continue;
-                    }
-
+                    }                                            
                     if (usRet == 0x9970) {
                         do {
                             CTOS_Beep();
-                            ret = (USHORT) iProcess_ReadCardBasicData();
-                            if (ret != 0x9000) {
+                            //ret = (USHORT) iProcess_ReadCardBasicData();
+                            ret = (USHORT) inPPR_ReadCardNumber2();
+                            if(ret != 0x9000) {
                                 CTOS_PrinterPutString("9970讀卡機接收失敗，請確認!!");
                                 //    PrintDateTime((STR *)&gTransData.ucTxnData,(STR *)&gTransData.ucTxnTime);
                             }
                         } while (ret != 0x9000);
+                        
+                        retryOn = TRUE;
+                        retryCnt--;
                         
                         continue;
                     }
@@ -1599,8 +1351,9 @@ START:
                 sprintf(line3, "交易金額  %ld", gTransData.lTxnAmt);
                 
                 printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
-                myDebugFile((char*)__FUNCTION__,__LINE__,"===== Txn ok =====");
+                
                 Process_AfterTXSueeess();
+                myDebugFile((char*)__FUNCTION__,__LINE__,"===== Txn ok =====");
                 ShowSystemMemoryStatus("Process_AfterTXSueeess 1");
 
                 printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
@@ -1614,6 +1367,12 @@ START:
                     goto DISCONNECT;
                 }
 
+            } else if(retryOn == TRUE){                        
+                retryCnt--;                
+                myDebugFile((char*)__FUNCTION__,__LINE__,"retryOn, offlineReq error(%04X), puted the card Back, try again");
+                CTOS_Beep();                
+                ShowMessage2line(gTransTitle, "交易未完成", "請放回原本卡片", Type_ComformNONE);                
+                continue;                        
             } else {
                 usRet = ECC_CheckReaderResponseCode(usRet);
                 if (usRet != d_OK) {

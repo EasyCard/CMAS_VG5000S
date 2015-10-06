@@ -307,20 +307,13 @@ USHORT usInitTxData(BYTE TXTYPE) {
 }
 
 USHORT usSaveTxData(TRANS_DATA2 * TransData) {
-    /*
-        FILE *fp =  fopen(TransDataFile, "ab+");
-        if (fp ==  NULL) 
-                 return d_Fail;
-    
-        int inRetVal = fseek(fp,0,SEEK_END);
-        if(inRetVal != 0)
-        {
-            fclose(fp);
-            return d_Fail;
-         }
-        fwrite((UCHAR *)TransData,sizeof(TRANS_DATA2),1,fp);
-    
-        fclose(fp);*/
+    //debug for bugBankCode
+    if(TransData->ucBankCode==0xFF ||
+       TransData->ucBankCode==0x01 ||
+       TransData->ucBankCode==0x25){
+        myDebugPrinter(ERROR,"save Data bugBankCode show(%02x)",TransData->ucBankCode);
+        myDebugFile((char*)__FUNCTION__,__LINE__,"save Data bugBankCode show(%02x)",TransData->ucBankCode);
+    }
     USHORT usRet = usAppendFile(TransDataFile, (UCHAR *) TransData, sizeof (TRANS_DATA2));
     if (usRet != d_OK) {
         FLASHERROR();

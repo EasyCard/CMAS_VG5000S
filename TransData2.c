@@ -501,7 +501,15 @@ int BuildTxnReqOfflineOutput_2(int inTxnType, TRANS_DATA2 *Trans, TxnReqOffline_
     Trans->ucCPDReadFlag = DongleOut->ucCPDReadFlag;
 
     if (DongleOut->ucPurseVersionNumber == MIFARE) {
-        Trans->ucBankCode = DongleOut->ucBankCode_HostAdminKVN;
+        Trans->ucBankCode = DongleOut->ucBankCode_HostAdminKVN;        
+         if(Trans->ucBankCode==0xFF ||
+            Trans->ucBankCode==0x01 ||
+            Trans->ucBankCode==0x25){
+                myDebugPrinter(ERROR,"Dongle out bugBankCode show(%02x)",Trans->ucBankCode);
+                myDebugFile((char*)__FUNCTION__,__LINE__,"pprOffline Response trans.BankCode(%02X), dongleout.bankcode(%02x)", Trans->ucBankCode, DongleOut->ucBankCode_HostAdminKVN);
+        }
+        
+        
         memcpy(Trans->ucSTAC, (unsigned char *) &DongleOut->ucSID_STAC, sizeof (DongleOut->ucSID_STAC));
         Trans->ucKeyVersion = DongleOut->ucCPDKVN_SAMKVN;
         memcpy(&Trans->usLoyaltyCounter, (unsigned char *) &DongleOut->ucCPD_SAMID[0], 2);
@@ -592,7 +600,8 @@ int inBuildAuthTxnOfflineOutPut_2(int inTxnType, TRANS_DATA2 *Trans, AuthTxnOffl
     memcpy(&Trans->ucCardParameter_CardOneDayQuota, &DongleOut->ucCardOneDayQuota, sizeof (DongleOut->ucCardOneDayQuota));
     memcpy(&Trans->ucCardParameter_CardOneDayQuotaDate, &DongleOut->ucCardOneDayQuota, sizeof (DongleOut->ucCardOneDayQuota));
 
-    memcpy(&Trans->ucTxnDateTime, &DongleOut->ucTxnDateTime, sizeof (DongleOut->ucTxnDateTime));
+    //kobe marked it
+    //memcpy(&Trans->ucTxnDateTime, &DongleOut->ucTxnDateTime, sizeof (DongleOut->ucTxnDateTime));
 
     BYTE tmp[14];
     memset(tmp, 0x00, 14);
@@ -1687,6 +1696,13 @@ USHORT usFormatTransTag3(TRANS_DATA2 * TransData, BYTE * TAG, BYTE * NAME, BYTE 
             //ezxml_set_txt_d(node,buf);       
             break;
         case 4803:
+            //debug for bugBankCode
+            if(TransData->ucBankCode==0xFF || 
+               TransData->ucBankCode==0x01 ||
+               TransData->ucBankCode==0x25){
+                myDebugPrinter(ERROR, "pack XML bug BankCode show(%02X)",TransData->ucBankCode);
+                myDebugFile((char*)__FUNCTION__,__LINE__,"bug BankCode show(%02X)",TransData->ucBankCode);
+            }
             wub_hex_2_str(&TransData->ucBankCode, (BYTE *) & buf, 1);
             // ezxml_set_txt_d(node,buf);   
             myxml_ADDXMLNODE(TransLog, TAG, NAME, buf);
