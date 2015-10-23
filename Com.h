@@ -26,8 +26,8 @@ USHORT recv_from(BYTE COMPORT,BYTE* buf,USHORT recv_size,int inTimeout);
 USHORT recv_apdu(BYTE COMPORT,BYTE* buf,int inTimeout);
 
 static void finalizer_(void);
-int inTSendRecvAPDU(BYTE *bSendData,int inSendLen,BYTE *bRecvData,int * inRecvLen,int inTimeOut,STR * TESTACTIONNAME,int Outputlen);
-int inSendRecvAPDU(BYTE *bSendData,int  inSendLen,BYTE *bRecvData,int*inRecvLen,int inTimeOut);
+int inTSendRecvAPDU(BYTE *bSendData,int inSendLen,BYTE *bRecvData,int * inRecvLen,int inTimeOut,STR * TESTACTIONNAME,int Outputlen,BOOL saved);
+int inSendRecvAPDU(BYTE *bSendData,int  inSendLen,BYTE *bRecvData,int*inRecvLen,int inTimeOut,BOOL saved);
 
 
 #ifdef	__cplusplus

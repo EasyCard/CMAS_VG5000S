@@ -189,7 +189,7 @@ USHORT inOutLen,inStatus;
 	inStatus = inCMD_STATUS;
 	inCMD_STATUS = Status_LOCKCARD;
         tTxnTimeout = DEFAULT_TIMEOUT;
-	inRetVal = inSendRecvAPDU(cAPDU,inCnt,cOutputData,(int *)&inOutLen,tTxnTimeout);
+	inRetVal = inSendRecvAPDU(cAPDU,inCnt,cOutputData,(int *)&inOutLen,tTxnTimeout,TRUE);
 
 	if(inRetVal != SUCCESS)
 		return inRetVal;

@@ -1188,14 +1188,7 @@ USHORT Process_Settle() {
         CheckMemoarystatus();
         if (ecrObj.ecrOn) ezSystemReset(); //kobe added for V15, forced reboot
         ShowMessage2line(gTransTitle, "結帳完成", "正在重開機...", Type_ComformNONE);
-        ezSystemReset();
-
-        //     ret=UnpackTMSParameter();
-
-
-        // CheckNewVersionAP();
-
-
+        ezSystemReset();      
     }
 DISCONNECT:
     //   Eth_SSLSocketDisConnect();       
@@ -1408,7 +1401,8 @@ void checkReaderChanged(){
                 ,gBatchTotal.DEVICEID[5]);
         
         myDebugPrinter(ERROR,"%s",log);                        
-        SystemLog("checkReaderChanged", log);
+        myDebugFile((char*)__FUNCTION__,__LINE__,"%s",log);
+        
         if(ecrObj.ecrOn && ecrObj.gData.isEcrTxn) {
             sprintf(ecrObj.ngData->errMsg,"讀卡機已變更,設備將重新開機,檢查設定。");
             ecrObj.errorResponse(&ecrObj, d_ERR_DEVICE_CHANGED);            
@@ -1668,7 +1662,7 @@ int iProcessWaitCard(void) {
 
     mkHWSupport = (Eth_CheckDeviceSupport() & d_MK_HW_CONTACTLESS);
 
-    
+    //myDebugFile((char*)__FUNCTION__,__LINE__,"waitting card start");
     do {            
         if (mkHWSupport == d_MK_HW_CONTACTLESS) {
             CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);        
@@ -1688,18 +1682,21 @@ int iProcessWaitCard(void) {
                     ,gCardNumberInfo.ucCardID[5]
                     ,gCardNumberInfo.ucCardID[6]);
             //     CTOS_Beep();
-            printf("[%s,%d] got card, txn go~~~time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+            //printf("[%s,%d] got card, txn go~~~time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
             iret = iProcess_ReadCardBasicData();
             if(iret == 0x9000) return d_OK;//V2, kobe added it, 9000 does not needed to parse XML file
             if (iret != 0x6201) {
+                myDebugFile((char*)__FUNCTION__,__LINE__,"iProcess_ReadCardBasicData result error:(%04X)",iret);
                 usRet = ECC_CheckReaderResponseCode(iret);
                 return usRet;
             }
 
         }
         CTOS_KBDHit(&key);
-        if (key == d_KBD_CANCEL)
+        if (key == d_KBD_CANCEL){
+            myDebugFile((char*)__FUNCTION__,__LINE__,"User Cancel to waitting card");
             return d_ERR_USERCANCEL;
+        }
         CheckMemoarystatus();
     } while (1);
     return d_ERR_USERCANCEL;
