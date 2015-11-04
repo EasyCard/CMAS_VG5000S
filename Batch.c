@@ -173,6 +173,7 @@ USHORT InitBatchTotal() {
 
     USHORT ret = CTOS_RTCGet(&SetRTC);
     if (ret != 0) {
+        myDebugFile((char*)__FUNCTION__,__LINE__,"CTOS_RTCGet error(%d)",ret);
         return d_ERR_GETRTC;
     }
     memset(&gBatchTotal, 0x00, sizeof (gBatchTotal));

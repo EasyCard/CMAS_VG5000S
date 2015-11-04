@@ -202,7 +202,7 @@ int inPPR_Reset(BYTE ONLINEFLAG) {
     tTxnTimeout = DEFAULT_TIMEOUT;
 
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_Reset", sizeof (Reset_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_Reset", sizeof (Reset_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -237,7 +237,7 @@ int inPPR_SignOn() {
     tTxnTimeout = DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_SignOn", sizeof (SignOn_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_SignOn", sizeof (SignOn_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -273,7 +273,7 @@ int inPPR_SignOnQuery() {
     tTxnTimeout = DEFAULT_TIMEOUT; //DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_SignOnQuery", sizeof (SignOnQuery_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_SignOnQuery", sizeof (SignOnQuery_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -312,7 +312,7 @@ int inPPR_ReadCardBasicData() {
     inSendLen = inReaderCommand(inCMD_STATUS);
 
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadCardBasic", sizeof (ReadCardBasicData_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadCardBasic", sizeof (ReadCardBasicData_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -350,7 +350,7 @@ int inPPR_TxnReqOnline() {
     tTxnTimeout = SEARCH_CARD_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_TxnReqOnline", sizeof (TxnReqOnline_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_TxnReqOnline", sizeof (TxnReqOnline_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -392,7 +392,7 @@ int inPPR_AuthTxnOnline() {
     tTxnTimeout = DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthTxnOnline", sizeof (AuthTxnOnline_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthTxnOnline", sizeof (AuthTxnOnline_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -429,7 +429,9 @@ int inPPR_TxnReqOffline() {
     tTxnTimeout = SEARCH_CARD_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_TxnReqOffline", sizeof (TxnReqOffline_APDU_Out));
+    
+    
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_TxnReqOffline", sizeof (TxnReqOffline_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -441,11 +443,12 @@ int inPPR_TxnReqOffline() {
     }
 #endif
     inRetVal = (cOutputData[cOutputData[2] + 1] << 8) | (cOutputData[cOutputData[2] + 2]);
+    //int recvLen = cOutputData[2] + 3 + 2 + 1;//head3+statuCode2+EDC1   
+    
+    
     if ((inRetVal == 0x6103) || (inRetVal == 0x640E) || (inRetVal == 0x640F) || (inRetVal == 0x6418)) {
         inRetVal = iProcess_LogLockCardData(inRetVal);
-
-    } else if (inRetVal == 0x9000 || inRetVal == 0x6415) {
-        //vdSaveReqData(TXN_REQ_DATA,(BYTE *)&cOutputData[OUT_DATA_OFFSET],sizeof(TxnReqOffline_APDU_Out));
+    } else if (inRetVal == 0x9000 || inRetVal == 0x6415) {        
         BuildTxnReqOfflineOutput_2(inCMD_STATUS, &gTransData, (TxnReqOffline_APDU_In *) & cAPDU[IN_DATA_OFFSET], (TxnReqOffline_APDU_Out *) & cOutputData[OUT_DATA_OFFSET]);
     }
     return (inRetVal);
@@ -469,7 +472,8 @@ int inPPR_AuthTxnOffline() {
     inSendLen = inReaderCommand(inCMD_STATUS);
 
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthTxnOffline", sizeof (AuthTxnOffline_APDU_Out));
+    myDebugFileHex2Str((char*)__FUNCTION__,__LINE__,"send inPPR_AuthTxnOffline",cAPDU,inSendLen);
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthTxnOffline", sizeof (AuthTxnOffline_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -480,7 +484,7 @@ int inPPR_AuthTxnOffline() {
         return inRetVal;
     }
 #endif
-
+    //myDebugFileHex2Str((char*)__FUNCTION__,__LINE__,"recv inPPR_AuthTxnOffline",cOutputData, cOutputData[2] + 3 + 2 + 1);
     inRetVal = (cOutputData[cOutputData[2] + 1] << 8) | (cOutputData[cOutputData[2] + 2]);
     if (inRetVal == 0x9000) {
         //vdLoadReqData(TXN_REQ_DATA,(BYTE *)&srTxnReqOut,sizeof(TxnReqOffline_APDU_Out));
@@ -504,7 +508,7 @@ int inPPR_LockCard() {
     tTxnTimeout = DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_LockCard", sizeof (LockCard_APDU_Out_2));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_LockCard", sizeof (LockCard_APDU_Out_2),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -539,7 +543,7 @@ int inPPR_ReadDongleDeduct(BYTE *lpOutData, int *inOutLen) {
     tTxnTimeout = DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadDongleDeduct", sizeof (ReadDongleDeduct_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadDongleDeduct", sizeof (ReadDongleDeduct_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -570,7 +574,7 @@ int inPPR_ReadCardDeduct(BYTE *lpOutData, int *inOutLen) {
     tTxnTimeout = SEARCH_CARD_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadCardDeduct", sizeof (ReadCardDeduct_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadCardDeduct", sizeof (ReadCardDeduct_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -600,7 +604,7 @@ int inPPR_ReadCodeVersion(BYTE *lpOutData, int *inOutLen) {
     tTxnTimeout = DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadCodeVersion", sizeof (ReadCodeVersion_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_ReadCodeVersion", sizeof (ReadCodeVersion_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -631,7 +635,7 @@ int inPR_Reboot(BYTE *lpOutData, int *inOutLen) {
     inSendLen = inReaderCommand(inCMD_STATUS);
 
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PR_Reboot", 0);
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PR_Reboot", 0, TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -659,7 +663,7 @@ int inPPR_SetValue() {
     tTxnTimeout = SEARCH_CARD_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_SetValue", sizeof (SetValue2_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_SetValue", sizeof (SetValue2_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -698,7 +702,7 @@ int inPPR_AuthSetValue() {
     tTxnTimeout = DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthSetValue", sizeof (AuthSetValue2_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthSetValue", sizeof (AuthSetValue2_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -729,7 +733,7 @@ int inPPR_AutoloadEnable(BYTE *lpOutData, int *inOutLen) {
     tTxnTimeout = SEARCH_CARD_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AutoloadEnable", sizeof (TxnReqOnline_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AutoloadEnable", sizeof (TxnReqOnline_APDU_Out),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -775,7 +779,7 @@ int inPPR_AuthAutoloadEnable(BYTE *lpOutData, int *inOutLen) {
     tTxnTimeout = DEFAULT_TIMEOUT;
     inSendLen = inReaderCommand(inCMD_STATUS);
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthAutoloadEnable", sizeof (AuthTxnOnline_APDU_In));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "PPR_AuthAutoloadEnable", sizeof (AuthTxnOnline_APDU_In),TRUE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -810,7 +814,7 @@ int inPPR_ReadCardNumber() {
     inSendLen = inReaderCommand(inCMD_STATUS);
 
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "inPPR_ReadCardNumber", sizeof (ReadCardNumber_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "inPPR_ReadCardNumber", sizeof (ReadCardNumber_APDU_Out),FALSE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }
@@ -855,7 +859,7 @@ int inPPR_ReadCardNumber2() {
     //inSendLen  = inReaderCommand(inCMD_STATUS);
     inSendLen = inCnt;
 #ifdef TESTMODE  
-    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "inPPR_ReadCardNumber", sizeof (ReadCardNumber_APDU_Out));
+    inRetVal = inTSendRecvAPDU(cAPDU, inSendLen, cOutputData, (int *) &inReceLen, tTxnTimeout, "inPPR_ReadCardNumber", sizeof (ReadCardNumber_APDU_Out),FALSE);
     if (inRetVal != SUCCESS) {
         return inRetVal;
     }

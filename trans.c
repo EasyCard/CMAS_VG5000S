@@ -1153,15 +1153,16 @@ USHORT Trans_Deduct_Auto()//購貨交易
     char operationMode[16];    
     int ret;
     gucLockReason = 0;
-    USHORT usRet;
-    BYTE tmp[32];
-    //  ULONG tstart,tend,t1,t2,t3,t4;
+    USHORT usRet;        
     int amt = 0;
     BYTE line[64];
-    BYTE line1[64], line2[64], line3[64];
+    BYTE line1[64], line3[64];
     USHORT mkHWSupport;
+//<<<<<<< HEAD
     BOOL retryOn = FALSE;
     int retryCnt = 3;
+/*=======
+>>>>>>> V2-BugFixed*/
     
     memset(gTransTitle, 0x00, sizeof (gTransTitle));
     sprintf(gTransTitle, "購貨");
@@ -1176,6 +1177,7 @@ USHORT Trans_Deduct_Auto()//購貨交易
         SelectAuto_FixDeductAMT();
     } else if (strcmp(operationMode, "AUTO_BYTYPE") == 0) {
         SelectAMTTABLE();
+        myDebugFile((char*)__FUNCTION__,__LINE__,"User Select Amt table(%d) finish",gSelectTable);
     }
 
     memset(gTransTitle, 0x00, sizeof (gTransTitle));
@@ -1207,37 +1209,29 @@ START:
         }
         gucLCDControlFlag = 1;
         
-        //gDebugFlag = 0x01;// for read basicdata debug used
+        
         usRet = iProcessWaitCard();
-        //gDebugFlag = 0x00;
+        
         if (usRet != d_OK) {
-            if (usRet == d_ERR_USERCANCEL)
-                goto DISCONNECT;
-            else
-                continue;
+            if (usRet == d_ERR_USERCANCEL) goto DISCONNECT;            
+            else continue;
         }
                 
-        //printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
-        if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) {
+        
+        if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0)
             amt = GetAutoDeductAmt();
-        }
-        //printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
-        //ShowMessage2line(gTransTitle, "交易進行中.", "請勿移動卡片", Type_ComformNONE);
-
-
-        //printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+                      
         if (GetFunctionSwitch("AUTOLOAD")) {
             gAutoloadAMT = 0;
-            if ((gBasicData.bAutoLoad == TRUE)) {
-                Process_Autoload(amt);
-            }
+            if ((gBasicData.bAutoLoad == TRUE))
+                Process_Autoload(amt);           
         }
                 
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        
         if (mkHWSupport == d_MK_HW_CONTACTLESS) {
             CTOS_CLLEDSet(0x0f, d_CL_LED_YELLOW);
         }
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        
         usInitTxData(TXTYPE_DEDUCT);
         if (strcmp(gConfig.TX.OPERATIONMODE, "AUTO_BYTYPE") == 0) {
             sprintf(gTransData.POSID, "%s", gConfig.TX.AMTTABLE[gSelectTable].NAME);
@@ -1247,6 +1241,7 @@ START:
 
         
         while (1) {
+//<<<<<<< HEAD
             if(retryOn == TRUE && retryCnt < 0){
                 myDebugFile((char*)__FUNCTION__,__LINE__,"retry count <0, go to start");
                 goto START;
@@ -1274,6 +1269,23 @@ START:
                 }
                 
                 
+/*=======
+            usRet = (USHORT) inPPR_TxnReqOffline(); //2014.04.22, kobe modified for ECR
+            
+            if (usRet == 0x6415 || usRet == 0x9000) {
+                checkReaderChanged();//kobe added for V2            
+                //for avoid readBasicData reade from ACard, but TxnReqoffline readed from BCard
+                if(memcmp(gBasicData.ucCardID, gTransData.ucCardID, sizeof(gTransData.ucCardID) != 0)){
+                    BYTE log[512];
+                    sprintf(log,"readBasicData'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x), txnReqoffline'CardID(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)(%02x)",
+                            gBasicData.ucCardID[0],gBasicData.ucCardID[1],gBasicData.ucCardID[2],gBasicData.ucCardID[3],gBasicData.ucCardID[4],gBasicData.ucCardID[5],gBasicData.ucCardID[6],
+                            gTransData.ucCardID[0],gTransData.ucCardID[1],gTransData.ucCardID[2],gTransData.ucCardID[3],gTransData.ucCardID[4],gTransData.ucCardID[5],gTransData.ucCardID[6]);
+                    
+                    myDebugFile((char*)__FUNCTION__,__LINE__,"Trans_Deduct_Auto CardID no the same(%s)",log);
+                    goto START;
+                }
+                
+>>>>>>> V2-BugFixed*/
                 /*記錄交易前卡片餘額，備交易retry判斷用*/
                 memset(&gCardRemainEV, 0x00, sizeof (gCardRemainEV));
                 memcpy(&gCardRemainEV, (BYTE *) & gTransData.lEVBeforeTxn, sizeof (gTransData.lEVBeforeTxn));
@@ -1286,6 +1298,7 @@ START:
                     ShowMessage2line(gTransTitle, "網路連線中", "請稍候", Type_ComformNONE);
                     usRet = SSLSocketConnect();
                     if (usRet != d_OK) {
+                        myDebugFile((char*)__FUNCTION__,__LINE__,"6415 online to host, SSLSocketConnect fail(%d)",usRet);
                         MessageBox(gTransTitle, "", "網路連線異常", "請檢查並重試", "", d_MB_CHECK);
                         goto START;
                     }
@@ -1294,6 +1307,7 @@ START:
                     //    CTOS_Delay(500);
                     ECC_CheckAPResponseCode(usRet);
                     if (usRet != d_OK) {
+                        myDebugFile((char*)__FUNCTION__,__LINE__,"Process_TransComm2 fail(%d)",usRet);
                         ShowMessage2line(gTransTitle, "通訊異常", "請重試交易", Type_ComformOK);
                         goto START;
                     }
@@ -1308,6 +1322,7 @@ START:
                 
                 if (usRet != 0x9000) {
                     if (usRet == 0x6088 || usRet == 0x9969 || usRet == 0x9968 || usRet == 6004) {
+                        myDebugFile((char*)__FUNCTION__,__LINE__,"inPPR_AuthTxnOffline error:(%04X), goto Retry",usRet);
                         ShowMessage2line(gTransTitle, "交易未完成", "請放回卡片", Type_ComformNONE);
                         continue;
                     }                                            
@@ -1322,12 +1337,17 @@ START:
                             }
                         } while (ret != 0x9000);
                         
+//<<<<<<< HEAD
                         retryOn = TRUE;
                         retryCnt--;
                         
+/*=======
+                        myDebugFile((char*)__FUNCTION__,__LINE__,"reader no response, but now, it wakeup");
+>>>>>>> V2-BugFixed*/
                         continue;
                     }
                     if(usRet != 0x9000){
+                        myDebugFile((char*)__FUNCTION__,__LINE__,"inPPR_AuthTxnOffline error:(%04x)", usRet);
                         usRet = ECC_CheckReaderResponseCode(usRet);
                         if (usRet != d_OK) {
                             goto START;
@@ -1350,15 +1370,20 @@ START:
                 sprintf(line1, "卡片種類  %s", strPersonalProfileName);
                 sprintf(line3, "交易金額  %ld", gTransData.lTxnAmt);
                 
+<<<<<<< HEAD
                 printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
                 
+=======
+                
+                myDebugFile((char*)__FUNCTION__,__LINE__,"===== Txn ok =====");
+>>>>>>> V2-BugFixed
                 Process_AfterTXSueeess();
                 myDebugFile((char*)__FUNCTION__,__LINE__,"===== Txn ok =====");
                 ShowSystemMemoryStatus("Process_AfterTXSueeess 1");
 
-                printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+                
                 ShowMessage3line(gTransTitle, line1, line3, line, Type_RemoveCard);
-                printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+                
                 
                 gAutoloadAMT = 0;
                 gEVBeforeAutoload = 0;
@@ -1374,7 +1399,9 @@ START:
                 ShowMessage2line(gTransTitle, "交易未完成", "請放回原本卡片", Type_ComformNONE);                
                 continue;                        
             } else {
+                myDebugFile((char*)__FUNCTION__,__LINE__,"pprReqOffline error:(%04X)",usRet);
                 usRet = ECC_CheckReaderResponseCode(usRet);
+                                
                 if (usRet != d_OK) {
                     goto START;
                 }
@@ -1382,7 +1409,7 @@ START:
 
             break;
         }
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        
         USHORT TotalCount;
         TotalCount = CheckUnuploadTxCount();
         if (TotalCount > gFORCEONLINELIMIT) {
@@ -1391,9 +1418,9 @@ START:
             return usRet;
         }
 
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        
         CheckMemoarystatus();
-        printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
+        
     } while (1);
 
 DISCONNECT:
@@ -2035,6 +2062,7 @@ USHORT checkTxnLimit() {
 
     USHORT usRet;
     if (gBatchTotal.TotleCnt >= gBATCHTXLIMIT) {
+        myDebugFile((char*)__FUNCTION__,__LINE__,"batchTotal(%d) >= gBATCHTXLIMIT",gBatchTotal.TotleCnt, gBATCHTXLIMIT);
         usRet = d_ERR_BATCH_LIMIT_SETTLE_FIRST;
         ECC_CheckAPResponseCode(usRet);
         return usRet;
@@ -2042,12 +2070,14 @@ USHORT checkTxnLimit() {
 
     //add by bruce 20140905 6608不允許再作交易
     if (gConfig.DEVICE.READER.bREADERSTATUS == READERSTATUS_LOCK) {
+        myDebugFile((char*)__FUNCTION__,__LINE__,"READERSTATUS_LOCK happened");
         usRet = d_ERR_READER_6608;
         ECC_CheckReaderResponseCode(usRet);
         return usRet;
     }
 
     if (File_exist(SettleFile) == d_OK) {
+        myDebugFile((char*)__FUNCTION__,__LINE__,"d_ERR_PRE_SETTLE_FAIL_TRY_AGAIN happened");
         usRet = d_ERR_PRE_SETTLE_FAIL_TRY_AGAIN;
         ECC_CheckAPResponseCode(usRet);
         return usRet;
@@ -2057,6 +2087,7 @@ USHORT checkTxnLimit() {
     USHORT TotalCount;
     TotalCount = CheckUnuploadTxCount();
     if (TotalCount > gFORCEONLINELIMIT) {
+        myDebugFile((char*)__FUNCTION__,__LINE__,"d_ERR_BATCHNOTEMPTY happened");
         usRet = d_ERR_BATCHNOTEMPTY;
         ECC_CheckAPResponseCode(usRet);
         return usRet;

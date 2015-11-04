@@ -32,6 +32,15 @@ void SaveDebugData(TRANS_DATA2* TransData)
 
 }
 
+void myDebugFileHex2Str(char* function, int line, BYTE* msg, BYTE* hex, int len){
+        
+    BYTE buffer[1024];      
+    memset(buffer,0x00,sizeof(buffer));
+    wub_hex_2_str(hex, buffer, len);    
+    myDebugFile(function, line, "%s:%s",msg,buffer);
+    return;
+}
+
 void myDebugFile(char* function,int line, const char* fmt, ...) {
     char szLog[1024];
     //char szEvent[512];
@@ -71,7 +80,17 @@ void myDebugFile(char* function,int line, const char* fmt, ...) {
     
     snprintf(logstr,1024,"[%s %s,%d] %s",time,function,line, szLog);//V15, modified by kobe, sprintf -> snprintf
   
-  
+   int fd = 0x00;
+   fd = open (filename, O_WRONLY | O_CREAT | O_APPEND, 0660);
+   if (fd == 0x00)          
+        return;
+        
+   write (fd, logstr, strlen (logstr)); 
+   write (fd, "\n", 1); 
+   fsync (fd);   
+   close (fd);
+   return;
+    /*
     f = fopen(filename, "at+");  
     if (f == NULL)          
         return;
@@ -80,13 +99,15 @@ void myDebugFile(char* function,int line, const char* fmt, ...) {
     fflush(f);   
     fsync(fileno(f));   
     fclose(f);   
-    return;
+     * */
+    //return;
 }
 
 
 USHORT SystemLog(STR * EVENT,STR * DATA)
 {
-    
+   // return d_OK;
+#if 1
     STR path[32];
     STR filename[46];
     
@@ -122,17 +143,20 @@ USHORT SystemLog(STR * EVENT,STR * DATA)
    fsync(fileno(f));
    fclose(f);
    return ret;
+#endif
 }
 
 USHORT SystemLogInt(STR * EVENT,int  digi,STR * str)
 {
-   
+//     return d_OK;
+#if 1
     USHORT ret;
     
     STR strbuf[1024];
     sprintf(strbuf,"%d:%s",digi,str);
     ret=SystemLog(EVENT,strbuf);
     return 0;
+#endif
 }
 USHORT SystemLogHex(STR * EVENT,unsigned char* DATA,int len)
 {

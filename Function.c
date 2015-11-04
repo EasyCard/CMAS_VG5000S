@@ -1552,7 +1552,7 @@ void CheckMemoarystatus()
     if((ulTotalRamSize-ulUsedRamSize)<2000){
      printf("[%s,%d] totalRAMSize(%ld), usedRAMSize(%ld)\n",__FUNCTION__,__LINE__,ulTotalRamSize,ulUsedRamSize);
          ShowMessage2line(gTransTitle,"資料重整","請稍候!",Type_ComformNONE);  
-         
+         myDebugFile((char*)__FUNCTION__,__LINE__,"ulTotalRamSize(%ld),ulUsedRamSize(%ld)",ulTotalRamSize,ulUsedRamSize);
          //2014.04.11, kobe modified it for ECR
          //CTOS_SystemReset (  );
          ezSystemReset();
@@ -1686,10 +1686,12 @@ USHORT DecompressionFile(STR * file)
 //2014.04.11, kobe added for ECR
 int ezSystemReset()
 {
+    
     int result;
     if(ecrObj.gData.isEcrTxn)
         result = ecrObj.successResponse(&ecrObj);
     
+    myDebugFile((char*)__FUNCTION__,__LINE__,"CTOS_SystemReset now");
     CTOS_SystemReset();
 }
 
