@@ -1999,10 +1999,17 @@ int inHospitalSuccessResponse(void *p1) {
             sprintf(out+p,"05");p+=2;
 
             //Remains
-            memset(temp2,0x20, sizeof(temp));
-            sprintf(temp,"%ld",BYTE3Data2LONG((char *)gBasicData.ucEV));                            
+            memset(temp2,0x20, sizeof(temp));            
+            int autoloadAMT = 0, autoloadAmtUnit = 0;
+            if (gBasicData.bAutoLoad == TRUE){//hospital ecr spec. remains = ev+autoloadAmt(if autoload Supported)                             
+                memcpy((BYTE *) &autoloadAmtUnit, (BYTE *)gBasicData.ucAutoLoadAmt, sizeof (gBasicData.ucAutoLoadAmt));
+                int autoloadLimit = atoi(gConfig.TX.AUTOLOADLIMITAMT);   
+                int maxMultiple = autoloadLimit/autoloadAmtUnit;
+                autoloadAMT = maxMultiple * autoloadAmtUnit;
+            }
+            sprintf(temp,"%ld",BYTE3Data2LONG((char *)gBasicData.ucEV)+autoloadAMT);                            
             memcpy(temp2+(((6-strlen(temp))<0)?0:(6-strlen(temp))),temp, strlen(temp));
-            sprintf(out+p,"%s",temp2);p+=6;//Remains
+            sprintf(out+p,"%s",temp2);p+=6;//Remains          
             
             //CSC_Card_ID
             vdUIntToAsc((BYTE *)gBasicData.ucCardID,sizeof(gBasicData.ucCardID),(BYTE *)&CardID,17,'0',10);

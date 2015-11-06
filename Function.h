@@ -72,8 +72,8 @@ typedef struct{
 #define LEVEL1		0x01
 #define LEVEL2		0x02
 
-#define DEFAULT_TIMEOUT			240
-#define SEARCH_CARD_TIMEOUT		1100
+#define DEFAULT_TIMEOUT			500//240
+#define SEARCH_CARD_TIMEOUT		1200//1100
 
 #define API_STATUS_CNT			4
 

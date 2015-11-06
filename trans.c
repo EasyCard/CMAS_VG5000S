@@ -1370,13 +1370,7 @@ START:
                 sprintf(line1, "卡片種類  %s", strPersonalProfileName);
                 sprintf(line3, "交易金額  %ld", gTransData.lTxnAmt);
                 
-<<<<<<< HEAD
-                printf("[%s,%d] time(%lu)\n", __FUNCTION__, __LINE__, CTOS_TickGet());
-                
-=======
-                
-                myDebugFile((char*)__FUNCTION__,__LINE__,"===== Txn ok =====");
->>>>>>> V2-BugFixed
+
                 Process_AfterTXSueeess();
                 myDebugFile((char*)__FUNCTION__,__LINE__,"===== Txn ok =====");
                 ShowSystemMemoryStatus("Process_AfterTXSueeess 1");
