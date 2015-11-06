@@ -1998,9 +1998,11 @@ int inHospitalSuccessResponse(void *p1) {
             //Trans_Item
             sprintf(out+p,"05");p+=2;
 
-            //Remains
-            memset(temp2,0x20, sizeof(temp));
-            sprintf(temp,"%ld",BYTE3Data2LONG((char *)gBasicData.ucEV));                            
+            memset(temp2,0x20, sizeof(temp));            
+            long autoloadAMT = 0.0;
+            if (gBasicData.bAutoLoad == TRUE)//hospital ecr spec. remains = ev+autoloadAmt(if autoload Supported)
+                memcpy((BYTE *) &autoloadAMT, (BYTE *)gBasicData.ucAutoLoadAmt, sizeof (gBasicData.ucAutoLoadAmt));
+            sprintf(temp,"%ld",BYTE3Data2LONG((char *)gBasicData.ucEV)+autoloadAMT);                            
             memcpy(temp2+(((6-strlen(temp))<0)?0:(6-strlen(temp))),temp, strlen(temp));
             sprintf(out+p,"%s",temp2);p+=6;//Remains
             

@@ -1440,31 +1440,31 @@ USHORT PrintSettlementReceipt(Batch_Totle_STRUCT *BatchTotal) {
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
 
-        sprintf(Line, "普通卡:%-30ld總額:%-6ld\n", BatchTotal->AMTByProfile[0], BatchTotal->CntByProfile[0]);
+        sprintf(Line, "普通卡:%-30ld總額:%-6ld\n", BatchTotal->CntByProfile[0], BatchTotal->AMTByProfile[0]);
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
 
-        sprintf(Line, "敬老卡(一):%-30ld總額:%-6ld\n", BatchTotal->AMTByProfile[1], BatchTotal->CntByProfile[1]);
+        sprintf(Line, "敬老卡(一):%-30ld總額:%-6ld\n", BatchTotal->CntByProfile[1], BatchTotal->AMTByProfile[1]);
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
 
-        sprintf(Line, "敬老卡(二):%-30ld總額:%-6ld\n", BatchTotal->AMTByProfile[2], BatchTotal->CntByProfile[2]);
+        sprintf(Line, "敬老卡(二):%-30ld總額:%-6ld\n", BatchTotal->CntByProfile[2], BatchTotal->AMTByProfile[2]);
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
 
-        sprintf(Line, "愛心卡:%-30ld總額:%-6ld\n", BatchTotal->AMTByProfile[3], BatchTotal->CntByProfile[3]);
+        sprintf(Line, "愛心卡:%-30ld總額:%-6ld\n", BatchTotal->CntByProfile[3], BatchTotal->AMTByProfile[3]);
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
 
-        sprintf(Line, "愛陪卡:%-30ld總額:%-6ld\n", BatchTotal->AMTByProfile[4], BatchTotal->CntByProfile[4]);
+        sprintf(Line, "愛陪卡:%-30ld總額:%-6ld\n", BatchTotal->CntByProfile[4], BatchTotal->AMTByProfile[4]);
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
 
-        sprintf(Line, "學生卡:%-30ld總額:%-6ld\n", BatchTotal->AMTByProfile[5], BatchTotal->CntByProfile[5]);
+        sprintf(Line, "學生卡:%-30ld總額:%-6ld\n", BatchTotal->CntByProfile[5], BatchTotal->AMTByProfile[5]);
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
 
-        sprintf(Line, "優待卡:%-30ld總額:%-6ld\n", BatchTotal->AMTByProfile[8], BatchTotal->CntByProfile[8]);
+        sprintf(Line, "優待卡:%-30ld總額:%-6ld\n", BatchTotal->CntByProfile[8], BatchTotal->AMTByProfile[8]);
         PrintStr(1, offsetY, Line, FontSize, FALSE);
         offsetY = offsetY + FONT_Height + 2;
     }

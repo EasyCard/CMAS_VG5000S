@@ -57,7 +57,7 @@ USHORT recv_from(BYTE COMPORT, BYTE * buf, USHORT recv_size, int inTimeout) {
     BYTE recvbuf[256];
 
     memset(recvbuf, 0x00, sizeof (recvbuf));
-    int retry_count = inTimeout * 10;
+    int retry_count = inTimeout;// * 10;
     int i = 0;
     //USHORT data_len = recv_size;
     USHORT data_len = 0;
